@@ -6,6 +6,8 @@ import com.google.common.collect.Sets;
 import goldenapple.omnidrills.reference.Names;
 import goldenapple.omnidrills.reference.Reference;
 import goldenapple.omnidrills.util.LogHelper;
+import goldenapple.omnidrills.util.MiscUtil;
+import goldenapple.omnidrills.util.StringHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -17,17 +19,21 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
+import org.lwjgl.input.Keyboard;
 
 import java.util.List;
 import java.util.Set;
 
 public class ItemDrill extends ItemTool implements IEnergyContainerItem {
     private static Set<Material> effectiveMaterials = Sets.newHashSet();
-    EnumRarity rarity;
+    private final String name;
+    private final EnumRarity rarity;
     private final int maxEnergy;
     private final int maxEnergyReceive;
     private final int energyPerBlock;
+    private final boolean canBreak;
 
     static {
         effectiveMaterials.add(Material.anvil);
@@ -46,12 +52,14 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
         effectiveMaterials.add(Material.sand);
     }
 
-    public ItemDrill(String name, ToolMaterial material, int maxEnergy, int maxEnergyReceive, int energyPerBlock, EnumRarity rarity){
+    public ItemDrill(String name, ToolMaterial material, int maxEnergy, int maxEnergyReceive, int energyPerBlock, EnumRarity rarity, boolean canBreak){
         super(1.0F, material, effectiveMaterials);
+        this.name = name;
         this.maxEnergy = maxEnergy;
         this.maxEnergyReceive = maxEnergyReceive;
         this.rarity = rarity;
         this.energyPerBlock = energyPerBlock;
+        this.canBreak = canBreak;
     }
 
     @Override
@@ -70,6 +78,10 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
     public boolean onBlockDestroyed(ItemStack itemStack, World world, Block block, int x, int y, int z, EntityLivingBase entity) {
         if(block.getBlockHardness(world, x, y, z) != 0){
             drainEnergy(itemStack, energyPerBlock);
+            if(canBreak && getEnergyStored(itemStack) == 0){
+                entity.renderBrokenItemStack(itemStack);
+                itemStack.stackSize--;
+            }
         }
         return true;
     }
@@ -77,7 +89,20 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
     @Override
     public boolean hitEntity(ItemStack itemStack, EntityLivingBase entity1, EntityLivingBase entity2) {
         drainEnergy(itemStack, energyPerBlock * 3);
+        if(canBreak && getEnergyStored(itemStack) == 0){
+            entity1.renderBrokenItemStack(itemStack);
+            itemStack.stackSize--;
+        }
         return true;
+    }
+
+    @Override
+    public int getHarvestLevel(ItemStack stack, String toolClass) {
+        if(toolClass.equals("shovel") || toolClass.equals("pickaxe")){
+            return toolMaterial.getHarvestLevel();
+        }else{
+            return -1;
+        }
     }
 
     @Override
@@ -88,8 +113,13 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
     }
 
     @Override
+    public EnumRarity getRarity(ItemStack itemStack) {
+        return rarity;
+    }
+
+    @Override
     public boolean showDurabilityBar(ItemStack itemStack) {
-        return this.getEnergyStored(itemStack) <  maxEnergy;
+        return true;
     }
 
     @Override
@@ -100,22 +130,27 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
     @Override
     @SuppressWarnings({"unchecked"})
     public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean what) {
-        list.add("Energy: " + this.getEnergyStored(itemStack) + " / " + maxEnergy + "RF");
+        if(MiscUtil.isShiftPressed()) {
+            list.add(StringHelper.writeEnergyInfo(getEnergyStored(itemStack), maxEnergy));
+            list.add(StringHelper.writeEnergyPerBlockInfo(energyPerBlock));
+        }else{
+            list.add(StatCollector.translateToLocal("omnidrills.tooltip.press_shift"));
+        }
     }
 
     @Override
     public void registerIcons(IIconRegister register) {
-        itemIcon = register.registerIcon(Reference.MOD_ID.toLowerCase() + ":" + Names.LEADSTONE_DRILL);
+        itemIcon = register.registerIcon(Reference.MOD_ID.toLowerCase() + ":" + name);
     }
 
     @Override
     public String getUnlocalizedName() {
-        return "item." +Reference.MOD_ID.toLowerCase() + ":" + Names.LEADSTONE_DRILL;
+        return "item." +Reference.MOD_ID.toLowerCase() + ":" + name;
     }
 
     @Override
     public String getUnlocalizedName(ItemStack itemStack) {
-        return "item." + Reference.MOD_ID.toLowerCase() + ":" + Names.LEADSTONE_DRILL;
+        return "item." + Reference.MOD_ID.toLowerCase() + ":" + name;
     }
 
     private ItemStack setEnergy(ItemStack itemStack, int energy){

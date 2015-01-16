@@ -1,0 +1,10 @@
+item.omnidrills:leadstone_drill.name=Leadstone Drill
+
+omnidrills.tooltip.press_shift=Hold §e§oShift §r§7for Details
+omnidrills.tooltip.energy=Charge: %s / %s %s
+omnidrills.tooltip.energy_per_block=Energy per block: %s %s
+
+omnidrills.energyunit.RF=RF
+omnidrills.energyunit.EU=EU
+omnidrills.energyunit.gJ=gJ
+omnidrills.energyunit.J=J
