@@ -1,7 +1,6 @@
 package goldenapple.omnidrills.gui;
 
 import cpw.mods.fml.client.config.GuiConfig;
-import cpw.mods.fml.client.config.IConfigElement;
 import goldenapple.omnidrills.OmniDrills;
 import goldenapple.omnidrills.reference.Reference;
 import net.minecraft.client.gui.GuiScreen;
