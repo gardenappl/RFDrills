@@ -3,9 +3,7 @@ package goldenapple.omnidrills.item;
 import cofh.api.energy.IEnergyContainerItem;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
-import goldenapple.omnidrills.reference.Names;
 import goldenapple.omnidrills.reference.Reference;
-import goldenapple.omnidrills.util.LogHelper;
 import goldenapple.omnidrills.util.MiscUtil;
 import goldenapple.omnidrills.util.StringHelper;
 import net.minecraft.block.Block;
@@ -21,7 +19,6 @@ import net.minecraft.item.ItemTool;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
-import org.lwjgl.input.Keyboard;
 
 import java.util.List;
 import java.util.Set;

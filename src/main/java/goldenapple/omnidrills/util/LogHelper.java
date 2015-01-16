@@ -1,7 +1,7 @@
 package goldenapple.omnidrills.util;
 
-import goldenapple.omnidrills.reference.Reference;
 import cpw.mods.fml.common.FMLLog;
+import goldenapple.omnidrills.reference.Reference;
 import org.apache.logging.log4j.Level;
 
 public class LogHelper
