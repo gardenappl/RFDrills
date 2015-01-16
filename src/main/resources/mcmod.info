@@ -1,0 +1,16 @@
+[
+{
+  "modid": "omnidrills",
+  "name": "OmniDrills",
+  "description": "Adds RF-powered Drills to Minecraft! Compatible with Thermal Expansion and EnderIO.",
+  "version": "0.1",
+  "mcversion": "1.7.10",
+  "url": "",
+  "updateUrl": "",
+  "authorList": ["goldenapple"],
+  "credits": "The Forge and FML guys, for making Forge",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
