@@ -3,6 +3,7 @@ package goldenapple.omnidrills.item;
 import cofh.api.energy.IEnergyContainerItem;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
+import goldenapple.omnidrills.OmniDrillsCreativeTab;
 import goldenapple.omnidrills.reference.Reference;
 import goldenapple.omnidrills.util.MiscUtil;
 import goldenapple.omnidrills.util.StringHelper;
@@ -12,6 +13,7 @@ import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -24,39 +26,39 @@ import java.util.List;
 import java.util.Set;
 
 public class ItemDrill extends ItemTool implements IEnergyContainerItem {
-    private static Set<Material> effectiveMaterials = Sets.newHashSet();
+    private static final Set<Block> pickaxeVanillaBlocks = Sets.newHashSet(Blocks.cobblestone, Blocks.double_stone_slab, Blocks.stone_slab, Blocks.stone, Blocks.sandstone, Blocks.mossy_cobblestone, Blocks.iron_ore, Blocks.iron_block, Blocks.coal_ore, Blocks.gold_block, Blocks.gold_ore, Blocks.diamond_ore, Blocks.diamond_block, Blocks.ice, Blocks.netherrack, Blocks.lapis_ore, Blocks.lapis_block, Blocks.redstone_ore, Blocks.lit_redstone_ore, Blocks.rail, Blocks.detector_rail, Blocks.golden_rail, Blocks.activator_rail, Blocks.grass, Blocks.dirt, Blocks.sand, Blocks.gravel, Blocks.snow_layer, Blocks.snow, Blocks.clay, Blocks.farmland, Blocks.soul_sand, Blocks.mycelium);
+    private static final Set<Block> shovelVanillaBlocks = Sets.newHashSet(Blocks.grass, Blocks.dirt, Blocks.sand, Blocks.gravel, Blocks.snow_layer, Blocks.snow, Blocks.clay, Blocks.farmland, Blocks.soul_sand, Blocks.mycelium);
+    private static final Set<Material> effectiveMaterials = Sets.newHashSet(Material.anvil, Material.clay, Material.craftedSnow, Material.glass, Material.dragonEgg, Material.grass, Material.ground, Material.ice, Material.snow, Material.iron, Material.rock, Material.sand, Material.coral);
+    private static Set<Block> effectiveVanillaBlocks = Sets.newHashSet();
+
     private final String name;
     private final EnumRarity rarity;
     private final int maxEnergy;
-    private final int maxEnergyReceive;
+    private final int rechargeRate;
     private final int energyPerBlock;
     private final boolean canBreak;
 
     static {
-        effectiveMaterials.add(Material.anvil);
-        effectiveMaterials.add(Material.clay);
-        effectiveMaterials.add(Material.craftedSnow);
-        effectiveMaterials.add(Material.glass);
-        effectiveMaterials.add(Material.dragonEgg);
-        effectiveMaterials.add(Material.grass);
-        effectiveMaterials.add(Material.ground);
-        effectiveMaterials.add(Material.ice);
-        effectiveMaterials.add(Material.snow);
-        effectiveMaterials.add(Material.iron);
-        effectiveMaterials.add(Material.packedIce);
-        effectiveMaterials.add(Material.piston);
-        effectiveMaterials.add(Material.rock);
-        effectiveMaterials.add(Material.sand);
+        effectiveVanillaBlocks.addAll(pickaxeVanillaBlocks);
+        effectiveVanillaBlocks.addAll(shovelVanillaBlocks);
     }
 
-    public ItemDrill(String name, ToolMaterial material, int maxEnergy, int maxEnergyReceive, int energyPerBlock, EnumRarity rarity, boolean canBreak){
-        super(1.0F, material, effectiveMaterials);
+    public ItemDrill(String name, ToolMaterial material, int maxEnergy, int rechargeRate, int energyPerBlock, EnumRarity rarity, boolean canBreak){
+        super(1.0F, material, effectiveVanillaBlocks);
         this.name = name;
         this.maxEnergy = maxEnergy;
-        this.maxEnergyReceive = maxEnergyReceive;
+        this.rechargeRate = rechargeRate;
         this.rarity = rarity;
         this.energyPerBlock = energyPerBlock;
         this.canBreak = canBreak;
+        this.setCreativeTab(OmniDrillsCreativeTab.OmniDrillsTab);
+        this.setHarvestLevel("pickaxe", material.getHarvestLevel());
+        this.setHarvestLevel("shovel", material.getHarvestLevel());
+    }
+
+    @Override
+    public boolean isItemTool(ItemStack itemStack) {
+        return true;
     }
 
     @Override
@@ -65,8 +67,13 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
     }
 
     @Override
+    public boolean func_150897_b(Block p_150897_1_){ //stolen from ItemPickaxe to avoid vanilla block harvesting weirdness (e.g. enchanting tables not dropping)
+        return p_150897_1_ == Blocks.obsidian ? this.toolMaterial.getHarvestLevel() == 3 : (p_150897_1_ != Blocks.diamond_block && p_150897_1_ != Blocks.diamond_ore ? (p_150897_1_ != Blocks.emerald_ore && p_150897_1_ != Blocks.emerald_block ? (p_150897_1_ != Blocks.gold_block && p_150897_1_ != Blocks.gold_ore ? (p_150897_1_ != Blocks.iron_block && p_150897_1_ != Blocks.iron_ore ? (p_150897_1_ != Blocks.lapis_block && p_150897_1_ != Blocks.lapis_ore ? (p_150897_1_ != Blocks.redstone_ore && p_150897_1_ != Blocks.lit_redstone_ore ? (p_150897_1_.getMaterial() == Material.rock ? true : (p_150897_1_.getMaterial() == Material.iron ? true : p_150897_1_.getMaterial() == Material.anvil)) : this.toolMaterial.getHarvestLevel() >= 2) : this.toolMaterial.getHarvestLevel() >= 1) : this.toolMaterial.getHarvestLevel() >= 1) : this.toolMaterial.getHarvestLevel() >= 2) : this.toolMaterial.getHarvestLevel() >= 2) : this.toolMaterial.getHarvestLevel() >= 2);
+    }
+
+    @Override
     public float func_150893_a(ItemStack itemStack, Block block) { //should be called "getEfficiencyOnBlock" or something I dunno
-        if(getEnergyStored(itemStack) != 0) {
+        if(getEnergyStored(itemStack) > energyPerBlock) {
             return effectiveMaterials.contains(block.getMaterial()) ? this.efficiencyOnProperMaterial : 1.0F;
         }else return 1.0F;
     }
@@ -104,7 +111,7 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
 
     @Override
     @SuppressWarnings({"unchecked"})
-    public void getSubItems(Item item, CreativeTabs creeativTab, List list) {
+    public void getSubItems(Item item, CreativeTabs creativeTab, List list) {
         list.add(setEnergy(new ItemStack(item, 1, 0), 0));
         list.add(setEnergy(new ItemStack(item, 1, 0), maxEnergy));
     }
@@ -127,9 +134,19 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
     @Override
     @SuppressWarnings({"unchecked"})
     public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean what) {
+        list.add(StringHelper.writeEnergyInfo(getEnergyStored(itemStack), maxEnergy));
+
         if(MiscUtil.isShiftPressed()) {
-            list.add(StringHelper.writeEnergyInfo(getEnergyStored(itemStack), maxEnergy));
             list.add(StringHelper.writeEnergyPerBlockInfo(energyPerBlock));
+            if(canBreak) {
+                list.add(StatCollector.translateToLocal("omnidrills.tooltip.can_break"));
+            }
+            if(toolMaterial.getHarvestLevel() >= 3){
+                list.add(StatCollector.translateToLocal("omnidrills.tooltip.can_mine_obsidian"));
+            }
+            if(toolMaterial.getEnchantability() > 0){
+                list.add(StatCollector.translateToLocal("omnidrills.tooltip.enchantable"));
+            }
         }else{
             list.add(StatCollector.translateToLocal("omnidrills.tooltip.press_shift"));
         }
@@ -150,7 +167,7 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
         return "item." + Reference.MOD_ID.toLowerCase() + ":" + name;
     }
 
-    private ItemStack setEnergy(ItemStack itemStack, int energy){
+    public ItemStack setEnergy(ItemStack itemStack, int energy){
         if(itemStack.stackTagCompound == null){
             itemStack.stackTagCompound = new NBTTagCompound();
         }
@@ -181,7 +198,7 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
         }
 
         int energy = getEnergyStored(itemStack);
-        int energyReceived = Math.min(maxEnergy - energy, Math.min(this.maxEnergyReceive, maxReceive));
+        int energyReceived = Math.min(maxEnergy - energy, Math.min(this.rechargeRate, maxReceive));
 
         if (!simulate) {
             energy += energyReceived;
