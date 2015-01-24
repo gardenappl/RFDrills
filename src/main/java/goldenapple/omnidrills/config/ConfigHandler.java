@@ -12,7 +12,7 @@ public class ConfigHandler {
     public Configuration config; //public because of OmniDrillsGuiConfig
 
     public static String energyUnitName;
-    public static EnumEnergyUnit energyUnit;
+    public static EnumEnergyUnit energyUnit = EnumEnergyUnit.RF;
 
     public ConfigHandler(File file){
         if(config == null) {
@@ -25,17 +25,15 @@ public class ConfigHandler {
         energyUnitName = config.getString("energyUnit", Configuration.CATEGORY_GENERAL, "RF", "Energy unit to display in tooltips. Valid units: EU, RF, gJ (GalactiCraft Joules), J (Mekanism Joules)", new String[]{"RF", "EU", "gJ", "J"});
 
         if(energyUnitName.equals("EU")){
-            LogHelper.info("Using EU");
             energyUnit = EnumEnergyUnit.EU;
         }else if(energyUnitName.equals("J")){
-            LogHelper.info("Using Joules");
             energyUnit = EnumEnergyUnit.J;
         }else if(energyUnitName.equals("gJ")){
-            LogHelper.info("Using Galacticraft Joules");
             energyUnit = EnumEnergyUnit.gJ;
-        }else {
-            LogHelper.info("Using RF");
+        }else if(energyUnitName.equals("RF")){
             energyUnit = EnumEnergyUnit.RF;
+        }else{
+            LogHelper.info("Invalid EnergyUnit value. Using default (RF)");
         }
 
         if(config.hasChanged()){
