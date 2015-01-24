@@ -5,12 +5,14 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import goldenapple.omnidrills.OmniDrillsCreativeTab;
 import goldenapple.omnidrills.reference.Reference;
+import goldenapple.omnidrills.util.LogHelper;
 import goldenapple.omnidrills.util.MiscUtil;
 import goldenapple.omnidrills.util.StringHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -19,6 +21,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.stats.StatList;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
@@ -56,14 +59,18 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
         this.setHarvestLevel("shovel", material.getHarvestLevel());
     }
 
-    @Override
-    public boolean isItemTool(ItemStack itemStack) {
-        return true;
+    public int getEnergyPerBlock() {
+        return energyPerBlock;
     }
 
     @Override
     public Set<String> getToolClasses(ItemStack stack) {
         return ImmutableSet.of("pickaxe", "shovel");
+    }
+
+    @Override
+    public boolean getShareTag() {
+        return true;
     }
 
     @Override
@@ -76,28 +83,6 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
         if(getEnergyStored(itemStack) > energyPerBlock) {
             return effectiveMaterials.contains(block.getMaterial()) ? this.efficiencyOnProperMaterial : 1.0F;
         }else return 1.0F;
-    }
-
-    @Override
-    public boolean onBlockDestroyed(ItemStack itemStack, World world, Block block, int x, int y, int z, EntityLivingBase entity) {
-        if(block.getBlockHardness(world, x, y, z) != 0){
-            drainEnergy(itemStack, energyPerBlock);
-            if(canBreak && getEnergyStored(itemStack) == 0){
-                entity.renderBrokenItemStack(itemStack);
-                itemStack.stackSize--;
-            }
-        }
-        return true;
-    }
-
-    @Override
-    public boolean hitEntity(ItemStack itemStack, EntityLivingBase entity1, EntityLivingBase entity2) {
-        drainEnergy(itemStack, energyPerBlock * 3);
-        if(canBreak && getEnergyStored(itemStack) == 0){
-            entity1.renderBrokenItemStack(itemStack);
-            itemStack.stackSize--;
-        }
-        return true;
     }
 
     @Override
@@ -123,7 +108,34 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
 
     @Override
     public boolean showDurabilityBar(ItemStack itemStack) {
+        if(itemStack.stackTagCompound != null){
+            return !itemStack.stackTagCompound.getBoolean("isCreativeTabIcon");
+        }
         return true;
+    }
+
+    @Override
+    public boolean onBlockDestroyed(ItemStack itemStack, World world, Block block, int x, int y, int z, EntityLivingBase entity) {
+        if (this.getEnergyStored(itemStack) <= energyPerBlock) {
+            itemStack.damageItem(1000000, entity);
+            entity.renderBrokenItemStack(itemStack);
+            if(entity instanceof EntityPlayer) {
+                ((EntityPlayer) entity).addStat(StatList.objectBreakStats[Item.getIdFromItem(this)], 1);
+            }
+        }
+        return true; //See DrillMiningHandler
+    }
+
+    @Override
+    public boolean hitEntity(ItemStack itemStack, EntityLivingBase entityAttacked, EntityLivingBase entityAttacker) {
+        if (this.getEnergyStored(itemStack) <= energyPerBlock) {
+            itemStack.damageItem(1000000, entityAttacker);
+            entityAttacker.renderBrokenItemStack(itemStack);
+            if(entityAttacker instanceof EntityPlayer) {
+                ((EntityPlayer) entityAttacker).addStat(StatList.objectBreakStats[Item.getIdFromItem(this)], 1);
+            }
+        }
+        return true; //See DrillMiningHandler
     }
 
     @Override
@@ -134,21 +146,25 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
     @Override
     @SuppressWarnings({"unchecked"})
     public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean what) {
-        list.add(StringHelper.writeEnergyInfo(getEnergyStored(itemStack), maxEnergy));
+        try {
+            list.add(StringHelper.writeEnergyInfo(getEnergyStored(itemStack), maxEnergy));
 
-        if(MiscUtil.isShiftPressed()) {
-            list.add(StringHelper.writeEnergyPerBlockInfo(energyPerBlock));
-            if(canBreak) {
-                list.add(StatCollector.translateToLocal("omnidrills.tooltip.can_break"));
+            if (MiscUtil.isShiftPressed()) {
+                list.add(StringHelper.writeEnergyPerBlockInfo(energyPerBlock));
+                if (canBreak) {
+                    list.add(StatCollector.translateToLocal("omnidrills.tooltip.can_break"));
+                }
+                if (toolMaterial.getHarvestLevel() >= 3) {
+                    list.add(StatCollector.translateToLocal("omnidrills.tooltip.can_mine_obsidian"));
+                }
+                if (toolMaterial.getEnchantability() > 0) {
+                    list.add(StatCollector.translateToLocal("omnidrills.tooltip.enchantable"));
+                }
+            } else {
+                list.add(StatCollector.translateToLocal("omnidrills.tooltip.press_shift"));
             }
-            if(toolMaterial.getHarvestLevel() >= 3){
-                list.add(StatCollector.translateToLocal("omnidrills.tooltip.can_mine_obsidian"));
-            }
-            if(toolMaterial.getEnchantability() > 0){
-                list.add(StatCollector.translateToLocal("omnidrills.tooltip.enchantable"));
-            }
-        }else{
-            list.add(StatCollector.translateToLocal("omnidrills.tooltip.press_shift"));
+        }catch (Throwable e){
+            e.printStackTrace();
         }
     }
 
@@ -176,7 +192,7 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
         return itemStack;
     }
 
-    private int drainEnergy(ItemStack itemStack, int drain){
+    public int drainEnergy(ItemStack itemStack, int drain){
         if(itemStack.stackTagCompound == null){
             itemStack.stackTagCompound = new NBTTagCompound();
         }
