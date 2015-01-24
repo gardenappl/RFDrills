@@ -9,5 +9,11 @@ public class Names {
     public static final String BASIC_DRILL = "basic_drill";
 
     public static final String MOTOR = "motor";
-    public static final String[] MOTORS = {"leadstone_motor", "hardened_motor", "redstone_motor", "resonant_motor", "basic_motor"};
+    public static final String[] MOTORS = {"leadstone_motor",
+                                           "hardened_motor",
+                                           "redstone_motor",
+                                           "redstone_motor_empty",
+                                           "redstone_motor_full",
+                                           "resonant_motor",
+                                           "basic_motor"};
 }

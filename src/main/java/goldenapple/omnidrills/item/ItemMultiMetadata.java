@@ -4,6 +4,7 @@ import goldenapple.omnidrills.OmniDrillsCreativeTab;
 import goldenapple.omnidrills.reference.Reference;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
@@ -14,13 +15,29 @@ public class ItemMultiMetadata extends Item {
     private String[] names;
     private IIcon[] icons;
     private String defaultName;
+    private EnumRarity[] rarities;
 
-    public ItemMultiMetadata(String[] names, String defaultName){
+    public ItemMultiMetadata(String[] names, String defaultName, EnumRarity[] rarities){
         this.names = names;
         this.icons = new IIcon[names.length];
         this.defaultName = defaultName;
         this.setCreativeTab(OmniDrillsCreativeTab.OmniDrillsTab);
         this.setHasSubtypes(true);
+    }
+
+    public ItemMultiMetadata(String[] names, String defaultName){
+        this(names, defaultName, null);
+    }
+
+    @Override
+    public EnumRarity getRarity(ItemStack itemStack) {
+        if(rarities == null){
+            return EnumRarity.common;
+        }else if(itemStack.getItemDamage() >= rarities.length){
+            return EnumRarity.common;
+        }else{
+            return rarities[itemStack.getItemDamage()];
+        }
     }
 
     @Override
