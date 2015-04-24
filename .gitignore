@@ -1,11 +1,7 @@
-## gradle
+/libs
 /.gradle
 /build
-
-## ForgeGradle
 /run
-
-## intellij
 /out
 /.idea
 /*.iml
