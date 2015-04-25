@@ -109,7 +109,7 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
         if(itemStack.stackTagCompound != null){
             return !itemStack.stackTagCompound.getBoolean("isCreativeTabIcon");
         }
-        return true;
+        return !(getEnergyStored(itemStack) == getMaxEnergyStored(itemStack));
     }
 
     @Override
