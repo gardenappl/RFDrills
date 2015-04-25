@@ -10,8 +10,10 @@ import java.io.File;
 public class ConfigHandler {
     public Configuration config; //public because of OmniDrillsGuiConfig
 
-    public static String energyUnitName;
-    public static EnumEnergyUnit energyUnit = EnumEnergyUnit.RF;
+    public static boolean integrateTE;
+    public static boolean integrateEIO;
+    /*public static String energyUnitName;
+    public static EnumEnergyUnit energyUnit = EnumEnergyUnit.RF; */
 
     public ConfigHandler(File file){
         if(config == null) {
@@ -33,11 +35,14 @@ public class ConfigHandler {
             energyUnit = EnumEnergyUnit.RF;
         }else{
             LogHelper.info("Invalid EnergyUnit value. Using default (RF)");
-        }
+        } */
+
+        integrateTE = config.getBoolean("integrateTE", Configuration.CATEGORY_GENERAL, true, "Set this to false to disable Thermal Expansion drills");
+        integrateEIO = config.getBoolean("integrateEIO", Configuration.CATEGORY_GENERAL, true, "Set this to false to disable EnderIO drills");
 
         if(config.hasChanged()){
             config.save();
-        } */
+        }
     }
 
     @SubscribeEvent

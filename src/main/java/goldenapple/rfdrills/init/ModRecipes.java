@@ -3,6 +3,7 @@ package goldenapple.rfdrills.init;
 import cofh.api.modhelpers.ThermalExpansionHelper;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.GameRegistry;
+import goldenapple.rfdrills.config.ConfigHandler;
 import goldenapple.rfdrills.crafting.ShapedUpgradeRecipe;
 import goldenapple.rfdrills.reference.LibMetadata;
 import net.minecraft.item.ItemStack;
@@ -12,8 +13,8 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 public class ModRecipes {
 
     public static void init(){
-        if(Loader.isModLoaded("ThermalExpansion")) initTE();
-        if(Loader.isModLoaded("EnderIO")) initEIO();
+        if(Loader.isModLoaded("ThermalExpansion") && ConfigHandler.integrateTE) initTE();
+        if(Loader.isModLoaded("EnderIO") && ConfigHandler.integrateEIO) initEIO();
     }
 
     private static void initTE(){

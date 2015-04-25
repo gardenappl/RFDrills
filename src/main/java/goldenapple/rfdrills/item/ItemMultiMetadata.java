@@ -1,6 +1,6 @@
 package goldenapple.rfdrills.item;
 
-import goldenapple.rfdrills.RFDrillsCreativeTab;
+import goldenapple.rfdrills.RFDrills;
 import goldenapple.rfdrills.reference.Reference;
 import goldenapple.rfdrills.util.LogHelper;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -22,7 +22,7 @@ public class ItemMultiMetadata extends Item {
         this.names = names;
         this.icons = new IIcon[names.length];
         this.defaultName = defaultName;
-        this.setCreativeTab(RFDrillsCreativeTab.OmniDrillsTab);
+        this.setCreativeTab(RFDrills.OmniDrillsTab);
         this.setHasSubtypes(true);
     }
 

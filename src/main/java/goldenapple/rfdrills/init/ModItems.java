@@ -2,6 +2,7 @@ package goldenapple.rfdrills.init;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.GameRegistry;
+import goldenapple.rfdrills.config.ConfigHandler;
 import goldenapple.rfdrills.item.ItemDrill;
 import goldenapple.rfdrills.item.ItemMultiMetadata;
 import goldenapple.rfdrills.reference.Names;
@@ -22,8 +23,8 @@ public class ModItems {
     public static Item motor = new ItemMultiMetadata(Names.MOTORS, Names.MOTOR, new EnumRarity[]{EnumRarity.common, EnumRarity.common, EnumRarity.uncommon, EnumRarity.common, EnumRarity.uncommon, EnumRarity.rare});
 
     public static void init(){
-        if(Loader.isModLoaded("ThermalExpansion")) initTE();
-        if(Loader.isModLoaded("EnderIO")) initEIO();
+        if(Loader.isModLoaded("ThermalExpansion") && ConfigHandler.integrateTE) initTE();
+        if(Loader.isModLoaded("EnderIO") && ConfigHandler.integrateEIO) initEIO();
         GameRegistry.registerItem(motor, Names.MOTOR);
     }
 

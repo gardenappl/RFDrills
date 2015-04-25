@@ -3,7 +3,7 @@ package goldenapple.rfdrills.item;
 import cofh.api.energy.IEnergyContainerItem;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
-import goldenapple.rfdrills.RFDrillsCreativeTab;
+import goldenapple.rfdrills.RFDrills;
 import goldenapple.rfdrills.reference.Reference;
 import goldenapple.rfdrills.util.MiscUtil;
 import goldenapple.rfdrills.util.StringHelper;
@@ -52,7 +52,7 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
         this.rarity = rarity;
         this.energyPerBlock = energyPerBlock;
         this.canBreak = canBreak;
-        this.setCreativeTab(RFDrillsCreativeTab.OmniDrillsTab);
+        this.setCreativeTab(RFDrills.OmniDrillsTab);
         this.setHarvestLevel("pickaxe", material.getHarvestLevel());
         this.setHarvestLevel("shovel", material.getHarvestLevel());
     }
@@ -159,7 +159,7 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
                     list.add(StatCollector.translateToLocal("rfdrills.tooltip.enchantable"));
                 }
             } else {
-                list.add(StatCollector.translateToLocal("info.cofh.hold") + "§e§o" + StatCollector.translateToLocal("info.cofh.shift") + "§r§7" + StatCollector.translateToLocal("info.cofh.forDetails"));
+                list.add(StatCollector.translateToLocal("info.cofh.hold") + " §e§o" + StatCollector.translateToLocal("info.cofh.shift") + " §r§7" + StatCollector.translateToLocal("info.cofh.forDetails"));
             }
         }catch (Throwable e){
             e.printStackTrace();

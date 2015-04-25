@@ -13,6 +13,6 @@ public class RFDrillsGuiConfig extends GuiConfig{
     public RFDrillsGuiConfig(GuiScreen parentScreen){
         super(parentScreen,
               new ConfigElement(RFDrills.configHandler.config.getCategory(Configuration.CATEGORY_GENERAL)).getChildElements(),
-              Reference.MOD_ID, false, false, GuiConfig.getAbridgedConfigPath(RFDrills.configHandler.config.toString()));
+              Reference.MOD_ID, false, true, GuiConfig.getAbridgedConfigPath(RFDrills.configHandler.config.toString()));
     }
 }
