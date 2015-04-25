@@ -19,9 +19,9 @@ public class ModRecipes {
     private static void initTE(){
         ItemStack motorLeadstone = new ItemStack(ModItems.motor, 1, LibMetadata.MOTOR_LEASDSTONE);
         ItemStack motorHardened = new ItemStack(ModItems.motor, 1, LibMetadata.MOTOR_HARDENED);
-        ItemStack motorRedstoneFrameEmpty = new ItemStack(ModItems.motor, 1, LibMetadata.MOTOR_REDSTONE_EMPTY);
-        ItemStack motorRedstoneFrame = new ItemStack(ModItems.motor, 1, LibMetadata.MOTOR_REDSTONE_FULL);
+        ItemStack motorRedstoneFrame = new ItemStack(ModItems.motor, 1, LibMetadata.MOTOR_REDSTONE_FRAME);
         ItemStack motorRedstone = new ItemStack(ModItems.motor, 1, LibMetadata.MOTOR_REDSTONE);
+        ItemStack motorResonantFrame = new ItemStack(ModItems.motor, 1, LibMetadata.MOTOR_RESONANT_FRAME);
         ItemStack motorResonant = new ItemStack(ModItems.motor, 1, LibMetadata.MOTOR_RESONANT);
 
         ItemStack pneumaticServo = new ItemStack(GameRegistry.findItem("ThermalExpansion", "material"), 1, 0);
@@ -45,25 +45,22 @@ public class ModRecipes {
                 "iCi", 'i', "ingotInvar", 'D', "dustGlowstone", 'G', "gearElectrum", 'P', pneumaticServo.copy(), 'C', receptionCoil.copy()));
 
         //Redstone motor frame
-        GameRegistry.addRecipe(new ShapedOreRecipe(motorRedstoneFrameEmpty.copy(),
-                "iGi",
-                "GBG",
-                "iGi", 'i', "ingotElectrum", 'B', "blockRedstone", 'G', "blockGlassHardened"));
-
-        //Redstone motor frame filling
-        ThermalExpansionHelper.addTransposerFill(16000, motorRedstoneFrameEmpty.copy(), motorRedstoneFrame.copy(), FluidRegistry.getFluidStack("redstone", 4000), false);
+        GameRegistry.addRecipe(new ShapedOreRecipe(motorRedstoneFrame.copy(),
+                "iHi",
+                "GPG",
+                "iCi", 'i', "ingotElectrum", 'H', "blockGlassHardened", 'G', "gearSignalum", 'P', pneumaticServo.copy(), 'C', receptionCoil.copy()));
 
         //Redstone motor
-        GameRegistry.addRecipe(new ShapedOreRecipe(motorRedstone.copy(),
-                "iMi",
+        ThermalExpansionHelper.addTransposerFill(16000, motorRedstoneFrame.copy(), motorRedstone.copy(), FluidRegistry.getFluidStack("redstone", 4000), false);
+
+        //Resonant motor frame
+        GameRegistry.addRecipe(new ShapedOreRecipe(motorResonantFrame.copy(),
+                "iAi",
                 "GPG",
-                "iCi", 'i', "ingotElectrum", 'M', new ItemStack(ModItems.motor, 1, LibMetadata.MOTOR_REDSTONE_FULL), 'G', "gearSignalum", 'P', pneumaticServo.copy(), 'C', receptionCoil.copy()));
+                "iCi", 'i', "ingotSilver", 'A', cryocoilAugment.copy(), 'G', "gearEnderium", 'P', pneumaticServo.copy(), 'C', receptionCoil.copy()));
 
         //Resonant motor
-        GameRegistry.addRecipe(new ShapedOreRecipe(motorResonant.copy(),
-                "iAi",
-                "GMG",
-                "iCi", 'i', "ingotSilver", 'A', cryocoilAugment.copy(), 'G', "gearEnderium", 'M', new ItemStack(ModItems.motor, 1, LibMetadata.MOTOR_REDSTONE), 'C', receptionCoil.copy()));
+        ThermalExpansionHelper.addTransposerFill(60000, motorResonantFrame.copy(), motorResonant.copy(), FluidRegistry.getFluidStack("cryotheum", 4000), false);
 
 
         //Leadstone drill
@@ -93,8 +90,11 @@ public class ModRecipes {
 
     private static void initEIO(){
         ItemStack motorBasic = new ItemStack(ModItems.motor, 1, LibMetadata.MOTOR_BASIC);
+        ItemStack motorAdvanced = new ItemStack(ModItems.motor, 1, LibMetadata.MOTOR_ADVANCED);
         ItemStack machineChassis = new ItemStack(GameRegistry.findItem("EnderIO", "itemMachinePart"), 1, 0);
+        ItemStack pulsatingCrystal = new ItemStack(GameRegistry.findItem("EnderIO", "itemMaterial"), 1, 5);
         ItemStack capacitorBasic = new ItemStack(GameRegistry.findItem("EnderIO", "itemBasicCapacitor"), 1, 0);
+        ItemStack capacitorAdvanced = new ItemStack(GameRegistry.findItem("EnderIO", "itemBasicCapacitor"), 1, 1);
 
         //Basic motor
         GameRegistry.addRecipe(new ShapedOreRecipe(motorBasic.copy(),
@@ -102,11 +102,22 @@ public class ModRecipes {
                 "GFG",
                 "iRi", 'i', "itemSilicon", 'F', machineChassis.copy(), 'G', "gearStone", 'R', "dustRedstone", 'C', capacitorBasic.copy()));
 
+        //Advanced motor
+        GameRegistry.addRecipe(new ShapedOreRecipe(motorAdvanced.copy(),
+                "iCi",
+                "PFP",
+                "iRi", 'i', "ingotElectricalSteel", 'F', machineChassis.copy(), 'P', pulsatingCrystal.copy(), 'R', "ingotRedstoneAlloy", 'C', capacitorAdvanced.copy()));
 
         //Basic drill
         GameRegistry.addRecipe(new ShapedOreRecipe(ModItems.basicDrill,
                 " i ",
                 "iMi",
-                "ICI", 'I', "ingotIron", 'i', "ingotElectricalSteel", 'C', capacitorBasic.copy(), 'M', motorBasic.copy()));
+                "ICI", 'I', "itemSilicon", 'i', "ingotElectricalSteel", 'C', capacitorBasic.copy(), 'M', motorBasic.copy()));
+
+        //Advanced drill
+        GameRegistry.addRecipe(new ShapedOreRecipe(ModItems.advancedDrill,
+                " i ",
+                "iMi",
+                "ICI", 'I', "ingotElectricalSteel", 'i', "ingotEnergeticAlloy", 'C', capacitorAdvanced.copy(), 'M', motorAdvanced.copy()));
     }
 }

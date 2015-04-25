@@ -2,6 +2,7 @@ package goldenapple.rfdrills.item;
 
 import goldenapple.rfdrills.RFDrillsCreativeTab;
 import goldenapple.rfdrills.reference.Reference;
+import goldenapple.rfdrills.util.LogHelper;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.EnumRarity;
@@ -41,6 +42,7 @@ public class ItemMultiMetadata extends Item {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void getSubItems(Item item, CreativeTabs creativeTab, List list) {
         for(int i = 0; i < names.length; i++){
             list.add(new ItemStack(item, 1, i));
@@ -49,12 +51,12 @@ public class ItemMultiMetadata extends Item {
 
     @Override
     public int getMetadata(int meta) {
-        return meta > names.length ? 0 : meta;
+        return meta < names.length ? meta : 0;
     }
 
     @Override
-    public IIcon getIcon(ItemStack stack, int pass) {
-        return stack.getItemDamage() < icons.length ? icons[stack.getItemDamage()] : icons[0];
+    public IIcon getIconFromDamage(int meta) {
+        return meta < icons.length ? icons[meta] : icons[0];
     }
 
     @Override
