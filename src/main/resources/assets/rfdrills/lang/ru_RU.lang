@@ -1,0 +1,25 @@
+item.rfdrills:leadstone_drill.name=Свинцовая буровая дрель
+item.rfdrills:hardened_drill.name=Усиленная буровая дрель
+item.rfdrills:redstone_drill.name=Красная буровая дрель
+item.rfdrills:resonant_drill.name=Резонирующая буровая дрель
+item.rfdrills:basic_drill.name=Базовая буровая дрель
+item.rfdrills:advanced_drill.name=Улучшенная буровея дрель
+
+item.rfdrills:leadstone_motor.name=Свинцовый мотор
+item.rfdrills:hardened_motor.name=Усиленный мотор
+item.rfdrills:redstone_motor_frame.name=Рамка красного мотора
+item.rfdrills:redstone_motor.name=Красный мотор
+item.rfdrills:resonant_motor_frame.name=Рамка резонирующего мотора
+item.rfdrills:resonant_motor.name=Резонирующий мотор
+item.rfdrills:basic_motor.name=Базовый электромотор
+item.rfdrills:advanced_motor.name=Улучшеный электромотор
+
+
+rfdrills.tooltip.press_shift=Удерживайте §e§oShift §r§7для деталей
+rfdrills.tooltip.energy=Заряд: %s / %s RF
+rfdrills.tooltip.energy_per_block=Енегрия за блок: %s RF
+rfdrills.tooltip.can_break=§cСломается при нехватке енергии.
+rfdrills.tooltip.can_mine_obsidian=§eМожет копать обсидиан.
+rfdrills.tooltip.enchantable=§bМожет быть зачарована.
+
+itemGroup.rfdrills=RFDrills

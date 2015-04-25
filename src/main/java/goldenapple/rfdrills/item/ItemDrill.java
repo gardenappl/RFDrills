@@ -106,10 +106,10 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
 
     @Override
     public boolean showDurabilityBar(ItemStack itemStack) {
-        if(itemStack.stackTagCompound != null){
+        if(itemStack.hasTagCompound()){
             return !itemStack.stackTagCompound.getBoolean("isCreativeTabIcon");
         }
-        return !(getEnergyStored(itemStack) == getMaxEnergyStored(itemStack));
+        return true;
     }
 
     @Override
@@ -159,7 +159,7 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
                     list.add(StatCollector.translateToLocal("rfdrills.tooltip.enchantable"));
                 }
             } else {
-                list.add(StatCollector.translateToLocal("rfdrills.tooltip.press_shift"));
+                list.add(StatCollector.translateToLocal("info.cofh.hold") + "§e§o" + StatCollector.translateToLocal("info.cofh.shift") + "§r§7" + StatCollector.translateToLocal("info.cofh.forDetails"));
             }
         }catch (Throwable e){
             e.printStackTrace();

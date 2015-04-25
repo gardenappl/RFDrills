@@ -15,10 +15,8 @@ item.rfdrills:basic_motor.name=Basic Electric Motor
 item.rfdrills:advanced_motor.name=Advanced Electric Motor
 
 
-rfdrills.tooltip.press_shift=Hold §e§oShift §r§7for Details
-rfdrills.tooltip.energy=Charge: %s / %s RF
 rfdrills.tooltip.energy_per_block=Energy per block: %s RF
-rfdrills.tooltip.can_break=§cWill break when it runs out of energy
+rfdrills.tooltip.can_break=§cWill break when it runs out of energy.
 rfdrills.tooltip.can_mine_obsidian=§eCan mine obsidian.
 rfdrills.tooltip.enchantable=§bCan be enchanted.
 

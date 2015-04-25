@@ -21,6 +21,10 @@ public class StringHelper {
     public static String writeEnergyInfo(int energyLevel, int maxEnergy){
         String energy1 = formatEnergy(energyLevel);
         String energy2 = formatEnergy(maxEnergy);
-        return StatCollector.translateToLocalFormatted("rfdrills.tooltip.energy", energy1, energy2);
+        return StatCollector.translateToLocal("info.cofh.charge") + String.format(": %s / %s RF", energy1, energy2);
+    }
+
+    public static String writeShiftInfo(){
+        return StatCollector.translateToLocal("info.cofh.hold") + " §e§o" + StatCollector.translateToLocal("info.cofh.shift") + " §r§7" + StatCollector.translateToLocal("info.cofh.forDetails");
     }
 }
