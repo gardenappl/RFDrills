@@ -4,6 +4,7 @@ import cofh.api.energy.IEnergyContainerItem;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import goldenapple.rfdrills.RFDrills;
+import goldenapple.rfdrills.config.DrillTier;
 import goldenapple.rfdrills.reference.Reference;
 import goldenapple.rfdrills.util.MiscUtil;
 import goldenapple.rfdrills.util.StringHelper;
@@ -32,33 +33,25 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
     private static final Set<Material> effectiveMaterials = Sets.newHashSet(Material.anvil, Material.clay, Material.craftedSnow, Material.glass, Material.dragonEgg, Material.grass, Material.ground, Material.ice, Material.snow, Material.iron, Material.rock, Material.sand, Material.coral);
     private static Set<Block> effectiveVanillaBlocks = Sets.newHashSet();
 
+    private DrillTier tier;
     private final String name;
-    private final EnumRarity rarity;
-    private final int maxEnergy;
-    private final int rechargeRate;
-    private final int energyPerBlock;
-    private final boolean canBreak;
 
     static {
         effectiveVanillaBlocks.addAll(pickaxeVanillaBlocks);
         effectiveVanillaBlocks.addAll(shovelVanillaBlocks);
     }
 
-    public ItemDrill(String name, ToolMaterial material, int maxEnergy, int rechargeRate, int energyPerBlock, EnumRarity rarity, boolean canBreak){
-        super(1.0F, material, effectiveVanillaBlocks);
+    public ItemDrill(String name, DrillTier tier){
+        super(1.0F, tier.material, effectiveVanillaBlocks);
         this.name = name;
-        this.maxEnergy = maxEnergy;
-        this.rechargeRate = rechargeRate;
-        this.rarity = rarity;
-        this.energyPerBlock = energyPerBlock;
-        this.canBreak = canBreak;
+        this.tier = tier;
         this.setCreativeTab(RFDrills.OmniDrillsTab);
-        this.setHarvestLevel("pickaxe", material.getHarvestLevel());
-        this.setHarvestLevel("shovel", material.getHarvestLevel());
+        this.setHarvestLevel("pickaxe", tier.material.getHarvestLevel());
+        this.setHarvestLevel("shovel", tier.material.getHarvestLevel());
     }
 
     public int getEnergyPerBlock() {
-        return energyPerBlock;
+        return tier.energyPerBlock;
     }
 
     @Override
@@ -78,7 +71,7 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
 
     @Override
     public float func_150893_a(ItemStack itemStack, Block block) { //should be called "getEfficiencyOnBlock" or something I dunno
-        if(getEnergyStored(itemStack) > energyPerBlock) {
+        if(getEnergyStored(itemStack) > tier.energyPerBlock) {
             return effectiveMaterials.contains(block.getMaterial()) ? this.efficiencyOnProperMaterial : 1.0F;
         }else return 1.0F;
     }
@@ -96,12 +89,12 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
     @SuppressWarnings({"unchecked"})
     public void getSubItems(Item item, CreativeTabs creativeTab, List list) {
         list.add(setEnergy(new ItemStack(item, 1, 0), 0));
-        list.add(setEnergy(new ItemStack(item, 1, 0), maxEnergy));
+        list.add(setEnergy(new ItemStack(item, 1, 0), tier.maxEnergy));
     }
 
     @Override
     public EnumRarity getRarity(ItemStack itemStack) {
-        return rarity;
+        return tier.rarity;
     }
 
     @Override
@@ -114,7 +107,7 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
 
     @Override
     public boolean onBlockDestroyed(ItemStack itemStack, World world, Block block, int x, int y, int z, EntityLivingBase entity) {
-        if (this.getEnergyStored(itemStack) <= energyPerBlock) {
+        if (this.getEnergyStored(itemStack) <= tier.energyPerBlock) {
             itemStack.damageItem(1000000, entity);
             entity.renderBrokenItemStack(itemStack);
             if(entity instanceof EntityPlayer) {
@@ -126,7 +119,7 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
 
     @Override
     public boolean hitEntity(ItemStack itemStack, EntityLivingBase entityAttacked, EntityLivingBase entityAttacker) {
-        if (this.getEnergyStored(itemStack) <= energyPerBlock) {
+        if (this.getEnergyStored(itemStack) <= tier.energyPerBlock) {
             itemStack.damageItem(1000000, entityAttacker);
             entityAttacker.renderBrokenItemStack(itemStack);
             if(entityAttacker instanceof EntityPlayer) {
@@ -138,18 +131,18 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
 
     @Override
     public double getDurabilityForDisplay(ItemStack itemStack) {
-        return 1.0F - (double)this.getEnergyStored(itemStack) / (double)maxEnergy;
+        return Math.min(1.0F - (double)this.getEnergyStored(itemStack) / (double)tier.maxEnergy, 0);
     }
 
     @Override
     @SuppressWarnings({"unchecked"})
     public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean what) {
         try {
-            list.add(StringHelper.writeEnergyInfo(getEnergyStored(itemStack), maxEnergy));
+            list.add(StringHelper.writeEnergyInfo(getEnergyStored(itemStack), tier.maxEnergy));
 
             if (MiscUtil.isShiftPressed()) {
-                list.add(StringHelper.writeEnergyPerBlockInfo(energyPerBlock));
-                if (canBreak) {
+                list.add(StringHelper.writeEnergyPerBlockInfo(tier.energyPerBlock));
+                if (tier.canBreak) {
                     list.add(StatCollector.translateToLocal("rfdrills.tooltip.can_break"));
                 }
                 if (toolMaterial.getHarvestLevel() >= 3) {
@@ -212,7 +205,7 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
         }
 
         int energy = getEnergyStored(itemStack);
-        int energyReceived = Math.min(maxEnergy - energy, Math.min(this.rechargeRate, maxReceive));
+        int energyReceived = Math.min(tier.maxEnergy - energy, Math.min(tier.rechargeRate, maxReceive));
 
         if (!simulate) {
             energy += energyReceived;
@@ -242,6 +235,6 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
 
     @Override
     public int getMaxEnergyStored(ItemStack itemStack) {
-        return maxEnergy;
+        return tier.maxEnergy;
     }
 }

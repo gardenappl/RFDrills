@@ -7,6 +7,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import goldenapple.rfdrills.config.ConfigHandler;
+import goldenapple.rfdrills.config.DrillTier;
 import goldenapple.rfdrills.handler.DrillMiningHandler;
 import goldenapple.rfdrills.init.ModItems;
 import goldenapple.rfdrills.init.ModRecipes;
@@ -17,7 +18,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagByte;
 import net.minecraftforge.common.MinecraftForge;
 
-@Mod(modid = Reference.MOD_ID, version = Reference.VERSION, name = Reference.MOD_NAME, guiFactory = Reference.GUI_FACTORY)
+@Mod(modid = Reference.MOD_ID, version = Reference.VERSION, name = Reference.MOD_NAME, guiFactory = Reference.GUI_FACTORY, dependencies = Reference.DEPENDECIES)
 public class RFDrills {
     @Mod.Instance
     public static RFDrills instance;
@@ -31,6 +32,7 @@ public class RFDrills {
         configHandler = new ConfigHandler(event.getSuggestedConfigurationFile());
         FMLCommonHandler.instance().bus().register(configHandler);
         MinecraftForge.EVENT_BUS.register(new DrillMiningHandler());
+
         if(ConfigHandler.integrateTE || ConfigHandler.integrateEIO) {
             OmniDrillsTab = new CreativeTabs(Reference.MOD_ID) {
                 @Override
@@ -52,7 +54,6 @@ public class RFDrills {
         }
 
         ModItems.init();
-
     }
 
     @EventHandler
