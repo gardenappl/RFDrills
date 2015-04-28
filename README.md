@@ -7,7 +7,8 @@ FTB forum thread: http://forum.feed-the-beast.com/threads/1-7-10-rfdrills-addon-
 ####To-do list:
 * [X] Use task lists because they are badass
 * [X] More configurability (1.1 - The Configurable update)
+* [ ] Electric hoes+sickles combo
 * [ ] Chainsaws
 * [ ] Ultimate Flux-infused tool
 * [ ] Support for more mods
-* [ ] An upgrade system???
+* [ ] An upgrade system????
