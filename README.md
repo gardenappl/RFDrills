@@ -10,5 +10,6 @@ FTB forum thread: http://forum.feed-the-beast.com/threads/1-7-10-rfdrills-addon-
 * [ ] Electric hoes+sickles combo
 * [ ] Chainsaws
 * [ ] Ultimate Flux-infused tool
-* [ ] Support for more mods
-* [ ] An upgrade system????
+* [ ] Buildcraft support
+* [ ] Galacticraft support
+* [ ] Models?
