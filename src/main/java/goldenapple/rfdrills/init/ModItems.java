@@ -12,14 +12,14 @@ import net.minecraft.item.Item;
 
 public class ModItems {
     //Thermal Expansion
-    public static Item leadstoneDrill = new ItemDrill(Names.LEADSTONE_DRILL, DrillTier.TIER_1);
-    public static Item hardenedDrill = new ItemDrill(Names.HARDENED_DRILL, DrillTier.TIER_2);
-    public static Item redstoneDrill = new ItemDrill(Names.REDSTONE_DRILL, DrillTier.TIER_3);
-    public static Item resonantDrill = new ItemDrill(Names.RESONANT_DRILL, DrillTier.TIER_4);
+    public static Item leadstoneDrill = new ItemDrill(Names.LEADSTONE_DRILL, DrillTier.DRILL1);
+    public static Item hardenedDrill = new ItemDrill(Names.HARDENED_DRILL, DrillTier.DRILL2);
+    public static Item redstoneDrill = new ItemDrill(Names.REDSTONE_DRILL, DrillTier.DRILL3);
+    public static Item resonantDrill = new ItemDrill(Names.RESONANT_DRILL, DrillTier.DRILL4);
 
     //EnderIO
-    public static Item basicDrill = new ItemDrill(Names.BASIC_DRILL, DrillTier.TIER_1);
-    public static Item advancedDrill = new ItemDrill(Names.ADVANCED_DRILL, DrillTier.TIER_2);
+    public static Item basicDrill = new ItemDrill(Names.BASIC_DRILL, DrillTier.DRILL1);
+    public static Item advancedDrill = new ItemDrill(Names.ADVANCED_DRILL, DrillTier.DRILL2);
 
     public static Item motor = new ItemMultiMetadata(Names.MOTORS, Names.MOTOR, new EnumRarity[]{EnumRarity.common, EnumRarity.common, EnumRarity.uncommon, EnumRarity.common, EnumRarity.uncommon, EnumRarity.rare});
 

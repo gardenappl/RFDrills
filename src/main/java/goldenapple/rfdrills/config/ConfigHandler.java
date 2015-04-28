@@ -19,10 +19,10 @@ public class ConfigHandler {
     /*public static String energyUnitName;
     public static EnumEnergyUnit energyUnit = EnumEnergyUnit.RF; */
 
-    /* TIER1_MATERIAL = EnumHelper.addToolMaterial("TIER1_DRILL", 2, 9001, 6.0F, 2.0F, 0);
-    TIER2_MATERIAL = EnumHelper.addToolMaterial("TIER2_DRILL", 3, 9001, 7.0F, 3.0F, 0);
-    TIER3_MATERIAL = EnumHelper.addToolMaterial("TIER3_DRILL", 3, 9001, 8.0F, 4.0F, 0);
-    TIER4_MATERIAL = EnumHelper.addToolMaterial("TIER4_DRILL", 4, 9001, 10.0F, 5.0F, 10); */
+    /* DRILL1_MATERIAL = EnumHelper.addToolMaterial("TIER1_DRILL", 2, 9001, 6.0F, 2.0F, 0);
+    DRILL2_MATERIAL = EnumHelper.addToolMaterial("TIER2_DRILL", 3, 9001, 7.0F, 3.0F, 0);
+    DRILL3_MATERIAL = EnumHelper.addToolMaterial("TIER3_DRILL", 3, 9001, 8.0F, 4.0F, 0);
+    DRILL4_MATERIAL = EnumHelper.addToolMaterial("TIER4_DRILL", 4, 9001, 10.0F, 5.0F, 10); */
 
     public ConfigHandler(File file){
         if(config == null) {
@@ -50,10 +50,15 @@ public class ConfigHandler {
         integrateTE = config.getBoolean("integrateTE", Configuration.CATEGORY_GENERAL, true, "Set this to false to disable Thermal Expansion drills");
         integrateEIO = config.getBoolean("integrateEIO", Configuration.CATEGORY_GENERAL, true, "Set this to false to disable EnderIO drills");
         try {
-            DrillTier.TIER_1 = getTierInfo(1, DrillTier.TIER1_MATERIAL, 20000, 80, 80, EnumRarity.common, true, 2, 6.0F, 2.0F, 0);
-            DrillTier.TIER_2 = getTierInfo(2, DrillTier.TIER2_MATERIAL, 100000, 200, 400, EnumRarity.common, false, 3, 7.0F, 3.0F, 0);
-            DrillTier.TIER_3 = getTierInfo(3, DrillTier.TIER3_MATERIAL, 1000000, 1000, 1500, EnumRarity.uncommon, false, 3, 8.0F, 4.0F, 0);
-            DrillTier.TIER_4 = getTierInfo(4, DrillTier.TIER4_MATERIAL, 4000000, 2000, 5000, EnumRarity.rare, false, 4, 10.0F, 5.0F, 10);
+            DrillTier.DRILL1 = getDrillTierInfo("drill", 1, DrillTier.DRILL1_MATERIAL, 20000, 80, 80, EnumRarity.common, true, 2, 6.0F, 2.0F, 0);
+            DrillTier.DRILL2 = getDrillTierInfo("drill", 2, DrillTier.DRILL2_MATERIAL, 100000, 200, 400, EnumRarity.common, false, 3, 7.0F, 3.0F, 0);
+            DrillTier.DRILL3 = getDrillTierInfo("drill", 3, DrillTier.DRILL3_MATERIAL, 1000000, 1000, 1500, EnumRarity.uncommon, false, 3, 8.0F, 4.0F, 0);
+            DrillTier.DRILL4 = getDrillTierInfo("drill", 4, DrillTier.DRILL4_MATERIAL, 4000000, 2000, 5000, EnumRarity.rare, false, 4, 10.0F, 5.0F, 10);
+
+            /*DrillTier.CHAINSAW1 = getDrillTierInfo("chainsaw", 1, DrillTier.CHAINSAW1_MATERIAL, 20000, 80, 80, EnumRarity.common, true, 2, 6.0F, 2.0F, 0);
+            DrillTier.CHAINSAW2 = getDrillTierInfo("chainsaw", 2, DrillTier.CHAINSAW2_MATERIAL, 100000, 200, 400, EnumRarity.common, false, 3, 7.0F, 3.0F, 0);
+            DrillTier.CHAINSAW3 = getDrillTierInfo("chainsaw", 3, DrillTier.CHAINSAW3_MATERIAL, 1000000, 1000, 1500, EnumRarity.uncommon, false, 3, 8.0F, 4.0F, 0);
+            DrillTier.CHAINSAW4 = getDrillTierInfo("chainsaw", 4, DrillTier.CHAINSAW4_MATERIAL, 4000000, 2000, 5000, EnumRarity.rare, false, 4, 10.0F, 5.0F, 10); */
         }catch (Exception e){
             LogHelper.warn("Something went wrong with config files!");
             e.printStackTrace();
@@ -64,16 +69,16 @@ public class ConfigHandler {
         }
     }
 
-    private DrillTier getTierInfo(int tierNumber, Item.ToolMaterial material, int maxEnergy, int energyPerBlock, int rechargeRate, EnumRarity rarity, boolean canBreak, int miningLevel, float efficiency, float damage, int enchant){
-        maxEnergy = config.getInt("maxEnergy", "tier" + tierNumber, maxEnergy, 0, Integer.MAX_VALUE, "How much energy can tier" + tierNumber + " drills hold");
-        energyPerBlock = config.getInt("energyPerBlock", "tier" + tierNumber, energyPerBlock, 0, Integer.MAX_VALUE, "How much energy will tier" + tierNumber + " drills require to mine a block");
-        rechargeRate = config.getInt("rechargeRate", "tier" + tierNumber, rechargeRate, 0, Integer.MAX_VALUE, "How much RF can tier" + tierNumber + " drills recharge per tick");
-        canBreak = config.getBoolean("canBreak", "tier" + tierNumber, canBreak, "Can tier " + tierNumber + " drills break if they run out of energy");
-        miningLevel = config.getInt("miningLevel", "tier" + tierNumber, miningLevel, 0, Integer.MAX_VALUE, "Mining level of tier " + tierNumber + " drills (1 - can mine iron, 2 - can mine diamonds etc.) REQUIRES MC RESTART");
-        efficiency = config.getFloat("efficiency", "tier" + tierNumber, efficiency, 0, Float.MAX_VALUE, "Efficiency of tier " + tierNumber + " drills REQUIRES MC RESTART");
-        damage = config.getFloat("damage", "tier" + tierNumber, damage, 0, Float.MAX_VALUE, "Damage that tier " + tierNumber + " drills do when attacking enemies REQUIRES MC RESTART");
-        enchant = config.getInt("enchant", "tier" + tierNumber, enchant, 0, Integer.MAX_VALUE, "Enchantablity of tier " + tierNumber + " drills (0 - not enchantable) REQUIRES MC RESTART");
-        material = EnumHelper.addToolMaterial("DRILL_TIER" + tierNumber, miningLevel, 10, efficiency, damage, enchant);
+    private DrillTier getDrillTierInfo(String tool, int tierNumber, Item.ToolMaterial material, int maxEnergy, int energyPerBlock, int rechargeRate, EnumRarity rarity, boolean canBreak, int miningLevel, float efficiency, float damage, int enchant){
+        maxEnergy = config.getInt("maxEnergy", tool + "_tier" + tierNumber, maxEnergy, 0, Integer.MAX_VALUE, "The max amount of energy that the tool can hold");
+        energyPerBlock = config.getInt("energyPerBlock", tool + "_tier" + tierNumber, energyPerBlock, 0, Integer.MAX_VALUE, "The amount of energy that the tool uses to mine 1 block (uses twice as much energy for attacking)");
+        rechargeRate = config.getInt("rechargeRate", tool + "_tier" + tierNumber, rechargeRate, 0, Integer.MAX_VALUE, "RF that the tool can recharge per tick");
+        canBreak = config.getBoolean("canBreak", tool + "_tier" + tierNumber, canBreak, "Can the tool break when it runs out of energy");
+        miningLevel = config.getInt("miningLevel", tool + "_tier" + tierNumber, miningLevel, 0, Integer.MAX_VALUE, "Mining level of the tool (1 - can mine iron, 2 - can mine diamonds etc.) !REQUIRES MC RESTART!");
+        efficiency = config.getFloat("efficiency", tool + "_tier" + tierNumber, efficiency, 0, Float.MAX_VALUE, "Efficiency of the tool !REQUIRES MC RESTART!");
+        damage = config.getFloat("damage", tool + "_tier" + tierNumber, damage, 0, Float.MAX_VALUE, "Damage that the tool does when attacking enemies !REQUIRES MC RESTART!");
+        enchant = config.getInt("enchant", tool + "_tier" + tierNumber, enchant, 0, Integer.MAX_VALUE, "Enchantablity of the tool (0 - not enchantable) !REQUIRES MC RESTART!");
+        material = EnumHelper.addToolMaterial(tool.toUpperCase() + tierNumber, miningLevel, 10, efficiency, damage, enchant);
         return new DrillTier(material, maxEnergy, rechargeRate, energyPerBlock, rarity, canBreak);
     }
 

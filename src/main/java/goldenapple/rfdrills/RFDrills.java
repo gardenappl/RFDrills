@@ -31,7 +31,6 @@ public class RFDrills {
     public void preInit(FMLPreInitializationEvent event) {
         configHandler = new ConfigHandler(event.getSuggestedConfigurationFile());
         FMLCommonHandler.instance().bus().register(configHandler);
-        MinecraftForge.EVENT_BUS.register(new DrillMiningHandler());
 
         if(ConfigHandler.integrateTE || ConfigHandler.integrateEIO) {
             OmniDrillsTab = new CreativeTabs(Reference.MOD_ID) {

@@ -6,12 +6,14 @@ import com.google.common.collect.Sets;
 import goldenapple.rfdrills.RFDrills;
 import goldenapple.rfdrills.config.DrillTier;
 import goldenapple.rfdrills.reference.Reference;
+import goldenapple.rfdrills.util.LogHelper;
 import goldenapple.rfdrills.util.MiscUtil;
 import goldenapple.rfdrills.util.StringHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -60,11 +62,6 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
     }
 
     @Override
-    public boolean getShareTag() {
-        return true;
-    }
-
-    @Override
     public boolean func_150897_b(Block p_150897_1_){ //stolen from ItemPickaxe to avoid vanilla block harvesting weirdness (e.g. enchanting tables not dropping)
         return p_150897_1_ == Blocks.obsidian ? this.toolMaterial.getHarvestLevel() == 3 : (p_150897_1_ != Blocks.diamond_block && p_150897_1_ != Blocks.diamond_ore ? (p_150897_1_ != Blocks.emerald_ore && p_150897_1_ != Blocks.emerald_block ? (p_150897_1_ != Blocks.gold_block && p_150897_1_ != Blocks.gold_ore ? (p_150897_1_ != Blocks.iron_block && p_150897_1_ != Blocks.iron_ore ? (p_150897_1_ != Blocks.lapis_block && p_150897_1_ != Blocks.lapis_ore ? (p_150897_1_ != Blocks.redstone_ore && p_150897_1_ != Blocks.lit_redstone_ore ? (p_150897_1_.getMaterial() == Material.rock ? true : (p_150897_1_.getMaterial() == Material.iron ? true : p_150897_1_.getMaterial() == Material.anvil)) : this.toolMaterial.getHarvestLevel() >= 2) : this.toolMaterial.getHarvestLevel() >= 1) : this.toolMaterial.getHarvestLevel() >= 1) : this.toolMaterial.getHarvestLevel() >= 2) : this.toolMaterial.getHarvestLevel() >= 2) : this.toolMaterial.getHarvestLevel() >= 2);
     }
@@ -73,7 +70,7 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
     public float func_150893_a(ItemStack itemStack, Block block) { //should be called "getEfficiencyOnBlock" or something I dunno
         if(getEnergyStored(itemStack) > tier.energyPerBlock) {
             return effectiveMaterials.contains(block.getMaterial()) ? this.efficiencyOnProperMaterial : 1.0F;
-        }else return 1.0F;
+        }else return 0.5F;
     }
 
     @Override
@@ -107,31 +104,35 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
 
     @Override
     public boolean onBlockDestroyed(ItemStack itemStack, World world, Block block, int x, int y, int z, EntityLivingBase entity) {
-        if (this.getEnergyStored(itemStack) <= tier.energyPerBlock) {
-            itemStack.damageItem(1000000, entity);
-            entity.renderBrokenItemStack(itemStack);
-            if(entity instanceof EntityPlayer) {
-                ((EntityPlayer) entity).addStat(StatList.objectBreakStats[Item.getIdFromItem(this)], 1);
+        if(entity instanceof EntityPlayer && !((EntityPlayer)entity).capabilities.isCreativeMode) {
+            entity.setCurrentItemOrArmor(0, drainEnergy(itemStack, getEnergyPerBlock()));
+
+            if (this.getEnergyStored(itemStack) == 0 && tier.canBreak) {
+                itemStack.damageItem(1000000, entity);
             }
+            return true; //See DrillMiningHandler
         }
-        return true; //See DrillMiningHandler
+
+        return false;
     }
 
     @Override
     public boolean hitEntity(ItemStack itemStack, EntityLivingBase entityAttacked, EntityLivingBase entityAttacker) {
-        if (this.getEnergyStored(itemStack) <= tier.energyPerBlock) {
-            itemStack.damageItem(1000000, entityAttacker);
-            entityAttacker.renderBrokenItemStack(itemStack);
-            if(entityAttacker instanceof EntityPlayer) {
-                ((EntityPlayer) entityAttacker).addStat(StatList.objectBreakStats[Item.getIdFromItem(this)], 1);
+        if(entityAttacker instanceof EntityPlayer && !((EntityPlayer)entityAttacker).capabilities.isCreativeMode) {
+            entityAttacker.setCurrentItemOrArmor(0, drainEnergy(itemStack, getEnergyPerBlock() * 2));
+
+            if (this.getEnergyStored(itemStack) == 0 && tier.canBreak) {
+                itemStack.damageItem(1000000, entityAttacker);
             }
+            return true; //See DrillMiningHandler
         }
-        return true; //See DrillMiningHandler
+
+        return false;
     }
 
     @Override
     public double getDurabilityForDisplay(ItemStack itemStack) {
-        return Math.min(1.0F - (double)this.getEnergyStored(itemStack) / (double)tier.maxEnergy, 0);
+        return Math.max(1.0 - (double)getEnergyStored(itemStack) / (double)tier.maxEnergy, 0);
     }
 
     @Override
@@ -183,17 +184,8 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
         return itemStack;
     }
 
-    public int drainEnergy(ItemStack itemStack, int drain){
-        if(itemStack.stackTagCompound == null){
-            itemStack.stackTagCompound = new NBTTagCompound();
-        }
-
-        int energy = getEnergyStored(itemStack);
-        int energyDrained = Math.min(energy, drain);
-
-        energy -= energyDrained;
-        itemStack.stackTagCompound.setInteger("Energy", energy);
-        return energyDrained;
+    public ItemStack drainEnergy(ItemStack itemStack, int energy){
+        return setEnergy(itemStack, Math.max(getEnergyStored(itemStack) - energy, 0));
     }
 
     /* IEnergyContainerItem stuff */

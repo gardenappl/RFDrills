@@ -10,20 +10,20 @@ import net.minecraftforge.event.world.BlockEvent;
 public class DrillMiningHandler {
     @SubscribeEvent
     public void onBlockBreak(BlockEvent.BreakEvent event){
-        if(event.getPlayer().getCurrentEquippedItem() != null){
+        /* if(event.getPlayer().getCurrentEquippedItem() != null){
             if(event.getPlayer().getCurrentEquippedItem().getItem() instanceof ItemDrill){
                 ItemStack itemStack = event.getPlayer().getCurrentEquippedItem();
                 ItemDrill drill = (ItemDrill)itemStack.getItem();
 
                 if(!event.getPlayer().capabilities.isCreativeMode) {
-                    event.getPlayer().setCurrentItemOrArmor(0, drill.setEnergy(itemStack, drill.getEnergyStored(itemStack) - drill.getEnergyPerBlock()));
+                    event.getPlayer().setCurrentItemOrArmor(0, drill.drainEnergy(itemStack, drill.getEnergyPerBlock()));
 
-                    if (drill.getEnergyStored(itemStack) <= drill.getEnergyPerBlock()) {
+                    if (drill.getEnergyStored(itemStack) == 0) {
                         itemStack.damageItem(1000000, event.getPlayer());
                     }
                 }
             }
-        }
+        } */
     }
 
     @SubscribeEvent
@@ -34,9 +34,9 @@ public class DrillMiningHandler {
                 if(!player.capabilities.isCreativeMode) {
                     ItemStack itemStack = player.getCurrentEquippedItem();
                     ItemDrill drill = (ItemDrill) player.getCurrentEquippedItem().getItem();
-                    player.setCurrentItemOrArmor(0, drill.setEnergy(itemStack, drill.getEnergyStored(itemStack) - (drill.getEnergyPerBlock() * 3)));
+                    player.setCurrentItemOrArmor(0, drill.drainEnergy(itemStack, drill.getEnergyPerBlock()));
 
-                    if (drill.getEnergyStored(itemStack) < drill.getEnergyPerBlock() * 3) {
+                    if (drill.getEnergyStored(itemStack) < drill.getEnergyPerBlock() * 2) {
                         itemStack.damageItem(1000000, player);
                     }
                 }

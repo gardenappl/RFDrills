@@ -17,7 +17,7 @@ public class RFDrillsGuiConfig extends GuiConfig{ //@author ljfa
 
 @SuppressWarnings({"unchecked"})
     public RFDrillsGuiConfig(GuiScreen parentScreen){
-        super(parentScreen, getConfigElements(), Reference.MOD_ID, false, false, GuiConfig.getAbridgedConfigPath(ConfigHandler.config.toString()));
+        super(parentScreen, getConfigElements(), Reference.MOD_ID, false, true, GuiConfig.getAbridgedConfigPath(ConfigHandler.config.toString()));
     }
 
     /** Compiles a list of config elements */
@@ -26,10 +26,10 @@ public class RFDrillsGuiConfig extends GuiConfig{ //@author ljfa
 
         //Add categories to config GUI
         list.add(categoryElement(Configuration.CATEGORY_GENERAL, "General", "config.general"));
-        list.add(categoryElement("tier1", "Tier 1 Drills", "config.tier1"));
-        list.add(categoryElement("tier2", "Tier 2 Drills", "config.tier2"));
-        list.add(categoryElement("tier3", "Tier 3 Drills", "config.tier3"));
-        list.add(categoryElement("tier4", "Tier 4 Drills", "config.tier4"));
+        list.add(categoryElement("drill_tier1", "Tier 1 Drills", "config.drill_tier1"));
+        list.add(categoryElement("drill_tier2", "Tier 2 Drills", "config.drill_tier2"));
+        list.add(categoryElement("drill_tier3", "Tier 3 Drills", "config.drill_tier3"));
+        list.add(categoryElement("drill_tier4", "Tier 4 Drills", "config.drill_tier4"));
 
         return list;
     }
