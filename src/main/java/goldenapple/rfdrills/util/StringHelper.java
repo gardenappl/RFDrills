@@ -15,16 +15,12 @@ public class StringHelper {
 
     public static String writeEnergyPerBlockInfo(int energyPerBlock){
         String energy = formatEnergy(energyPerBlock);
-        return StatCollector.translateToLocalFormatted("rfdrills.tooltip.energy_per_block", energy);
+        return StatCollector.translateToLocalFormatted("rfdrills.energy_per_block.tooltip", energy);
     }
 
     public static String writeEnergyInfo(int energyLevel, int maxEnergy){
         String energy1 = formatEnergy(energyLevel);
         String energy2 = formatEnergy(maxEnergy);
         return StatCollector.translateToLocal("info.cofh.charge") + String.format(": %s / %s RF", energy1, energy2);
-    }
-
-    public static String writeShiftInfo(){
-        return StatCollector.translateToLocal("info.cofh.hold") + " §e§o" + StatCollector.translateToLocal("info.cofh.shift") + " §r§7" + StatCollector.translateToLocal("info.cofh.forDetails");
     }
 }

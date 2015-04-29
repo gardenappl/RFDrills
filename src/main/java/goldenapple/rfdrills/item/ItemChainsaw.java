@@ -86,10 +86,10 @@ public class ItemChainsaw extends ItemAxe implements IEnergyContainerItem{
             if (MiscUtil.isShiftPressed()) {
                 list.add(StringHelper.writeEnergyPerBlockInfo(tier.energyPerBlock));
                 if (tier.canBreak) {
-                    list.add(StatCollector.translateToLocal("rfdrills.tooltip.can_break"));
+                    list.add(StatCollector.translateToLocal("rfdrills.can_break.tooltip"));
                 }
                 if (toolMaterial.getEnchantability() > 0) {
-                    list.add(StatCollector.translateToLocal("rfdrills.tooltip.enchantable"));
+                    list.add(StatCollector.translateToLocal("rfdrills.enchantable.tooltip"));
                 }
             } else {
                 list.add(StatCollector.translateToLocal("info.cofh.hold") + " §e§o" + StatCollector.translateToLocal("info.cofh.shift") + " §r§7" + StatCollector.translateToLocal("info.cofh.forDetails"));
