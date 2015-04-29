@@ -17,13 +17,8 @@ public class ConfigHandler {
 
     public static boolean integrateTE;
     public static boolean integrateEIO;
-    /*public static String energyUnitName;
+  /*public static String energyUnitName;
     public static EnumEnergyUnit energyUnit = EnumEnergyUnit.RF; */
-
-    /* DRILL1_MATERIAL = EnumHelper.addToolMaterial("TIER1_DRILL", 2, 9001, 6.0F, 2.0F, 0);
-    DRILL2_MATERIAL = EnumHelper.addToolMaterial("TIER2_DRILL", 3, 9001, 7.0F, 3.0F, 0);
-    DRILL3_MATERIAL = EnumHelper.addToolMaterial("TIER3_DRILL", 3, 9001, 8.0F, 4.0F, 0);
-    DRILL4_MATERIAL = EnumHelper.addToolMaterial("TIER4_DRILL", 4, 9001, 10.0F, 5.0F, 10); */
 
     public ConfigHandler(File file){
         if(config == null) {
@@ -52,9 +47,9 @@ public class ConfigHandler {
         integrateEIO = config.getBoolean("integrateEIO", Configuration.CATEGORY_GENERAL, true, "Set this to false to disable EnderIO drills");
         try {
             DrillTier.DRILL1 = getDrillTierInfo("drill", 1, DrillTier.DRILL1_MATERIAL, 20000, 80, 80, EnumRarity.common, true, 2, 6.0F, 2.0F, 0);
-            DrillTier.DRILL2 = getDrillTierInfo("drill", 2, DrillTier.DRILL2_MATERIAL, 100000, 200, 400, EnumRarity.common, false, 3, 7.0F, 3.0F, 0);
-            DrillTier.DRILL3 = getDrillTierInfo("drill", 3, DrillTier.DRILL3_MATERIAL, 1000000, 1000, 1500, EnumRarity.uncommon, false, 3, 8.0F, 4.0F, 0);
-            DrillTier.DRILL4 = getDrillTierInfo("drill", 4, DrillTier.DRILL4_MATERIAL, 4000000, 2000, 5000, EnumRarity.rare, false, 4, 10.0F, 5.0F, 10);
+            DrillTier.DRILL2 = getDrillTierInfo("drill", 2, DrillTier.DRILL2_MATERIAL, 100000, 200, 400, EnumRarity.common, false, 3, 8.0F, 3.0F, 0);
+            DrillTier.DRILL3 = getDrillTierInfo("drill", 3, DrillTier.DRILL3_MATERIAL, 1000000, 1000, 1500, EnumRarity.uncommon, false, 3, 11.0F, 4.0F, 0);
+            DrillTier.DRILL4 = getDrillTierInfo("drill", 4, DrillTier.DRILL4_MATERIAL, 4000000, 2000, 5000, EnumRarity.rare, false, 4, 13.0F, 5.0F, 10);
 
             DrillTier.CHAINSAW1 = getDrillTierInfo("chainsaw", 1, DrillTier.CHAINSAW1_MATERIAL, 20000, 80, 80, EnumRarity.common, true, 2, 6.0F, 2.0F, 0);
             DrillTier.CHAINSAW2 = getDrillTierInfo("chainsaw", 2, DrillTier.CHAINSAW2_MATERIAL, 100000, 200, 400, EnumRarity.common, false, 3, 7.0F, 3.0F, 0);
