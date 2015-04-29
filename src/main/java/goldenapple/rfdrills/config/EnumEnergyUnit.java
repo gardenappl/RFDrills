@@ -7,15 +7,13 @@ public enum EnumEnergyUnit { //i don't want energy conversion so this is pretty 
     gJ(1.6F); //1 RF = 1.6 GalactiCraft J
 
     private float conversionRateFromRF;
-    private float conversionRateToRF;
 
     private EnumEnergyUnit(float concersionRateFromRF){
         this.conversionRateFromRF = concersionRateFromRF;
-        this.conversionRateToRF = 1 / concersionRateFromRF;
     }
 
     public static float convert(float energy, EnumEnergyUnit energyUnitFrom, EnumEnergyUnit energyUnitTo){
-        float energyRF = energy * energyUnitFrom.conversionRateToRF;
+        float energyRF = energy * 1 / energyUnitFrom.conversionRateFromRF;
         return energyRF * energyUnitTo.conversionRateFromRF;
     }
 }
