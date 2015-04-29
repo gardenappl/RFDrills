@@ -7,9 +7,9 @@ public class StringHelper {
 
     public static String formatEnergy(int energy){
         if(energy >= 10000000){ //at least 10 million
-            return (energy / 1000000) + "M";
+            return (Math.scalb(energy / 1000000, 1)) + "M";
         }else if(energy >= 10000){ //at least 10 thousand
-            return (energy / 1000) + "k";
+            return (Math.scalb(energy / 1000, 1)) + "k";
         }else return Integer.toString(energy);
     }
 
