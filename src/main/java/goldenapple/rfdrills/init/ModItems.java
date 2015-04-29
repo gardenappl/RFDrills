@@ -3,7 +3,8 @@ package goldenapple.rfdrills.init;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.GameRegistry;
 import goldenapple.rfdrills.config.ConfigHandler;
-import goldenapple.rfdrills.config.DrillTier;
+import goldenapple.rfdrills.DrillTier;
+import goldenapple.rfdrills.item.ItemChainsaw;
 import goldenapple.rfdrills.item.ItemDrill;
 import goldenapple.rfdrills.item.ItemMultiMetadata;
 import goldenapple.rfdrills.reference.Names;
@@ -17,9 +18,17 @@ public class ModItems {
     public static Item redstoneDrill = new ItemDrill(Names.REDSTONE_DRILL, DrillTier.DRILL3);
     public static Item resonantDrill = new ItemDrill(Names.RESONANT_DRILL, DrillTier.DRILL4);
 
+    public static Item leadstoneChainsaw = new ItemChainsaw(Names.LEADSTONE_CHAINSAW, DrillTier.CHAINSAW1);
+    public static Item hardenedChainsaw = new ItemChainsaw(Names.HARDENED_CHAINSAW, DrillTier.CHAINSAW2);
+    public static Item redstoneChainsaw = new ItemChainsaw(Names.REDSTONE_CHAINSAW, DrillTier.CHAINSAW3);
+    public static Item resonantChainsaw = new ItemChainsaw(Names.RESONANT_CHAINSAW, DrillTier.CHAINSAW4);
+
     //EnderIO
     public static Item basicDrill = new ItemDrill(Names.BASIC_DRILL, DrillTier.DRILL1);
     public static Item advancedDrill = new ItemDrill(Names.ADVANCED_DRILL, DrillTier.DRILL2);
+
+    public static Item basicChainsaw = new ItemChainsaw(Names.BASIC_CHAINSAW, DrillTier.CHAINSAW1);
+    public static Item advancedChainsaw = new ItemChainsaw(Names.ADVANCED_CHAINSAW, DrillTier.CHAINSAW2);
 
     public static Item motor = new ItemMultiMetadata(Names.MOTORS, Names.MOTOR, new EnumRarity[]{EnumRarity.common, EnumRarity.common, EnumRarity.uncommon, EnumRarity.common, EnumRarity.uncommon, EnumRarity.rare});
 
@@ -34,10 +43,18 @@ public class ModItems {
         GameRegistry.registerItem(hardenedDrill, Names.HARDENED_DRILL);
         GameRegistry.registerItem(redstoneDrill, Names.REDSTONE_DRILL);
         GameRegistry.registerItem(resonantDrill, Names.RESONANT_DRILL);
+
+        GameRegistry.registerItem(leadstoneChainsaw, Names.LEADSTONE_CHAINSAW);
+        GameRegistry.registerItem(hardenedChainsaw, Names.HARDENED_CHAINSAW);
+        GameRegistry.registerItem(redstoneChainsaw, Names.REDSTONE_CHAINSAW);
+        GameRegistry.registerItem(resonantChainsaw, Names.RESONANT_CHAINSAW);
     }
 
     private static void initEIO(){
         GameRegistry.registerItem(basicDrill, Names.BASIC_DRILL);
         GameRegistry.registerItem(advancedDrill, Names.ADVANCED_DRILL);
+
+        GameRegistry.registerItem(basicChainsaw, Names.BASIC_CHAINSAW);
+        GameRegistry.registerItem(advancedChainsaw, Names.ADVANCED_CHAINSAW);
     }
 }

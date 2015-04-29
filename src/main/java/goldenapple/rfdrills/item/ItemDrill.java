@@ -4,7 +4,7 @@ import cofh.api.energy.IEnergyContainerItem;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import goldenapple.rfdrills.RFDrills;
-import goldenapple.rfdrills.config.DrillTier;
+import goldenapple.rfdrills.DrillTier;
 import goldenapple.rfdrills.reference.Reference;
 import goldenapple.rfdrills.util.LogHelper;
 import goldenapple.rfdrills.util.MiscUtil;
@@ -13,7 +13,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -22,7 +21,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.stats.StatList;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 
@@ -52,10 +50,6 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
         this.setHarvestLevel("shovel", tier.material.getHarvestLevel());
     }
 
-    public int getEnergyPerBlock() {
-        return tier.energyPerBlock;
-    }
-
     @Override
     public Set<String> getToolClasses(ItemStack stack) {
         return ImmutableSet.of("pickaxe", "shovel");
@@ -67,16 +61,18 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
     }
 
     @Override
-    public float func_150893_a(ItemStack itemStack, Block block) { //should be called "getEfficiencyOnBlock" or something I dunno
-        if(getEnergyStored(itemStack) > tier.energyPerBlock) {
-            return effectiveMaterials.contains(block.getMaterial()) ? this.efficiencyOnProperMaterial : 1.0F;
-        }else return 0.5F;
+    public float getDigSpeed(ItemStack stack, Block block, int meta) {
+        if(getEnergyStored(stack) >= tier.energyPerBlock){
+            return super.getDigSpeed(stack, block, meta);
+        }else{
+            return 0.5F;
+        }
     }
 
     @Override
     public int getHarvestLevel(ItemStack stack, String toolClass) {
-        if(toolClass.equals("shovel") || toolClass.equals("pickaxe")){
-            return toolMaterial.getHarvestLevel();
+        if((toolClass.equals("shovel") || toolClass.equals("pickaxe")) && getEnergyStored(stack) >= tier.energyPerBlock){
+            return super.getHarvestLevel(stack, toolClass);
         }else{
             return -1;
         }
@@ -105,7 +101,7 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
     @Override
     public boolean onBlockDestroyed(ItemStack itemStack, World world, Block block, int x, int y, int z, EntityLivingBase entity) {
         if(entity instanceof EntityPlayer && !((EntityPlayer)entity).capabilities.isCreativeMode) {
-            entity.setCurrentItemOrArmor(0, drainEnergy(itemStack, getEnergyPerBlock()));
+            entity.setCurrentItemOrArmor(0, drainEnergy(itemStack, tier.energyPerBlock));
 
             if (this.getEnergyStored(itemStack) == 0 && tier.canBreak) {
                 itemStack.damageItem(1000000, entity);
@@ -119,7 +115,7 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
     @Override
     public boolean hitEntity(ItemStack itemStack, EntityLivingBase entityAttacked, EntityLivingBase entityAttacker) {
         if(entityAttacker instanceof EntityPlayer && !((EntityPlayer)entityAttacker).capabilities.isCreativeMode) {
-            entityAttacker.setCurrentItemOrArmor(0, drainEnergy(itemStack, getEnergyPerBlock() * 2));
+            entityAttacker.setCurrentItemOrArmor(0, drainEnergy(itemStack, tier.energyPerBlock * 2));
 
             if (this.getEnergyStored(itemStack) == 0 && tier.canBreak) {
                 itemStack.damageItem(1000000, entityAttacker);

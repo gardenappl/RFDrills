@@ -8,6 +8,13 @@ public class Names {
     public static final String BASIC_DRILL = "basic_drill";
     public static final String ADVANCED_DRILL = "advanced_drill";
 
+    public static final String LEADSTONE_CHAINSAW = "leadstone_chainsaw";
+    public static final String HARDENED_CHAINSAW = "hardened_chainsaw";
+    public static final String REDSTONE_CHAINSAW = "redstone_chainsaw";
+    public static final String RESONANT_CHAINSAW = "resonant_chainsaw";
+    public static final String BASIC_CHAINSAW = "basic_chainsaw";
+    public static final String ADVANCED_CHAINSAW = "advanced_chainsaw";
+
     public static final String MOTOR = "motor";
     public static final String[] MOTORS = {"leadstone_motor",
                                            "hardened_motor",
