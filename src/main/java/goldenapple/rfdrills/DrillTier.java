@@ -1,8 +1,7 @@
-package goldenapple.rfdrills.config;
+package goldenapple.rfdrills;
 
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
-import net.minecraftforge.common.util.EnumHelper;
 
 public class DrillTier {
     public static DrillTier DRILL1;
