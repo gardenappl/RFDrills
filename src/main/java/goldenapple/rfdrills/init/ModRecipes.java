@@ -110,13 +110,13 @@ public class ModRecipes {
                 "iRi", 'i', "ingotElectricalSteel", 'F', machineChassis.copy(), 'P', pulsatingCrystal.copy(), 'R', "ingotRedstoneAlloy", 'C', capacitorAdvanced.copy()));
 
         //Basic drill
-        GameRegistry.addRecipe(new ShapedOreRecipe(ModItems.basicDrill,
+        GameRegistry.addRecipe(new ShapedUpgradeRecipe(ModItems.basicDrill,
                 " i ",
                 "iMi",
                 "ICI", 'I', "itemSilicon", 'i', "ingotElectricalSteel", 'C', capacitorBasic.copy(), 'M', motorBasic.copy()));
 
         //Advanced drill
-        GameRegistry.addRecipe(new ShapedOreRecipe(ModItems.advancedDrill,
+        GameRegistry.addRecipe(new ShapedUpgradeRecipe(ModItems.advancedDrill,
                 " i ",
                 "iMi",
                 "ICI", 'I', "ingotElectricalSteel", 'i', "ingotEnergeticAlloy", 'C', capacitorAdvanced.copy(), 'M', motorAdvanced.copy()));
