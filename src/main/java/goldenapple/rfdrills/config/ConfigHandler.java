@@ -70,10 +70,10 @@ public class ConfigHandler {
         energyPerBlock = config.getInt("energyPerBlock", tool + "_tier" + tierNumber, energyPerBlock, 0, Integer.MAX_VALUE, "The amount of energy that the tool uses to mine 1 block (uses twice as much energy for attacking)");
         rechargeRate = config.getInt("rechargeRate", tool + "_tier" + tierNumber, rechargeRate, 0, Integer.MAX_VALUE, "RF that the tool can recharge per tick");
         canBreak = config.getBoolean("canBreak", tool + "_tier" + tierNumber, canBreak, "Can the tool break when it runs out of energy");
-        miningLevel = config.getInt("miningLevel", tool + "_tier" + tierNumber, miningLevel, 0, Integer.MAX_VALUE, "Mining level of the tool (1 - can mine iron, 2 - can mine diamonds etc.) !REQUIRES MC RESTART!");
-        efficiency = config.getFloat("efficiency", tool + "_tier" + tierNumber, efficiency, 0, Float.MAX_VALUE, "Efficiency of the tool !REQUIRES MC RESTART!");
-        damage = config.getFloat("damage", tool + "_tier" + tierNumber, damage, 0, Float.MAX_VALUE, "Damage that the tool does when attacking enemies !REQUIRES MC RESTART!");
-        enchant = config.getInt("enchant", tool + "_tier" + tierNumber, enchant, 0, Integer.MAX_VALUE, "Enchantablity of the tool (0 - not enchantable) !REQUIRES MC RESTART!");
+        miningLevel = config.getInt("miningLevel", tool + "_tier" + tierNumber, miningLevel, 0, Integer.MAX_VALUE, "Mining level of the tool (1 - can mine iron, 2 - can mine diamonds etc.)");
+        efficiency = config.getFloat("efficiency", tool + "_tier" + tierNumber, efficiency, 0, Float.MAX_VALUE, "Efficiency of the tool");
+        damage = config.getFloat("damage", tool + "_tier" + tierNumber, damage, 0, Float.MAX_VALUE, "Damage that the tool does when attacking enemies");
+        enchant = config.getInt("enchant", tool + "_tier" + tierNumber, enchant, 0, Integer.MAX_VALUE, "Enchantablity of the tool (0 - not enchantable)");
         material = EnumHelper.addToolMaterial(tool.toUpperCase() + tierNumber, miningLevel, 10, efficiency, damage, enchant);
         return new DrillTier(material, maxEnergy, rechargeRate, energyPerBlock, rarity, canBreak);
     }
