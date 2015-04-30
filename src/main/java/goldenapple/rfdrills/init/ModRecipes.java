@@ -18,12 +18,12 @@ public class ModRecipes {
     }
 
     private static void initTE(){
-        ItemStack motorLeadstone = new ItemStack(ModItems.motor, 1, LibMetadata.MOTOR_LEASDSTONE);
-        ItemStack motorHardened = new ItemStack(ModItems.motor, 1, LibMetadata.MOTOR_HARDENED);
-        ItemStack motorRedstoneFrame = new ItemStack(ModItems.motor, 1, LibMetadata.MOTOR_REDSTONE_FRAME);
-        ItemStack motorRedstone = new ItemStack(ModItems.motor, 1, LibMetadata.MOTOR_REDSTONE);
-        ItemStack motorResonantFrame = new ItemStack(ModItems.motor, 1, LibMetadata.MOTOR_RESONANT_FRAME);
-        ItemStack motorResonant = new ItemStack(ModItems.motor, 1, LibMetadata.MOTOR_RESONANT);
+        ItemStack motorLeadstone = new ItemStack(ModItems.motorTE, 1, LibMetadata.MOTOR_LEASDSTONE);
+        ItemStack motorHardened = new ItemStack(ModItems.motorTE, 1, LibMetadata.MOTOR_HARDENED);
+        ItemStack motorRedstoneFrame = new ItemStack(ModItems.motorTE, 1, LibMetadata.MOTOR_REDSTONE_FRAME);
+        ItemStack motorRedstone = new ItemStack(ModItems.motorTE, 1, LibMetadata.MOTOR_REDSTONE);
+        ItemStack motorResonantFrame = new ItemStack(ModItems.motorTE, 1, LibMetadata.MOTOR_RESONANT_FRAME);
+        ItemStack motorResonant = new ItemStack(ModItems.motorTE, 1, LibMetadata.MOTOR_RESONANT);
 
         ItemStack pneumaticServo = new ItemStack(GameRegistry.findItem("ThermalExpansion", "material"), 1, 0);
         ItemStack receptionCoil = new ItemStack(GameRegistry.findItem("ThermalExpansion", "material"), 1, 1);
@@ -61,7 +61,7 @@ public class ModRecipes {
                 "iCi", 'i', "ingotSilver", 'A', cryocoilAugment.copy(), 'G', "gearEnderium", 'P', pneumaticServo.copy(), 'C', receptionCoil.copy()));
 
         //Resonant motor
-        ThermalExpansionHelper.addTransposerFill(60000, motorResonantFrame.copy(), motorResonant.copy(), FluidRegistry.getFluidStack("cryotheum", 4000), false);
+        ThermalExpansionHelper.addTransposerFill(16000, motorResonantFrame.copy(), motorResonant.copy(), FluidRegistry.getFluidStack("cryotheum", 4000), false);
 
 
         //Leadstone drill
@@ -90,8 +90,8 @@ public class ModRecipes {
     }
 
     private static void initEIO(){
-        ItemStack motorBasic = new ItemStack(ModItems.motor, 1, LibMetadata.MOTOR_BASIC);
-        ItemStack motorAdvanced = new ItemStack(ModItems.motor, 1, LibMetadata.MOTOR_ADVANCED);
+        ItemStack motorBasic = new ItemStack(ModItems.motorEIO, 1, LibMetadata.MOTOR_BASIC);
+        ItemStack motorAdvanced = new ItemStack(ModItems.motorEIO, 1, LibMetadata.MOTOR_ADVANCED);
         ItemStack machineChassis = new ItemStack(GameRegistry.findItem("EnderIO", "itemMachinePart"), 1, 0);
         ItemStack pulsatingCrystal = new ItemStack(GameRegistry.findItem("EnderIO", "itemMaterial"), 1, 5);
         ItemStack capacitorBasic = new ItemStack(GameRegistry.findItem("EnderIO", "itemBasicCapacitor"), 1, 0);

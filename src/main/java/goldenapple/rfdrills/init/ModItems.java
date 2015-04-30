@@ -13,6 +13,8 @@ import net.minecraft.item.Item;
 
 public class ModItems {
     //Thermal Expansion
+    public static Item motorTE = new ItemMultiMetadata(Names.MOTORS_TE, Names.MOTOR_TE, new EnumRarity[]{EnumRarity.common, EnumRarity.common, EnumRarity.uncommon, EnumRarity.common, EnumRarity.rare, EnumRarity.common});
+
     public static Item leadstoneDrill = new ItemDrill(Names.LEADSTONE_DRILL, DrillTier.DRILL1);
     public static Item hardenedDrill = new ItemDrill(Names.HARDENED_DRILL, DrillTier.DRILL2);
     public static Item redstoneDrill = new ItemDrill(Names.REDSTONE_DRILL, DrillTier.DRILL3);
@@ -24,21 +26,22 @@ public class ModItems {
     public static Item resonantChainsaw = new ItemChainsaw(Names.RESONANT_CHAINSAW, DrillTier.CHAINSAW4);
 
     //EnderIO
+    public static Item motorEIO = new ItemMultiMetadata(Names.MOTORS_EIO, Names.MOTOR_EIO, new EnumRarity[]{EnumRarity.common, EnumRarity.common});
     public static Item basicDrill = new ItemDrill(Names.BASIC_DRILL, DrillTier.DRILL1);
     public static Item advancedDrill = new ItemDrill(Names.ADVANCED_DRILL, DrillTier.DRILL2);
 
     public static Item basicChainsaw = new ItemChainsaw(Names.BASIC_CHAINSAW, DrillTier.CHAINSAW1);
     public static Item advancedChainsaw = new ItemChainsaw(Names.ADVANCED_CHAINSAW, DrillTier.CHAINSAW2);
 
-    public static Item motor = new ItemMultiMetadata(Names.MOTORS, Names.MOTOR, new EnumRarity[]{EnumRarity.common, EnumRarity.common, EnumRarity.uncommon, EnumRarity.common, EnumRarity.uncommon, EnumRarity.rare});
 
     public static void init(){
         if(Loader.isModLoaded("ThermalExpansion") && ConfigHandler.integrateTE) initTE();
         if(Loader.isModLoaded("EnderIO") && ConfigHandler.integrateEIO) initEIO();
-        GameRegistry.registerItem(motor, Names.MOTOR);
     }
 
     private static void initTE(){
+        GameRegistry.registerItem(motorTE, Names.MOTOR_TE);
+
         GameRegistry.registerItem(leadstoneDrill, Names.LEADSTONE_DRILL);
         GameRegistry.registerItem(hardenedDrill, Names.HARDENED_DRILL);
         GameRegistry.registerItem(redstoneDrill, Names.REDSTONE_DRILL);
@@ -51,6 +54,8 @@ public class ModItems {
     }
 
     private static void initEIO(){
+        GameRegistry.registerItem(motorEIO, Names.MOTOR_EIO);
+
         GameRegistry.registerItem(basicDrill, Names.BASIC_DRILL);
         GameRegistry.registerItem(advancedDrill, Names.ADVANCED_DRILL);
 

@@ -15,13 +15,14 @@ public class Names {
     public static final String BASIC_CHAINSAW = "basic_chainsaw";
     public static final String ADVANCED_CHAINSAW = "advanced_chainsaw";
 
-    public static final String MOTOR = "motor";
-    public static final String[] MOTORS = {"leadstone_motor",
-                                           "hardened_motor",
-                                           "redstone_motor",
-                                           "redstone_motor_frame",
-                                           "resonant_motor",
-                                           "resonant_motor_frame",
-                                           "basic_motor",
-                                           "advanced_motor"};
+    public static final String MOTOR_TE = "motor_te";
+    public static final String[] MOTORS_TE = {"leadstone_motor",
+                                             "hardened_motor",
+                                             "redstone_motor",
+                                             "redstone_motor_frame",
+                                             "resonant_motor",
+                                             "resonant_motor_frame"};
+    public static final String MOTOR_EIO = "motor_eio";
+    public static final String[] MOTORS_EIO = {"basic_motor",
+                                               "advanced_motor"};
 }
