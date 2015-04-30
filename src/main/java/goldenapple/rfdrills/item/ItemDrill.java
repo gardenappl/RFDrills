@@ -56,7 +56,7 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
     }
 
     @Override
-    public boolean func_150897_b(Block p_150897_1_){ //stolen from ItemPickaxe to avoid vanilla block harvesting weirdness (e.g. enchanting tables not dropping)
+    public boolean func_150897_b(Block p_150897_1_){ //stolen from ItemPickaxe
         return p_150897_1_ == Blocks.obsidian ? this.toolMaterial.getHarvestLevel() == 3 : (p_150897_1_ != Blocks.diamond_block && p_150897_1_ != Blocks.diamond_ore ? (p_150897_1_ != Blocks.emerald_ore && p_150897_1_ != Blocks.emerald_block ? (p_150897_1_ != Blocks.gold_block && p_150897_1_ != Blocks.gold_ore ? (p_150897_1_ != Blocks.iron_block && p_150897_1_ != Blocks.iron_ore ? (p_150897_1_ != Blocks.lapis_block && p_150897_1_ != Blocks.lapis_ore ? (p_150897_1_ != Blocks.redstone_ore && p_150897_1_ != Blocks.lit_redstone_ore ? (p_150897_1_.getMaterial() == Material.rock ? true : (p_150897_1_.getMaterial() == Material.iron ? true : p_150897_1_.getMaterial() == Material.anvil)) : this.toolMaterial.getHarvestLevel() >= 2) : this.toolMaterial.getHarvestLevel() >= 1) : this.toolMaterial.getHarvestLevel() >= 1) : this.toolMaterial.getHarvestLevel() >= 2) : this.toolMaterial.getHarvestLevel() >= 2) : this.toolMaterial.getHarvestLevel() >= 2);
     }
 
@@ -99,6 +99,11 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
     }
 
     @Override
+    public double getDurabilityForDisplay(ItemStack itemStack) {
+        return Math.max(1.0 - (double)getEnergyStored(itemStack) / (double)tier.maxEnergy, 0);
+    }
+
+    @Override
     public boolean onBlockDestroyed(ItemStack itemStack, World world, Block block, int x, int y, int z, EntityLivingBase entity) {
         if(entity instanceof EntityPlayer && !((EntityPlayer)entity).capabilities.isCreativeMode) {
             entity.setCurrentItemOrArmor(0, drainEnergy(itemStack, tier.energyPerBlock));
@@ -106,7 +111,7 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
             if (this.getEnergyStored(itemStack) == 0 && tier.canBreak) {
                 itemStack.damageItem(1000000, entity);
             }
-            return true; //See DrillMiningHandler
+            return true;
         }
 
         return false;
@@ -120,15 +125,10 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
             if (this.getEnergyStored(itemStack) == 0 && tier.canBreak) {
                 itemStack.damageItem(1000000, entityAttacker);
             }
-            return true; //See DrillMiningHandler
+            return true;
         }
 
         return false;
-    }
-
-    @Override
-    public double getDurabilityForDisplay(ItemStack itemStack) {
-        return Math.max(1.0 - (double)getEnergyStored(itemStack) / (double)tier.maxEnergy, 0);
     }
 
     @Override

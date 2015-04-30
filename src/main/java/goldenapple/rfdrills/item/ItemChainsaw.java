@@ -9,8 +9,11 @@ import goldenapple.rfdrills.util.StringHelper;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemAxe;
@@ -18,6 +21,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
+import net.minecraftforge.common.IShearable;
 
 import java.util.List;
 
@@ -49,15 +53,61 @@ public class ItemChainsaw extends ItemAxe implements IEnergyContainerItem{
         return true;
     }
 
+    public boolean func_150897_b(Block p_150897_1_){ //stolen from ItemShears
+        return p_150897_1_ == Blocks.web || p_150897_1_ == Blocks.redstone_wire || p_150897_1_ == Blocks.tripwire;
+    }
+
     @Override
-    public boolean onBlockDestroyed(ItemStack itemStack, World world, Block block, int x, int y, int z, EntityLivingBase entity) {
-        if(entity instanceof EntityPlayer && !((EntityPlayer)entity).capabilities.isCreativeMode) {
-            entity.setCurrentItemOrArmor(0, drainEnergy(itemStack, tier.energyPerBlock));
+    public float getDigSpeed(ItemStack itemStack, Block block, int meta) {
+        itemStack.setItemDamage(0);
+        if(block instanceof IShearable){
+            return 100.0F;
+        }else if(getEnergyStored(itemStack) >= tier.energyPerBlock){
+            return super.getDigSpeed(itemStack, block, meta);
+        }else{
+            return 0.5F;
+        }
+    }
+
+    @Override
+    public double getDurabilityForDisplay(ItemStack itemStack) {
+        return Math.max(1.0 - (double)getEnergyStored(itemStack) / (double)tier.maxEnergy, 0);
+    }
+
+    @Override
+    public boolean itemInteractionForEntity(ItemStack itemStack, EntityPlayer player, EntityLivingBase entity) {
+        if(Items.shears.itemInteractionForEntity(itemStack, player, entity)){
+            itemStack.setItemDamage(0);
+            player.setCurrentItemOrArmor(0, drainEnergy(itemStack, tier.energyPerBlock));
 
             if (this.getEnergyStored(itemStack) == 0 && tier.canBreak) {
                 itemStack.damageItem(1000000, entity);
             }
-            return true; //See DrillMiningHandler
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    @Override
+    public boolean onBlockStartBreak(ItemStack itemStack, int x, int y, int z, EntityPlayer player) {
+        if(Items.shears.onBlockStartBreak(itemStack, x, y, z, player)){
+            itemStack.setItemDamage(0);
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    @Override
+    public boolean onBlockDestroyed(ItemStack itemStack, World world, Block block, int x, int y, int z, EntityLivingBase entity) {
+        if(entity instanceof EntityPlayer && !((EntityPlayer)entity).capabilities.isCreativeMode) {
+            entity.setCurrentItemOrArmor(0, drainEnergy(itemStack, block instanceof IShearable ? tier.energyPerBlock / 20 : tier.energyPerBlock));
+
+            if (this.getEnergyStored(itemStack) == 0 && tier.canBreak) {
+                itemStack.damageItem(1000000, entity);
+            }
+            return true;
         }
 
         return false;
@@ -66,12 +116,12 @@ public class ItemChainsaw extends ItemAxe implements IEnergyContainerItem{
     @Override
     public boolean hitEntity(ItemStack itemStack, EntityLivingBase entityAttacked, EntityLivingBase entityAttacker) {
         if(entityAttacker instanceof EntityPlayer && !((EntityPlayer)entityAttacker).capabilities.isCreativeMode) {
-            entityAttacker.setCurrentItemOrArmor(0, drainEnergy(itemStack, tier.energyPerBlock * 2));
+            entityAttacker.setCurrentItemOrArmor(0, drainEnergy(itemStack, tier.energyPerBlock));
 
             if (this.getEnergyStored(itemStack) == 0 && tier.canBreak) {
                 itemStack.damageItem(1000000, entityAttacker);
             }
-            return true; //See DrillMiningHandler
+            return true;
         }
 
         return false;
@@ -131,16 +181,11 @@ public class ItemChainsaw extends ItemAxe implements IEnergyContainerItem{
 
     @Override
     public int receiveEnergy(ItemStack itemStack, int maxReceive, boolean simulate) { //stolen from ItemEnergyContainer
-        if(itemStack.stackTagCompound == null){
-            itemStack.stackTagCompound = new NBTTagCompound();
-        }
-
         int energy = getEnergyStored(itemStack);
         int energyReceived = Math.min(tier.maxEnergy - energy, Math.min(tier.rechargeRate, maxReceive));
 
         if (!simulate) {
-            energy += energyReceived;
-            itemStack.stackTagCompound.setInteger("Energy", energy);
+            setEnergy(itemStack, energy += energyReceived);
         }
         return energyReceived;
     }

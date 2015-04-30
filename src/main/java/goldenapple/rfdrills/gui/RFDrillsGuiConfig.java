@@ -3,7 +3,6 @@ package goldenapple.rfdrills.gui;
 import cpw.mods.fml.client.config.DummyConfigElement;
 import cpw.mods.fml.client.config.GuiConfig;
 import cpw.mods.fml.client.config.IConfigElement;
-import goldenapple.rfdrills.RFDrills;
 import goldenapple.rfdrills.config.ConfigHandler;
 import goldenapple.rfdrills.reference.Reference;
 import net.minecraft.client.gui.GuiScreen;
@@ -20,7 +19,7 @@ public class RFDrillsGuiConfig extends GuiConfig{ //@author ljfa
         super(parentScreen, getConfigElements(), Reference.MOD_ID, false, true, GuiConfig.getAbridgedConfigPath(ConfigHandler.config.toString()));
     }
 
-    /** Compiles a list of config elements */
+    //Compiles a list of config elements
     private static List<IConfigElement> getConfigElements() {
         List<IConfigElement> list = new ArrayList<IConfigElement>();
 
@@ -31,10 +30,10 @@ public class RFDrillsGuiConfig extends GuiConfig{ //@author ljfa
         list.add(categoryElement("drill_tier3", "Tier 3 Drills", "config.drill_tier3"));
         list.add(categoryElement("drill_tier4", "Tier 4 Drills", "config.drill_tier4"));
 
-        /* list.add(categoryElement("chainsaw_tier1", "Tier 1 Chainsaws", "config.chainsaw_tier1"));
+        list.add(categoryElement("chainsaw_tier1", "Tier 1 Chainsaws", "config.chainsaw_tier1"));
         list.add(categoryElement("chainsaw_tier2", "Tier 2 Chainsaws", "config.chainsaw_tier2"));
         list.add(categoryElement("chainsaw_tier3", "Tier 3 Chainsaws", "config.chainsaw_tier3"));
-        list.add(categoryElement("chainsaw_tier4", "Tier 4 Chainsaws", "config.chainsaw_tier4")); */
+        list.add(categoryElement("chainsaw_tier4", "Tier 4 Chainsaws", "config.chainsaw_tier4"));
         return list;
     }
 

@@ -28,7 +28,7 @@ public class ConfigHandler {
     }
 
     private void loadConfig(){
-        /*energyUnitName = config.getString("energyUnit", Configuration.CATEGORY_GENERAL, "RF", "Energy unit to display in tooltips. Valid units: EU, RF, gJ (GalactiCraft Joules), J (Mekanism Joules)", new String[]{"RF", "EU", "gJ", "J"});
+      /*energyUnitName = config.getString("energyUnit", Configuration.CATEGORY_GENERAL, "RF", "Energy unit to display in tooltips. Valid units: EU, RF, gJ (GalactiCraft Joules), J (Mekanism Joules)", new String[]{"RF", "EU", "gJ", "J"});
 
         if(energyUnitName.equals("EU")){
             energyUnit = EnumEnergyUnit.EU;
@@ -51,10 +51,10 @@ public class ConfigHandler {
             DrillTier.DRILL3 = getDrillTierInfo("drill", 3, DrillTier.DRILL3_MATERIAL, 1000000, 1000, 1500, EnumRarity.uncommon, false, 3, 11.0F, 4.0F, 10);
             DrillTier.DRILL4 = getDrillTierInfo("drill", 4, DrillTier.DRILL4_MATERIAL, 4000000, 2000, 5000, EnumRarity.rare, false, 4, 13.0F, 5.0F, 15);
 
-            /* DrillTier.CHAINSAW1 = getDrillTierInfo("chainsaw", 1, DrillTier.CHAINSAW1_MATERIAL, 20000, 80, 80, EnumRarity.common, true, 2, 6.0F, 3.0F, 0);
+            DrillTier.CHAINSAW1 = getDrillTierInfo("chainsaw", 1, DrillTier.CHAINSAW1_MATERIAL, 20000, 80, 80, EnumRarity.common, true, 2, 6.0F, 3.0F, 0);
             DrillTier.CHAINSAW2 = getDrillTierInfo("chainsaw", 2, DrillTier.CHAINSAW2_MATERIAL, 100000, 200, 400, EnumRarity.common, false, 3, 7.0F, 4.0F, 0);
             DrillTier.CHAINSAW3 = getDrillTierInfo("chainsaw", 3, DrillTier.CHAINSAW3_MATERIAL, 1000000, 1000, 1500, EnumRarity.uncommon, false, 3, 8.0F, 5.0F, 10);
-            DrillTier.CHAINSAW4 = getDrillTierInfo("chainsaw", 4, DrillTier.CHAINSAW4_MATERIAL, 4000000, 2000, 5000, EnumRarity.rare, false, 4, 10.0F, 6.0F, 15); */
+            DrillTier.CHAINSAW4 = getDrillTierInfo("chainsaw", 4, DrillTier.CHAINSAW4_MATERIAL, 4000000, 2000, 5000, EnumRarity.rare, false, 4, 10.0F, 6.0F, 15);
         }catch (Exception e){
             LogHelper.warn("Something went wrong with config files!");
             e.printStackTrace();
