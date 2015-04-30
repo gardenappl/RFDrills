@@ -3,13 +3,15 @@ package goldenapple.rfdrills.util;
 import goldenapple.rfdrills.config.ConfigHandler;
 import net.minecraft.util.StatCollector;
 
+import java.math.BigDecimal;
+
 public class StringHelper {
 
     public static String formatEnergy(int energy){
-        if(energy >= 10000000){ //at least 10 million
-            return (Math.scalb(energy / 1000000, 1)) + "M";
-        }else if(energy >= 10000){ //at least 10 thousand
-            return (Math.scalb(energy / 1000, 1)) + "k";
+        if(energy >= 10000000){
+            return String.format("%.1fM", (float)energy / 1000000);
+        }else if(energy >= 10000){
+            return String.format("%.1fk", (float)energy / 1000);
         }else return Integer.toString(energy);
     }
 
