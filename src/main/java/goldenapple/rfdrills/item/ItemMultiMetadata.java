@@ -9,6 +9,7 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
+import sun.util.calendar.LocalGregorianCalendar;
 
 import java.util.List;
 
@@ -22,6 +23,7 @@ public class ItemMultiMetadata extends Item {
         this.names = names;
         this.icons = new IIcon[names.length];
         this.defaultName = defaultName;
+        this.rarities = rarities;
         this.setCreativeTab(RFDrills.OmniDrillsTab);
         this.setHasSubtypes(true);
     }
