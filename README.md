@@ -9,7 +9,11 @@ FTB forum thread: http://forum.feed-the-beast.com/threads/1-7-10-rfdrills-addon-
 * [X] More configurability (1.1 - The Configurable update)
 * [ ] Electric hoes+sickles combo
 * [ ] Chainsaws
+* [ ] The GunDrill
+* [ ] Modes
 * [ ] Ultimate Flux-infused tool
+* [ ] Ultimate Dark Steel/Dark Soularium tool with upgrades
 * [ ] Buildcraft support
 * [ ] Galacticraft support
+* [ ] Sounds
 * [ ] Models?
