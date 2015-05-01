@@ -30,12 +30,14 @@ public class DrillTier {
     public int energyPerBlock;
     public EnumRarity rarity;
     public boolean canBreak;
-    public DrillTier(Item.ToolMaterial material, int maxEnergy, int rechargeRate, int energyPerBlock, EnumRarity rarity, boolean canBreak){
+    public boolean hasModes;
+    public DrillTier(Item.ToolMaterial material, int maxEnergy, int rechargeRate, int energyPerBlock, EnumRarity rarity, boolean canBreak, boolean hasModes){
         this.material = material;
         this.maxEnergy = maxEnergy;
         this.rechargeRate = rechargeRate;
         this.energyPerBlock = energyPerBlock;
         this.rarity = rarity;
         this.canBreak = canBreak;
+        this.hasModes = hasModes;
     }
 }

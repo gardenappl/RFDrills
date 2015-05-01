@@ -24,9 +24,15 @@ item.rfdrills:advanced_motor.name=Advanced Electric Motor
 
 rfdrills.energy_per_block.tooltip=Energy per block: %s RF
 rfdrills.can_break.tooltip=§cWill break when it runs out of energy.
-rfdrills.can_mine_obsidian.tooltip=§eCan mine obsidian.
-rfdrills.enchantable.tooltip=§bCan be enchanted.
+rfdrills.chainsaw_has_modes.tooltip=§eUse while sneaking to toggle shears
+rfdrills.drill_has_modes.tooltip=§eUse while sneaking to toggle column mode
+rfdrills.can_mine_obsidian.tooltip=§aCan mine obsidian.
+rfdrills.enchantable.tooltip=§aCan be enchanted.
 
+rfdrills.shears_on.mode=Shears: §aOn
+rfdrills.shears_off.mode=Shears: §cOff
+rfdrills.1x3x1.mode=Column mode: §aOn
+rfdrills.1x1x1.mode=Column mode: §cOff
 
 config.general.tooltip=Configure main mod settings
 config.drill_tier1.tooltip=Configure properties of Tier 1 drills

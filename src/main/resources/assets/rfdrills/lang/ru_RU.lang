@@ -24,9 +24,13 @@ item.rfdrills:advanced_motor.name=Улучшеный электромотор
 
 rfdrills.energy_per_block.tooltip=Енегрия за блок: %s RF
 rfdrills.can_break.tooltip=§cСломается при нехватке енергии.
+rfdrills.chainsaw_has_modes.tooltip=§aShift+ПКМ чтобы включить/выключтиь ножницы
+rfdrills.drill_has_modes.tooltip=§aShift+ПКМ чтобы включить/выключить ножницы
 rfdrills.can_mine_obsidian.tooltip=§eМожет копать обсидиан.
 rfdrills.enchantable.tooltip=§bМожет быть зачарована.
 
+rfdrills.shears_on.mode=Ножницы: §aВкл
+rfdrills.shears_off.mode=Ножницы: §cВыкл
 
 config.general.tooltip=Конфигурировать основные настройки мода
 config.drill_tier1.tooltip=Конфигурировать свойства дрелей 1 класа

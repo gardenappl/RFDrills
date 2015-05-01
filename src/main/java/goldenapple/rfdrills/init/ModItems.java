@@ -28,10 +28,10 @@ public class ModItems {
     //EnderIO
     public static Item motorEIO = new ItemMultiMetadata(Names.MOTORS_EIO, Names.MOTOR_EIO, new EnumRarity[]{EnumRarity.common, EnumRarity.common});
     public static Item basicDrill = new ItemDrill(Names.BASIC_DRILL, DrillTier.DRILL1);
-    public static Item advancedDrill = new ItemDrill(Names.ADVANCED_DRILL, DrillTier.DRILL2);
+    public static Item advancedDrill = new ItemDrill(Names.ADVANCED_DRILL, DrillTier.DRILL3);
 
     public static Item basicChainsaw = new ItemChainsaw(Names.BASIC_CHAINSAW, DrillTier.CHAINSAW1);
-    public static Item advancedChainsaw = new ItemChainsaw(Names.ADVANCED_CHAINSAW, DrillTier.CHAINSAW2);
+    public static Item advancedChainsaw = new ItemChainsaw(Names.ADVANCED_CHAINSAW, DrillTier.CHAINSAW3);
 
 
     public static void init(){

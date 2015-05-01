@@ -21,28 +21,27 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.BlockEvent;
 
 import java.util.List;
 import java.util.Set;
 
 public class ItemDrill extends ItemTool implements IEnergyContainerItem {
-    private static final Set<Block> pickaxeVanillaBlocks = Sets.newHashSet(Blocks.cobblestone, Blocks.double_stone_slab, Blocks.stone_slab, Blocks.stone, Blocks.sandstone, Blocks.mossy_cobblestone, Blocks.iron_ore, Blocks.iron_block, Blocks.coal_ore, Blocks.gold_block, Blocks.gold_ore, Blocks.diamond_ore, Blocks.diamond_block, Blocks.ice, Blocks.netherrack, Blocks.lapis_ore, Blocks.lapis_block, Blocks.redstone_ore, Blocks.lit_redstone_ore, Blocks.rail, Blocks.detector_rail, Blocks.golden_rail, Blocks.activator_rail, Blocks.grass, Blocks.dirt, Blocks.sand, Blocks.gravel, Blocks.snow_layer, Blocks.snow, Blocks.clay, Blocks.farmland, Blocks.soul_sand, Blocks.mycelium);
-    private static final Set<Block> shovelVanillaBlocks = Sets.newHashSet(Blocks.grass, Blocks.dirt, Blocks.sand, Blocks.gravel, Blocks.snow_layer, Blocks.snow, Blocks.clay, Blocks.farmland, Blocks.soul_sand, Blocks.mycelium);
+    private static final Set<Block> vanillaBlocks = Sets.newHashSet(Blocks.cobblestone, Blocks.double_stone_slab, Blocks.stone_slab, Blocks.stone, Blocks.sandstone, Blocks.mossy_cobblestone, Blocks.iron_ore, Blocks.iron_block, Blocks.coal_ore, Blocks.gold_block, Blocks.gold_ore, Blocks.diamond_ore, Blocks.diamond_block, Blocks.ice, Blocks.netherrack, Blocks.lapis_ore, Blocks.lapis_block, Blocks.redstone_ore, Blocks.lit_redstone_ore, Blocks.rail, Blocks.detector_rail, Blocks.golden_rail, Blocks.activator_rail, Blocks.grass, Blocks.dirt, Blocks.sand, Blocks.gravel, Blocks.snow_layer, Blocks.snow, Blocks.clay, Blocks.farmland, Blocks.soul_sand, Blocks.mycelium);
     private static final Set<Material> effectiveMaterials = Sets.newHashSet(Material.anvil, Material.clay, Material.craftedSnow, Material.glass, Material.dragonEgg, Material.grass, Material.ground, Material.ice, Material.snow, Material.iron, Material.rock, Material.sand, Material.coral);
-    private static Set<Block> effectiveVanillaBlocks = Sets.newHashSet();
 
     private DrillTier tier;
     private final String name;
 
     static {
-        effectiveVanillaBlocks.addAll(pickaxeVanillaBlocks);
-        effectiveVanillaBlocks.addAll(shovelVanillaBlocks);
     }
 
     public ItemDrill(String name, DrillTier tier){
-        super(1.0F, tier.material, effectiveVanillaBlocks);
+        super(1.0F, tier.material, vanillaBlocks);
         this.name = name;
         this.tier = tier;
         this.setCreativeTab(RFDrills.OmniDrillsTab);
@@ -61,18 +60,18 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
     }
 
     @Override
-    public float getDigSpeed(ItemStack stack, Block block, int meta) {
-        if(getEnergyStored(stack) >= tier.energyPerBlock){
-            return super.getDigSpeed(stack, block, meta);
+    public float getDigSpeed(ItemStack itemStack, Block block, int meta) {
+        if(getEnergyStored(itemStack) >= tier.energyPerBlock){
+            return getMode(itemStack) == 1? super.getDigSpeed(itemStack, block, meta) * 2 : super.getDigSpeed(itemStack, block, meta);
         }else{
             return 0.5F;
         }
     }
 
     @Override
-    public int getHarvestLevel(ItemStack stack, String toolClass) {
-        if((toolClass.equals("shovel") || toolClass.equals("pickaxe")) && getEnergyStored(stack) >= tier.energyPerBlock){
-            return super.getHarvestLevel(stack, toolClass);
+    public int getHarvestLevel(ItemStack itemStack, String toolClass) {
+        if((toolClass.equals("shovel") || toolClass.equals("pickaxe")) && getEnergyStored(itemStack) >= tier.energyPerBlock){
+            return super.getHarvestLevel(itemStack, toolClass);
         }else{
             return -1;
         }
@@ -104,9 +103,57 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
     }
 
     @Override
+    public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
+        if(!world.isRemote && player.isSneaking() && tier.hasModes) {
+            switch (getMode(itemStack)) {
+                case 0:
+                    setMode(itemStack, (byte) 1);
+                    player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("rfdrills.1x3x1.mode")));
+                    break;
+                case 1:
+                    setMode(itemStack, (byte) 0);
+                    player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("rfdrills.1x1x1.mode")));
+                    break;
+                default:
+                    setMode(itemStack, (byte) 0);
+                    player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("rfdrills.1x1x1_on.mode")));
+                    LogHelper.warn("Illegal drill mode! Resetting to 0");
+                    break;
+            }
+        }
+        return itemStack;
+    }
+
+    private void harvestBlock(World world, int x, int y, int z, EntityPlayer player){
+        Block block = world.getBlock(x, y, z);
+        if (block.getBlockHardness(world, x, y, z) < 0) {
+            return;
+        }
+        int meta = world.getBlockMetadata(x, y, z);
+        BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(x, y, z, world, block, meta, player);
+
+        MinecraftForge.EVENT_BUS.post(event);
+        if(!event.isCanceled()) {
+            if (block.canHarvestBlock(player, meta)) {
+                block.harvestBlock(world, player, x, y, z, meta);
+            }
+            world.setBlockToAir(x, y, z);
+        }
+    }
+
+    @Override
     public boolean onBlockDestroyed(ItemStack itemStack, World world, Block block, int x, int y, int z, EntityLivingBase entity) {
+        if(getMode(itemStack) == 1 && entity instanceof EntityPlayer && !world.isRemote){
+            for (int b = y - 1; b <= y + 1; b++) {
+                if (world.blockExists(x, b, z) && effectiveMaterials.contains(world.getBlock(x, b, z).getMaterial())) {
+                    if (b != y) { //don't harvest the same block twice
+                        harvestBlock(world, x, b, z, (EntityPlayer) entity);
+                    }
+                }
+            }
+        }
         if(entity instanceof EntityPlayer && !((EntityPlayer)entity).capabilities.isCreativeMode) {
-            entity.setCurrentItemOrArmor(0, drainEnergy(itemStack, tier.energyPerBlock));
+            entity.setCurrentItemOrArmor(0, drainEnergy(itemStack, getMode(itemStack) == 1 ? tier.energyPerBlock * 5 : tier.energyPerBlock));
 
             if (this.getEnergyStored(itemStack) == 0 && tier.canBreak) {
                 itemStack.damageItem(1000000, entity);
@@ -142,14 +189,18 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
                 if (tier.canBreak) {
                     list.add(StatCollector.translateToLocal("rfdrills.can_break.tooltip"));
                 }
-                if (toolMaterial.getHarvestLevel() >= 3) {
+                if (toolMaterial.getHarvestLevel() >= Blocks.obsidian.getHarvestLevel(0)) {
                     list.add(StatCollector.translateToLocal("rfdrills.can_mine_obsidian.tooltip"));
                 }
                 if (toolMaterial.getEnchantability() > 0) {
                     list.add(StatCollector.translateToLocal("rfdrills.enchantable.tooltip"));
                 }
+                if (tier.hasModes){
+                    list.add(StatCollector.translateToLocal("rfdrills.drill_has_modes.tooltip"));
+                }
             } else {
-                list.add(StatCollector.translateToLocal("info.cofh.hold") + " §e§o" + StatCollector.translateToLocal("info.cofh.shift") + " §r§7" + StatCollector.translateToLocal("info.cofh.forDetails"));
+                //list.add(StatCollector.translateToLocal("info.cofh.hold") + " §e§o" + StatCollector.translateToLocal("info.cofh.shift") + " §r§7" + StatCollector.translateToLocal("info.cofh.forDetails"));
+                list.add(cofh.lib.util.helpers.StringHelper.shiftForDetails());
             }
         }catch (Throwable e){
             e.printStackTrace();
@@ -169,6 +220,31 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
     @Override
     public String getUnlocalizedName(ItemStack itemStack) {
         return "item." + Reference.MOD_ID.toLowerCase() + ":" + name;
+    }
+
+    public ItemStack setMode(ItemStack itemStack, byte mode){
+        if(itemStack.stackTagCompound == null){
+            itemStack.stackTagCompound = new NBTTagCompound();
+        }
+
+        itemStack.stackTagCompound.setByte("Mode", mode);
+        return itemStack;
+    }
+
+    public byte getMode(ItemStack itemStack){
+        if(!tier.hasModes){
+            return 0;
+        }
+
+        if(itemStack.stackTagCompound == null){
+            return 0;
+        }
+
+        if(itemStack.stackTagCompound.hasKey("Mode")) {
+            return itemStack.stackTagCompound.getByte("Mode");
+        }else{
+            return 0;
+        }
     }
 
     public ItemStack setEnergy(ItemStack itemStack, int energy){

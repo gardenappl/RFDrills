@@ -70,11 +70,23 @@ public class ModRecipes {
                 "iMi",
                 "ICI", 'I', "ingotLead", 'i', "ingotBronze", 'C', capacitorLeadstone.copy(), 'M', motorLeadstone.copy()));
 
+        //Leadstone chainsaw
+        GameRegistry.addRecipe(new ShapedUpgradeRecipe(ModItems.leadstoneChainsaw,
+                " ii",
+                "IMi",
+                "CI ", 'I', "ingotLead", 'i', "ingotBronze", 'C', capacitorLeadstone.copy(), 'M', motorLeadstone.copy()));
+
         //Hardened drill
         GameRegistry.addRecipe(new ShapedUpgradeRecipe(ModItems.hardenedDrill,
                 " D ",
                 "iMi",
                 "ICI", 'I', "ingotInvar", 'i', "ingotIron", 'C', capacitorHardened.copy(), 'M', motorHardened.copy(), 'D', new ItemStack(ModItems.leadstoneDrill)));
+
+        //Hardened chainsaw
+        GameRegistry.addRecipe(new ShapedUpgradeRecipe(ModItems.hardenedChainsaw,
+                " iS",
+                "IMi",
+                "CI ", 'I', "ingotInvar", 'i', "ingotIron", 'C', capacitorHardened.copy(), 'M', motorHardened.copy(), 'S', new ItemStack(ModItems.leadstoneChainsaw)));
 
         //Redstone drill
         GameRegistry.addRecipe(new ShapedUpgradeRecipe(ModItems.redstoneDrill,
@@ -82,11 +94,23 @@ public class ModRecipes {
                 "iMi",
                 "ICI", 'I', "ingotElectrum", 'i', "ingotInvar", 'C', capacitorRedstone.copy(), 'M', motorRedstone.copy(), 'D', new ItemStack(ModItems.hardenedDrill)));
 
+        //Redstone chainsaw
+        GameRegistry.addRecipe(new ShapedUpgradeRecipe(ModItems.redstoneChainsaw,
+                " iS",
+                "IMi",
+                "CI ", 'I', "ingotElectrum", 'i', "ingotInvar", 'C', capacitorRedstone.copy(), 'M', motorRedstone.copy(), 'S', new ItemStack(ModItems.hardenedChainsaw)));
+
         //Resonant drill
         GameRegistry.addRecipe(new ShapedUpgradeRecipe(ModItems.resonantDrill,
                 " D ",
                 "iMi",
                 "ICI", 'I', "ingotEnderium", 'i', "ingotSilver", 'C', capacitorResonant.copy(), 'M', motorResonant.copy(), 'D', new ItemStack(ModItems.redstoneDrill)));
+
+        //Resonant chainsaw
+        GameRegistry.addRecipe(new ShapedUpgradeRecipe(ModItems.resonantChainsaw,
+                " iS",
+                "IMi",
+                "CI ", 'I', "ingotEnderium", 'i', "ingotSilver", 'C', capacitorResonant.copy(), 'M', motorResonant.copy(), 'S', new ItemStack(ModItems.redstoneChainsaw)));
     }
 
     private static void initEIO(){
@@ -115,10 +139,22 @@ public class ModRecipes {
                 "iMi",
                 "ICI", 'I', "itemSilicon", 'i', "ingotConductiveIron", 'C', capacitorBasic.copy(), 'M', motorBasic.copy()));
 
+        //Basic chainsaw
+        GameRegistry.addRecipe(new ShapedUpgradeRecipe(ModItems.basicChainsaw,
+                " ii",
+                "IMi",
+                "CI ", 'I', "itemSilicon", 'i', "ingotConductiveIron", 'C', capacitorBasic.copy(), 'M', motorBasic.copy()));
+
         //Advanced drill
         GameRegistry.addRecipe(new ShapedUpgradeRecipe(ModItems.advancedDrill,
-                " i ",
+                " D ",
                 "iMi",
-                "ICI", 'I', "ingotEnergeticAlloy", 'i', "ingotElectricalSteel", 'C', capacitorAdvanced.copy(), 'M', motorAdvanced.copy()));
+                "ICI", 'I', "ingotEnergeticAlloy", 'i', "ingotElectricalSteel", 'C', capacitorAdvanced.copy(), 'M', motorAdvanced.copy(), 'D', new ItemStack(ModItems.basicDrill)));
+
+        //Advanced chainsaw
+        GameRegistry.addRecipe(new ShapedUpgradeRecipe(ModItems.advancedChainsaw,
+                " iS",
+                "IMi",
+                "CI ", 'I', "ingotEnergeticAlloy", 'i', "ingotElectricalSteel", 'C', capacitorAdvanced.copy(), 'M', motorAdvanced.copy(), 'S', new ItemStack(ModItems.basicChainsaw)));
     }
 }
