@@ -17,6 +17,7 @@ public class ConfigHandler {
 
     public static boolean integrateTE;
     public static boolean integrateEIO;
+    public static boolean shearsDefault;
   /*public static String energyUnitName;
     public static EnumEnergyUnit energyUnit = EnumEnergyUnit.RF; */
 
@@ -43,8 +44,9 @@ public class ConfigHandler {
         } */
 
         config.setCategoryRequiresMcRestart(Configuration.CATEGORY_GENERAL, true);
-        integrateTE = config.getBoolean("integrateTE", Configuration.CATEGORY_GENERAL, true, "Set this to false to disable Thermal Expansion drills");
-        integrateEIO = config.getBoolean("integrateEIO", Configuration.CATEGORY_GENERAL, true, "Set this to false to disable EnderIO drills");
+        integrateTE = config.getBoolean("integrateTE", Configuration.CATEGORY_GENERAL, true, "Set this to false to disable Thermal Expansion integration");
+        integrateEIO = config.getBoolean("integrateEIO", Configuration.CATEGORY_GENERAL, true, "Set this to false to disable EnderIO integration");
+        shearsDefault = config.getBoolean("shearsDefault", Configuration.CATEGORY_GENERAL, true, "Set this to false to disable shears functionality for lower tier chainsaws");
         try {
             DrillTier.DRILL1 = getDrillTierInfo("drill", 1, DrillTier.DRILL1_MATERIAL, 20000, 80, 80, EnumRarity.common, true, false, 2, 6.0F, 2.0F, 0);
             DrillTier.DRILL2 = getDrillTierInfo("drill", 2, DrillTier.DRILL2_MATERIAL, 100000, 200, 400, EnumRarity.common, false, false, 3, 8.0F, 3.0F, 0);

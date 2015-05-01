@@ -3,6 +3,7 @@ package goldenapple.rfdrills.item;
 import cofh.api.energy.IEnergyContainerItem;
 import goldenapple.rfdrills.RFDrills;
 import goldenapple.rfdrills.DrillTier;
+import goldenapple.rfdrills.config.ConfigHandler;
 import goldenapple.rfdrills.reference.Reference;
 import goldenapple.rfdrills.util.LogHelper;
 import goldenapple.rfdrills.util.MiscUtil;
@@ -99,12 +100,14 @@ public class ItemChainsaw extends ItemAxe implements IEnergyContainerItem{
     @Override
     public boolean itemInteractionForEntity(ItemStack itemStack, EntityPlayer player, EntityLivingBase entity) {
         if(getMode(itemStack) == 1) {
-            if (Items.shears.itemInteractionForEntity(itemStack, player, entity)) {
+            if ((getEnergyStored(itemStack) >= tier.energyPerBlock || tier.canBreak) && Items.shears.itemInteractionForEntity(itemStack, player, entity)) {
                 itemStack.setItemDamage(0);
-                player.setCurrentItemOrArmor(0, drainEnergy(itemStack, tier.energyPerBlock));
+                if(!player.capabilities.isCreativeMode) {
+                    player.setCurrentItemOrArmor(0, drainEnergy(itemStack, tier.energyPerBlock));
 
-                if (this.getEnergyStored(itemStack) == 0 && tier.canBreak) {
-                    itemStack.damageItem(1000000, entity);
+                    if (this.getEnergyStored(itemStack) == 0 && tier.canBreak) {
+                        itemStack.damageItem(1000000, entity);
+                    }
                 }
                 return true;
             } else {
@@ -209,17 +212,17 @@ public class ItemChainsaw extends ItemAxe implements IEnergyContainerItem{
 
     public byte getMode(ItemStack itemStack){
         if(!tier.hasModes){
-            return 0;
+            return ConfigHandler.shearsDefault ? (byte)1 : 0;
         }
 
         if(itemStack.stackTagCompound == null){
-            return 0;
+            return ConfigHandler.shearsDefault ? (byte)1 : 0;
         }
 
         if(itemStack.stackTagCompound.hasKey("Mode")) {
             return itemStack.stackTagCompound.getByte("Mode");
         }else{
-            return 0;
+            return ConfigHandler.shearsDefault ? (byte)1 : 0;
         }
     }
 
