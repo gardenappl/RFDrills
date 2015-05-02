@@ -1,7 +1,11 @@
 package goldenapple.rfdrills.util;
 
 import goldenapple.rfdrills.config.ConfigHandler;
+import goldenapple.rfdrills.item.ItemDrill;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
+import net.minecraft.world.gen.structure.StructureNetherBridgePieces;
 
 import java.math.BigDecimal;
 

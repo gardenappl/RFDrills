@@ -55,16 +55,23 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
     }
 
     @Override
-    public boolean func_150897_b(Block p_150897_1_){ //stolen from ItemPickaxe
-        return p_150897_1_ == Blocks.obsidian ? this.toolMaterial.getHarvestLevel() == 3 : (p_150897_1_ != Blocks.diamond_block && p_150897_1_ != Blocks.diamond_ore ? (p_150897_1_ != Blocks.emerald_ore && p_150897_1_ != Blocks.emerald_block ? (p_150897_1_ != Blocks.gold_block && p_150897_1_ != Blocks.gold_ore ? (p_150897_1_ != Blocks.iron_block && p_150897_1_ != Blocks.iron_ore ? (p_150897_1_ != Blocks.lapis_block && p_150897_1_ != Blocks.lapis_ore ? (p_150897_1_ != Blocks.redstone_ore && p_150897_1_ != Blocks.lit_redstone_ore ? (p_150897_1_.getMaterial() == Material.rock ? true : (p_150897_1_.getMaterial() == Material.iron ? true : p_150897_1_.getMaterial() == Material.anvil)) : this.toolMaterial.getHarvestLevel() >= 2) : this.toolMaterial.getHarvestLevel() >= 1) : this.toolMaterial.getHarvestLevel() >= 1) : this.toolMaterial.getHarvestLevel() >= 2) : this.toolMaterial.getHarvestLevel() >= 2) : this.toolMaterial.getHarvestLevel() >= 2);
+    public boolean func_150897_b(Block block){
+        return effectiveMaterials.contains(block.getMaterial()) && (block.getHarvestLevel(0) <= tier.material.getHarvestLevel());
     }
 
     @Override
     public float getDigSpeed(ItemStack itemStack, Block block, int meta) {
-        if(getEnergyStored(itemStack) >= tier.energyPerBlock){
-            return getMode(itemStack) == 1? super.getDigSpeed(itemStack, block, meta) * 2 : super.getDigSpeed(itemStack, block, meta);
+        if(getEnergyStored(itemStack) >= tier.energyPerBlock && canHarvestBlock(block, itemStack)){
+            switch (getMode(itemStack)){
+                case 0: return effectiveMaterials.contains(block.getMaterial()) ? efficiencyOnProperMaterial : 1.0F;
+                case 1: return effectiveMaterials.contains(block.getMaterial()) ? efficiencyOnProperMaterial / 3 : 1.0F;
+                case 2: return effectiveMaterials.contains(block.getMaterial()) ? efficiencyOnProperMaterial * 3 : 1.0F;
+                default:
+                    LogHelper.warn("Illegal drill mode!");
+                    return effectiveMaterials.contains(block.getMaterial()) ? efficiencyOnProperMaterial : 1.0F;
+            }
         }else{
-            return 0.5F;
+            return effectiveMaterials.contains(block.getMaterial()) ? 0.5F : 1.0F;
         }
     }
 
@@ -102,6 +109,17 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
         return Math.max(1.0 - (double)getEnergyStored(itemStack) / (double)tier.maxEnergy, 0);
     }
 
+    private int getEnergyPerBlock(ItemStack itemStack, Block block){
+        switch (getMode(itemStack)){
+            case 0: return tier.energyPerBlock;
+            case 1: return tier.energyPerBlock * 3;
+            case 2: return tier.energyPerBlock * 3;
+            default:
+                LogHelper.warn("Illegal drill mode!");
+                return tier.energyPerBlock;
+        }
+    }
+
     @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
         if(!world.isRemote && player.isSneaking() && tier.hasModes) {
@@ -111,12 +129,16 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
                     player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("rfdrills.1x3x1.mode")));
                     break;
                 case 1:
+                    setMode(itemStack, (byte) 2);
+                    player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("rfdrills.speed.mode")));
+                    break;
+                case 2:
                     setMode(itemStack, (byte) 0);
                     player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("rfdrills.1x1x1.mode")));
                     break;
                 default:
                     setMode(itemStack, (byte) 0);
-                    player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("rfdrills.1x1x1_on.mode")));
+                    player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("rfdrills.1x1x1.mode")));
                     LogHelper.warn("Illegal drill mode! Resetting to 0");
                     break;
             }
@@ -153,7 +175,7 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
             }
         }
         if(entity instanceof EntityPlayer && !((EntityPlayer)entity).capabilities.isCreativeMode) {
-            entity.setCurrentItemOrArmor(0, drainEnergy(itemStack, getMode(itemStack) == 1 ? tier.energyPerBlock * 5 : tier.energyPerBlock));
+            entity.setCurrentItemOrArmor(0, drainEnergy(itemStack, getEnergyPerBlock(itemStack, block)));
 
             if (this.getEnergyStored(itemStack) == 0 && tier.canBreak) {
                 itemStack.damageItem(1000000, entity);
@@ -186,11 +208,21 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
 
             if (MiscUtil.isShiftPressed()) {
                 list.add(StringHelper.writeEnergyPerBlockInfo(tier.energyPerBlock));
+                if(tier.hasModes) {
+                    switch (getMode(itemStack)) {
+                        case 0:
+                            list.add(StatCollector.translateToLocal("rfdrills.1x1x1.mode"));
+                            break;
+                        case 1:
+                            list.add(StatCollector.translateToLocal("rfdrills.1x3x1.mode"));
+                            break;
+                        case 2:
+                            list.add(StatCollector.translateToLocal("rfdrills.speed.mode"));
+                            break;
+                    }
+                }
                 if (tier.canBreak) {
                     list.add(StatCollector.translateToLocal("rfdrills.can_break.tooltip"));
-                }
-                if (toolMaterial.getHarvestLevel() >= Blocks.obsidian.getHarvestLevel(0)) {
-                    list.add(StatCollector.translateToLocal("rfdrills.can_mine_obsidian.tooltip"));
                 }
                 if (toolMaterial.getEnchantability() > 0) {
                     list.add(StatCollector.translateToLocal("rfdrills.enchantable.tooltip"));
@@ -199,10 +231,11 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
                     list.add(StatCollector.translateToLocal("rfdrills.drill_has_modes.tooltip"));
                 }
             } else {
-                //list.add(StatCollector.translateToLocal("info.cofh.hold") + " §e§o" + StatCollector.translateToLocal("info.cofh.shift") + " §r§7" + StatCollector.translateToLocal("info.cofh.forDetails"));
+              //list.add(StatCollector.translateToLocal("info.cofh.hold") + " §e§o" + StatCollector.translateToLocal("info.cofh.shift") + " §r§7" + StatCollector.translateToLocal("info.cofh.forDetails"));
                 list.add(cofh.lib.util.helpers.StringHelper.shiftForDetails());
             }
         }catch (Throwable e){
+            LogHelper.warn("Something went wrong with the tooltips!");
             e.printStackTrace();
         }
     }
@@ -222,7 +255,7 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
         return "item." + Reference.MOD_ID.toLowerCase() + ":" + name;
     }
 
-    public ItemStack setMode(ItemStack itemStack, byte mode){
+    public static ItemStack setMode(ItemStack itemStack, byte mode){
         if(itemStack.stackTagCompound == null){
             itemStack.stackTagCompound = new NBTTagCompound();
         }

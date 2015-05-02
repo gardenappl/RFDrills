@@ -88,9 +88,9 @@ public class ItemChainsaw extends ItemAxe implements IEnergyContainerItem{
                     player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("rfdrills.shears_off.mode")));
                     break;
                 default:
-                    setMode(itemStack, (byte) 0);
+                    setMode(itemStack, (byte) 1);
                     player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("rfdrills.shears_on.mode")));
-                    LogHelper.warn("Illegal chainsaw mode! Resetting to 0");
+                    LogHelper.warn("Illegal chainsaw mode! Resetting to 1");
                     break;
             }
         }
@@ -149,7 +149,7 @@ public class ItemChainsaw extends ItemAxe implements IEnergyContainerItem{
     @Override
     public boolean hitEntity(ItemStack itemStack, EntityLivingBase entityAttacked, EntityLivingBase entityAttacker) {
         if(entityAttacker instanceof EntityPlayer && !((EntityPlayer)entityAttacker).capabilities.isCreativeMode) {
-            entityAttacker.setCurrentItemOrArmor(0, drainEnergy(itemStack, tier.energyPerBlock));
+            entityAttacker.setCurrentItemOrArmor(0, drainEnergy(itemStack, tier.energyPerBlock * 2));
 
             if (this.getEnergyStored(itemStack) == 0 && tier.canBreak) {
                 itemStack.damageItem(1000000, entityAttacker);
@@ -178,7 +178,7 @@ public class ItemChainsaw extends ItemAxe implements IEnergyContainerItem{
                     list.add(StatCollector.translateToLocal("rfdrills.chainsaw_has_modes.tooltip"));
                 }
             } else {
-                //list.add(StatCollector.translateToLocal("info.cofh.hold") + " §e§o" + StatCollector.translateToLocal("info.cofh.shift") + " §r§7" + StatCollector.translateToLocal("info.cofh.forDetails"));
+              //list.add(StatCollector.translateToLocal("info.cofh.hold") + " §e§o" + StatCollector.translateToLocal("info.cofh.shift") + " §r§7" + StatCollector.translateToLocal("info.cofh.forDetails"));
                 list.add(cofh.lib.util.helpers.StringHelper.shiftForDetails());
             }
         }catch (Throwable e){
