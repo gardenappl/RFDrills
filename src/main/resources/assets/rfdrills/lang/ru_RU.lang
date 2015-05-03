@@ -22,7 +22,7 @@ item.rfdrills:basic_motor.name=Основной электромотор
 item.rfdrills:advanced_motor.name=Продвинутый электромотор
 
 
-rfdrills.energy_per_block.tooltip=§6Энергии за блок: §7%s RF
+rfdrills.energy_per_block.tooltip=Энергии за блок: %s RF
 rfdrills.can_break.tooltip=§cСломается при нехватке энергии.
 rfdrills.chainsaw_has_modes.tooltip=§b§oИспользуйте сидя, чтобы активировать ножницы
 rfdrills.drill_has_modes.tooltip=§b§oИспользуйте сидя, чтобы изменить режим копания
@@ -32,7 +32,6 @@ rfdrills.shears_on.mode=Ножницы: §aВкл
 rfdrills.shears_off.mode=Ножницы: §cВыкл
 rfdrills.1x3x1.mode=Режим: §a1х3х1
 rfdrills.1x1x1.mode=Режим: §c1х1х1
-rfdrills.speed.mode=Режим: §aВысокоскоростной
 
 config.general.tooltip=Конфигурировать основные настройки мода
 config.drill_tier1.tooltip=Конфигурировать свойства дрелей 1-го класса

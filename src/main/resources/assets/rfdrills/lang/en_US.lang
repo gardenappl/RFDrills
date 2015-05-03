@@ -31,8 +31,7 @@ rfdrills.enchantable.tooltip=§aCan be enchanted.
 rfdrills.shears_on.mode=Shears: §aOn
 rfdrills.shears_off.mode=Shears: §cOff
 rfdrills.1x3x1.mode=Mode: §a1x3x1
-rfdrills.1x1x1.mode=Mode: §cRegular
-rfdrills.speed.mode=Mode: §aHigh-speed
+rfdrills.1x1x1.mode=Mode: §c1x1x1
 
 config.general.tooltip=Configure main mod settings
 config.drill_tier1.tooltip=Configure properties of Tier 1 drills

@@ -64,8 +64,7 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
         if(getEnergyStored(itemStack) >= tier.energyPerBlock && canHarvestBlock(block, itemStack)){
             switch (getMode(itemStack)){
                 case 0: return effectiveMaterials.contains(block.getMaterial()) ? efficiencyOnProperMaterial : 1.0F;
-                case 1: return effectiveMaterials.contains(block.getMaterial()) ? efficiencyOnProperMaterial / 3 : 1.0F;
-                case 2: return effectiveMaterials.contains(block.getMaterial()) ? efficiencyOnProperMaterial * 3 : 1.0F;
+                case 1: return effectiveMaterials.contains(block.getMaterial()) ? efficiencyOnProperMaterial / 5 : 1.0F;
                 default:
                     LogHelper.warn("Illegal drill mode!");
                     return effectiveMaterials.contains(block.getMaterial()) ? efficiencyOnProperMaterial : 1.0F;
@@ -81,6 +80,16 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
             return super.getHarvestLevel(itemStack, toolClass);
         }else{
             return -1;
+        }
+    }
+
+    private int getEnergyPerBlock(ItemStack itemStack, Block block){
+        switch (getMode(itemStack)){
+            case 0: return tier.energyPerBlock;
+            case 1: return tier.energyPerBlock * 3;
+            default:
+                LogHelper.warn("Illegal drill mode!");
+                return tier.energyPerBlock;
         }
     }
 
@@ -109,17 +118,6 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
         return Math.max(1.0 - (double)getEnergyStored(itemStack) / (double)tier.maxEnergy, 0);
     }
 
-    private int getEnergyPerBlock(ItemStack itemStack, Block block){
-        switch (getMode(itemStack)){
-            case 0: return tier.energyPerBlock;
-            case 1: return tier.energyPerBlock * 3;
-            case 2: return tier.energyPerBlock * 3;
-            default:
-                LogHelper.warn("Illegal drill mode!");
-                return tier.energyPerBlock;
-        }
-    }
-
     @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
         if(!world.isRemote && player.isSneaking() && tier.hasModes) {
@@ -129,10 +127,6 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
                     player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("rfdrills.1x3x1.mode")));
                     break;
                 case 1:
-                    setMode(itemStack, (byte) 2);
-                    player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("rfdrills.speed.mode")));
-                    break;
-                case 2:
                     setMode(itemStack, (byte) 0);
                     player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("rfdrills.1x1x1.mode")));
                     break;
@@ -216,8 +210,9 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
                         case 1:
                             list.add(StatCollector.translateToLocal("rfdrills.1x3x1.mode"));
                             break;
-                        case 2:
-                            list.add(StatCollector.translateToLocal("rfdrills.speed.mode"));
+                        default:
+                            list.add(StatCollector.translateToLocal("rfdrills.1x1x1.mode"));
+                            LogHelper.warn("Illegal drill mode!");
                             break;
                     }
                 }
