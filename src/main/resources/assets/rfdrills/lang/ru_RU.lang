@@ -5,6 +5,8 @@ item.rfdrills:resonant_drill.name=Резонирующий бур
 item.rfdrills:basic_drill.name=Основной бур
 item.rfdrills:advanced_drill.name=Продвинутый бур
 
+item.rfdrills:flux_infused_breaker.name=Наполненый флаксом крушитель
+
 item.rfdrills:leadstone_chainsaw.name=Свинцовая пила
 item.rfdrills:hardened_chainsaw.name=Усиленная пила
 item.rfdrills:redstone_chainsaw.name=Красная пила
@@ -30,6 +32,8 @@ rfdrills.enchantable.tooltip=§aМожет быть зачарована.
 
 rfdrills.shears_on.mode=Ножницы: §aВкл
 rfdrills.shears_off.mode=Ножницы: §cВыкл
+rfdrills.5x5x5.mode=Режим: §a5x5x5
+rfdrills.3x3x3.mode=Режим: §e3x3x3
 rfdrills.1x3x1.mode=Режим: §a1х3х1
 rfdrills.1x1x1.mode=Режим: §c1х1х1
 
@@ -38,6 +42,7 @@ config.drill_tier1.tooltip=Конфигурировать свойства др�
 config.drill_tier2.tooltip=Конфигурировать свойства дрелей 2-го класса
 config.drill_tier3.tooltip=Конфигурировать свойства дрелей 3-го класса
 config.drill_tier4.tooltip=Конфигурировать свойства дрелей 4-го класса
+config.breaker.tooltip=Конфигурировать свойства крушителей
 config.chainsaw_tier1.tooltip=Конфигурировать свойства пил 1-го класса
 config.chainsaw_tier2.tooltip=Конфигурировать свойства пил 2-го класса
 config.chainsaw_tier3.tooltip=Конфигурировать свойства пил 3-го класса
