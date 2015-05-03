@@ -6,13 +6,16 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import goldenapple.rfdrills.config.ConfigHandler;
 import goldenapple.rfdrills.crafting.ShapedUpgradeRecipe;
 import goldenapple.rfdrills.reference.LibMetadata;
+import goldenapple.rfdrills.reference.Reference;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidRegistry;
+import net.minecraftforge.oredict.RecipeSorter;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 
 public class ModRecipes {
 
     public static void init(){
+        RecipeSorter.register(Reference.MOD_ID + ":upgrading", ShapedUpgradeRecipe.class, RecipeSorter.Category.SHAPED, "after:minecraft:shapeless");
         if(Loader.isModLoaded("ThermalExpansion") && ConfigHandler.integrateTE) initTE();
         if(Loader.isModLoaded("EnderIO") && ConfigHandler.integrateEIO) initEIO();
     }
