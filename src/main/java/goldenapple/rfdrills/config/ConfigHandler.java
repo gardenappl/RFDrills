@@ -4,7 +4,6 @@ import cpw.mods.fml.client.event.ConfigChangedEvent;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import goldenapple.rfdrills.DrillTier;
 import goldenapple.rfdrills.reference.Reference;
-import goldenapple.rfdrills.util.LogHelper;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.config.Configuration;

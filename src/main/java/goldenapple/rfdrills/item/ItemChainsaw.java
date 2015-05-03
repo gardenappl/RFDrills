@@ -1,8 +1,8 @@
 package goldenapple.rfdrills.item;
 
 import cofh.api.energy.IEnergyContainerItem;
-import goldenapple.rfdrills.RFDrills;
 import goldenapple.rfdrills.DrillTier;
+import goldenapple.rfdrills.RFDrills;
 import goldenapple.rfdrills.config.ConfigHandler;
 import goldenapple.rfdrills.reference.Reference;
 import goldenapple.rfdrills.util.LogHelper;
@@ -15,7 +15,10 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.*;
+import net.minecraft.item.EnumRarity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemAxe;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StatCollector;

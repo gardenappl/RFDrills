@@ -2,8 +2,8 @@ package goldenapple.rfdrills.init;
 
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.GameRegistry;
-import goldenapple.rfdrills.config.ConfigHandler;
 import goldenapple.rfdrills.DrillTier;
+import goldenapple.rfdrills.config.ConfigHandler;
 import goldenapple.rfdrills.item.ItemChainsaw;
 import goldenapple.rfdrills.item.ItemDrill;
 import goldenapple.rfdrills.item.ItemMultiMetadata;

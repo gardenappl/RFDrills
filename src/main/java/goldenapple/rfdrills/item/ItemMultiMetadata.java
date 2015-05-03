@@ -2,14 +2,12 @@ package goldenapple.rfdrills.item;
 
 import goldenapple.rfdrills.RFDrills;
 import goldenapple.rfdrills.reference.Reference;
-import goldenapple.rfdrills.util.LogHelper;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
-import sun.util.calendar.LocalGregorianCalendar;
 
 import java.util.List;
 
