@@ -1,0 +1,47 @@
+item.rfdrills:leadstone_drill.name=Leadstone-Minenbohrer
+item.rfdrills:hardened_drill.name=Gehärteter Minenbohrer
+item.rfdrills:redstone_drill.name=Redstone-Minenbohrer
+item.rfdrills:resonant_drill.name=Resonanter Minenbohrer
+item.rfdrills:basic_drill.name=Einfacher elektrischer Bohrer
+item.rfdrills:advanced_drill.name=Fortgeschrittener elektrischer Bohrer
+
+item.rfdrills:leadstone_chainsaw.name=Leadstone-Kettensäge
+item.rfdrills:hardened_chainsaw.name=Gehärtete Kettensäge
+item.rfdrills:redstone_chainsaw.name=Redstone-Kettensäge
+item.rfdrills:resonant_chainsaw.name=Resonante Kettensäge
+item.rfdrills:basic_chainsaw.name=Einfache Kettensäge
+item.rfdrills:advanced_chainsaw.name=Fortgeschrittene Kettensäge
+
+item.rfdrills:leadstone_motor.name=Leadstone-Motor
+item.rfdrills:hardened_motor.name=Gehärteter Motor
+item.rfdrills:redstone_motor_frame.name=Redstone-Motorgehäuse
+item.rfdrills:redstone_motor.name=Redstone-Motor
+item.rfdrills:resonant_motor_frame.name=Resonantes Motorgehäuse
+item.rfdrills:resonant_motor.name=Resonanter Motor
+item.rfdrills:basic_motor.name=Einfacher elektrischer Motor
+item.rfdrills:advanced_motor.name=Fortgeschrittener elektrischer Motor
+
+
+rfdrills.energy_per_block.tooltip=Energie pro Block: %s RF
+rfdrills.can_break.tooltip=§cWird zerstört wenn keine Energie mehr
+rfdrills.chainsaw_has_modes.tooltip=§aRechtsklick beim Schleichen um Schere zu aktivieren
+rfdrills.drill_has_modes.tooltip=§aRechtsklick beim Schleichen um Abbaumodus zu wechseln
+rfdrills.enchantable.tooltip=§aKann verzaubert werden.
+
+rfdrills.shears_on.mode=Shears: §aAn
+rfdrills.shears_off.mode=Shears: §cAus
+rfdrills.1x3x1.mode=Mode: §a1x3x1
+rfdrills.1x1x1.mode=Mode: §c1x1x1
+
+config.general.tooltip=Einstellungen ändern
+config.drill_tier1.tooltip=Einstellungen ändern von Tier 1 Bohrern
+config.drill_tier2.tooltip=Einstellungen ändern von Tier 2 Bohrern
+config.drill_tier3.tooltip=Einstellungen ändern von Tier 3 Bohrern
+config.drill_tier4.tooltip=Einstellungen ändern von Tier 4 Bohrern
+config.chainsaw_tier1.tooltip=Einstellungen ändern von Tier 1 Kettensägen
+config.chainsaw_tier2.tooltip=Einstellungen ändern von Tier 2 Kettensägen
+config.chainsaw_tier3.tooltip=Einstellungen ändern von Tier 3 Kettensägen
+config.chainsaw_tier4.tooltip=Einstellungen ändern von Tier 4 Kettensägen
+
+
+itemGroup.rfdrills=RFDrills
