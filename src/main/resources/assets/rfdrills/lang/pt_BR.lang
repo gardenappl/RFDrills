@@ -1,0 +1,52 @@
+item.rfdrills:leadstone_drill.name=Broca de Chumbo
+item.rfdrills:hardened_drill.name=Broca de Invar
+item.rfdrills:redstone_drill.name=Broca de Electro
+item.rfdrills:resonant_drill.name=Broca de Endério
+item.rfdrills:basic_drill.name=Broca Elétrica Básica
+item.rfdrills:advanced_drill.name=Broca Elétrica Avançada
+
+item.rfdrills:flux_infused_crusher.name=Esmagador Infuso em Flux
+
+item.rfdrills:leadstone_chainsaw.name=Motosserra de Chumbo
+item.rfdrills:hardened_chainsaw.name=Motossera de Invar
+item.rfdrills:redstone_chainsaw.name=Motosserra de Electro
+item.rfdrills:resonant_chainsaw.name=Motosserra de Endério
+item.rfdrills:basic_chainsaw.name=Motosserra Básica
+item.rfdrills:advanced_chainsaw.name=Motosserra Avançada
+
+item.rfdrills:leadstone_motor.name=Motor de Chumbo
+item.rfdrills:hardened_motor.name=Motor de Invar
+item.rfdrills:redstone_motor_frame.name=Armação de Motor de Electro
+item.rfdrills:redstone_motor.name=Motor de Electro
+item.rfdrills:resonant_motor_frame.name=Armação de Motor de Endério
+item.rfdrills:resonant_motor.name=Motor de Endério
+item.rfdrills:basic_motor.name=Motor Elétrico Básico
+item.rfdrills:advanced_motor.name=Motor Elétrico Avançado
+
+
+rfdrills.energy_per_block.tooltip=Energia por bloco: %s RF
+rfdrills.can_break.tooltip=§cSe destrói quando a bateria esvazia.
+rfdrills.chainsaw_has_modes.tooltip=§aSegure shift enquanto usa para alternar as tesouras.
+rfdrills.drill_has_modes.tooltip=§aSegure shift enquanto usa para alternar modos de mineração.
+rfdrills.enchantable.tooltip=§aPode ser encantada.
+
+rfdrills.shears_on.mode=Tesouras: §aLigadas
+rfdrills.shears_off.mode=Tesouras: §cDesligadas
+rfdrills.5x5x5.mode=Modo: §a5x5x5
+rfdrills.3x3x3.mode=Modo: §e3x3x3
+rfdrills.1x3x1.mode=Modo: §a1x3x1
+rfdrills.1x1x1.mode=Modo: §c1x1x1
+
+config.general.tooltip=Configura opções principais
+config.drill_tier1.tooltip=Configura as prpriedades de brocas Nível 1
+config.drill_tier2.tooltip=Configura as prpriedades de brocas Nível 2
+config.drill_tier3.tooltip=Configura as prpriedades de brocas Nível 3
+config.drill_tier4.tooltip=Configura as prpriedades de brocas Nível 4
+config.crusher.tooltip=Configura as propriedades dos Esmagadores
+config.chainsaw_tier1.tooltip=Configura as propriedades de motosserras Nível 1
+config.chainsaw_tier2.tooltip=Configura as propriedades de motosserras Nível 2
+config.chainsaw_tier3.tooltip=Configura as propriedades de motosserras Nível 3
+config.chainsaw_tier4.tooltip=Configura as propriedades de motosserras Nível 4
+
+
+itemGroup.rfdrills=RFDrills
