@@ -50,7 +50,7 @@ public class ConfigHandler {
         DrillTier.DRILL2 = getDrillTierInfo("drill", 2, 100000, 200, 400, EnumRarity.common, false, false, 3, 8.0F, 3.0F, 0);
         DrillTier.DRILL3 = getDrillTierInfo("drill", 3, 1000000, 800, 1500, EnumRarity.uncommon, false, true, 3, 10.0F, 4.0F, 10);
         DrillTier.DRILL4 = getDrillTierInfo("drill", 4, 5000000, 1500, 5000, EnumRarity.rare, false, true, 4, 12.0F, 5.0F, 15);
-        DrillTier.BREAKER = getDrillTierInfo("drill", 5, 25000000, 5000, 10000, EnumRarity.epic, false, true, 5, 12.0F, 6.0F, 20);
+        DrillTier.CRUSHER = getDrillTierInfo("drill", 5, 25000000, 5000, 10000, EnumRarity.epic, false, true, 5, 12.0F, 8.0F, 20);
 
         DrillTier.CHAINSAW1 = getDrillTierInfo("chainsaw", 1, 20000, 80, 80, EnumRarity.common, true, false, 2, 6.0F, 3.0F, 0);
         DrillTier.CHAINSAW2 = getDrillTierInfo("chainsaw", 2, 100000, 200, 400, EnumRarity.common, false, false, 3, 7.0F, 4.0F, 0);

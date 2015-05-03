@@ -6,7 +6,7 @@ import goldenapple.rfdrills.DrillTier;
 import goldenapple.rfdrills.config.ConfigHandler;
 import goldenapple.rfdrills.item.ItemChainsaw;
 import goldenapple.rfdrills.item.ItemDrill;
-import goldenapple.rfdrills.item.ItemFluxBreaker;
+import goldenapple.rfdrills.item.ItemFluxCrusher;
 import goldenapple.rfdrills.item.ItemMultiMetadata;
 import goldenapple.rfdrills.reference.Names;
 import net.minecraft.item.EnumRarity;
@@ -20,7 +20,7 @@ public class ModItems {
     public static Item hardenedDrill = new ItemDrill(Names.HARDENED_DRILL, DrillTier.DRILL2);
     public static Item redstoneDrill = new ItemDrill(Names.REDSTONE_DRILL, DrillTier.DRILL3);
     public static Item resonantDrill = new ItemDrill(Names.RESONANT_DRILL, DrillTier.DRILL4);
-    public static Item fluxBreaker = new ItemFluxBreaker();
+    public static Item fluxBreaker = new ItemFluxCrusher();
 
     public static Item leadstoneChainsaw = new ItemChainsaw(Names.LEADSTONE_CHAINSAW, DrillTier.CHAINSAW1);
     public static Item hardenedChainsaw = new ItemChainsaw(Names.HARDENED_CHAINSAW, DrillTier.CHAINSAW2);
@@ -54,7 +54,7 @@ public class ModItems {
         GameRegistry.registerItem(redstoneChainsaw, Names.REDSTONE_CHAINSAW);
         GameRegistry.registerItem(resonantChainsaw, Names.RESONANT_CHAINSAW);
 
-        GameRegistry.registerItem(fluxBreaker, Names.FLUX_BREAKER);
+        GameRegistry.registerItem(fluxBreaker, Names.FLUX_CRUSHER);
     }
 
     private static void initEIO(){

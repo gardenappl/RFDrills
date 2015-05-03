@@ -156,7 +156,7 @@ public class ItemDrill extends ItemTool implements IEnergyContainerItem {
 
     @Override
     public boolean onBlockDestroyed(ItemStack itemStack, World world, Block block, int x, int y, int z, EntityLivingBase entity) {
-        if(getMode(itemStack) == 1 && entity instanceof EntityPlayer && !world.isRemote){
+        if(getMode(itemStack) == 1 && entity instanceof EntityPlayer && !world.isRemote && getEnergyStored(itemStack) >= getEnergyPerBlock(itemStack, block)){
             for (int b = y - 1; b <= y + 1; b++) {
                 if (world.blockExists(x, b, z) && effectiveMaterials.contains(world.getBlock(x, b, z).getMaterial())) {
                     if (b != y) { //don't harvest the same block twice

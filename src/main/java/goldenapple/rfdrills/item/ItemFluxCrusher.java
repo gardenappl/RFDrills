@@ -5,7 +5,6 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import goldenapple.rfdrills.DrillTier;
 import goldenapple.rfdrills.RFDrills;
-import goldenapple.rfdrills.config.ConfigHandler;
 import goldenapple.rfdrills.reference.Names;
 import goldenapple.rfdrills.reference.Reference;
 import goldenapple.rfdrills.util.LogHelper;
@@ -33,15 +32,15 @@ import net.minecraftforge.event.world.BlockEvent;
 import java.util.List;
 import java.util.Set;
 
-public class ItemFluxBreaker extends ItemTool implements IEnergyContainerItem{
+public class ItemFluxCrusher extends ItemTool implements IEnergyContainerItem{
     private static final Set<Block> vanillaBlocks = Sets.newHashSet(Blocks.cobblestone, Blocks.double_stone_slab, Blocks.stone_slab, Blocks.stone, Blocks.sandstone, Blocks.mossy_cobblestone, Blocks.iron_ore, Blocks.iron_block, Blocks.coal_ore, Blocks.gold_block, Blocks.gold_ore, Blocks.diamond_ore, Blocks.diamond_block, Blocks.ice, Blocks.netherrack, Blocks.lapis_ore, Blocks.lapis_block, Blocks.redstone_ore, Blocks.lit_redstone_ore, Blocks.rail, Blocks.detector_rail, Blocks.golden_rail, Blocks.activator_rail, Blocks.grass, Blocks.dirt, Blocks.sand, Blocks.gravel, Blocks.snow_layer, Blocks.snow, Blocks.clay, Blocks.farmland, Blocks.soul_sand, Blocks.mycelium, Blocks.planks, Blocks.bookshelf, Blocks.log, Blocks.log2, Blocks.chest, Blocks.pumpkin, Blocks.lit_pumpkin);
     private static final Set<Material> effectiveMaterials = Sets.newHashSet(Material.anvil, Material.clay, Material.craftedSnow, Material.glass, Material.dragonEgg, Material.grass, Material.ground, Material.ice, Material.snow, Material.iron, Material.rock, Material.sand, Material.coral, Material.wood, Material.leaves, Material.plants, Material.vine, Material.cloth, Material.gourd);
 
-    private static DrillTier tier = DrillTier.BREAKER;
+    private static DrillTier tier = DrillTier.CRUSHER;
     private IIcon iconEmpty;
     private IIcon iconActive;
-    public ItemFluxBreaker(){
-        super(3.0F, tier.material, vanillaBlocks);
+    public ItemFluxCrusher(){
+        super(1.0F, tier.material, vanillaBlocks);
         this.setCreativeTab(RFDrills.OmniDrillsTab);
         this.setHarvestLevel("pickaxe", tier.material.getHarvestLevel());
         this.setHarvestLevel("shovel", tier.material.getHarvestLevel());
@@ -73,8 +72,8 @@ public class ItemFluxBreaker extends ItemTool implements IEnergyContainerItem{
         if(getEnergyStored(itemStack) >= tier.energyPerBlock && canHarvestBlock(block, itemStack)){
             switch (getMode(itemStack)){
                 case 0: return effectiveMaterials.contains(block.getMaterial()) ? efficiencyOnProperMaterial : 1.0F;
-                case 1: return effectiveMaterials.contains(block.getMaterial()) ? efficiencyOnProperMaterial / 10 : 1.0F;
-                case 2: return effectiveMaterials.contains(block.getMaterial()) ? efficiencyOnProperMaterial / 20 : 1.0F;
+                case 1: return effectiveMaterials.contains(block.getMaterial()) ? efficiencyOnProperMaterial / 5 : 1.0F;
+                case 2: return effectiveMaterials.contains(block.getMaterial()) ? efficiencyOnProperMaterial / 10 : 1.0F;
                 default:
                     LogHelper.warn("Illegal drill mode!");
                     return effectiveMaterials.contains(block.getMaterial()) ? efficiencyOnProperMaterial : 1.0F;
@@ -211,17 +210,6 @@ public class ItemFluxBreaker extends ItemTool implements IEnergyContainerItem{
     }
 
     @Override
-    public IIcon getIcon(ItemStack itemStack, int pass) {
-        if(getEnergyStored(itemStack) == 0){
-            return iconEmpty;
-        }else if(getMode(itemStack) == (byte)1 || getMode(itemStack) == (byte)2){
-            return iconActive;
-        }else{
-            return itemIcon;
-        }
-    }
-
-    @Override
     @SuppressWarnings({"unchecked"})
     public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean what) {
         try {
@@ -266,20 +254,31 @@ public class ItemFluxBreaker extends ItemTool implements IEnergyContainerItem{
     }
 
     @Override
+    public IIcon getIcon(ItemStack itemStack, int renderPass) {
+        if(getEnergyStored(itemStack) == 0){
+            return iconEmpty;
+        }else if(getMode(itemStack) == (byte)1 || getMode(itemStack) == (byte)2){
+            return iconActive;
+        }else{
+            return itemIcon;
+        }
+    }
+
+    @Override
     public void registerIcons(IIconRegister register) {
-        itemIcon = register.registerIcon(Reference.MOD_ID.toLowerCase() + ":" + Names.FLUX_BREAKER);
-        iconEmpty = register.registerIcon(Reference.MOD_ID.toLowerCase() + ":" + Names.FLUX_BREAKER + "_empty");
-        iconActive = register.registerIcon(Reference.MOD_ID.toLowerCase() + ":" + Names.FLUX_BREAKER + "_active");
+        itemIcon = register.registerIcon(Reference.MOD_ID.toLowerCase() + ":" + Names.FLUX_CRUSHER);
+        iconEmpty = register.registerIcon(Reference.MOD_ID.toLowerCase() + ":" + Names.FLUX_CRUSHER + "_empty");
+        iconActive = register.registerIcon(Reference.MOD_ID.toLowerCase() + ":" + Names.FLUX_CRUSHER + "_active");
     }
 
     @Override
     public String getUnlocalizedName() {
-        return "item." +Reference.MOD_ID.toLowerCase() + ":" + Names.FLUX_BREAKER;
+        return "item." +Reference.MOD_ID.toLowerCase() + ":" + Names.FLUX_CRUSHER;
     }
 
     @Override
     public String getUnlocalizedName(ItemStack itemStack) {
-        return "item." + Reference.MOD_ID.toLowerCase() + ":" + Names.FLUX_BREAKER;
+        return "item." + Reference.MOD_ID.toLowerCase() + ":" + Names.FLUX_CRUSHER;
     }
 
     public ItemStack setMode(ItemStack itemStack, byte mode){

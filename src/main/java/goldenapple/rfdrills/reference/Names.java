@@ -15,8 +15,8 @@ public class Names {
     public static final String BASIC_CHAINSAW = "basic_chainsaw";
     public static final String ADVANCED_CHAINSAW = "advanced_chainsaw";
 
-    public static final String DARK_SOULARIUM_BREAKER = "dark_soularium_breaker";
-    public static final String FLUX_BREAKER = "flux_infused_breaker";
+    public static final String DARK_SOULARIUM_CRUSHER = "dark_soularium_crusher";
+    public static final String FLUX_CRUSHER = "flux_infused_crusher";
 
     public static final String MOTOR_TE = "motor_te";
     public static final String[] MOTORS_TE = {"leadstone_motor",

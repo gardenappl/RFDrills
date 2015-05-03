@@ -29,7 +29,7 @@ public class RFDrillsGuiConfig extends GuiConfig{ //@author ljfa
         list.add(categoryElement("drill_tier2", "Tier 2 Drills", "config.drill_tier2"));
         list.add(categoryElement("drill_tier3", "Tier 3 Drills", "config.drill_tier3"));
         list.add(categoryElement("drill_tier4", "Tier 4 Drills", "config.drill_tier4"));
-        list.add(categoryElement("drill_tier5", "Breakers", "config.breaker"));
+        list.add(categoryElement("drill_tier5", "Crushers", "config.crusher"));
 
         list.add(categoryElement("chainsaw_tier1", "Tier 1 Chainsaws", "config.chainsaw_tier1"));
         list.add(categoryElement("chainsaw_tier2", "Tier 2 Chainsaws", "config.chainsaw_tier2"));

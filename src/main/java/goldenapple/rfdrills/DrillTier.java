@@ -8,23 +8,12 @@ public class DrillTier {
     public static DrillTier DRILL2;
     public static DrillTier DRILL3;
     public static DrillTier DRILL4;
-    public static DrillTier BREAKER;
+    public static DrillTier CRUSHER;
 
     public static DrillTier CHAINSAW1;
     public static DrillTier CHAINSAW2;
     public static DrillTier CHAINSAW3;
     public static DrillTier CHAINSAW4;
-
-    public static Item.ToolMaterial DRILL1_MATERIAL;
-    public static Item.ToolMaterial DRILL2_MATERIAL;
-    public static Item.ToolMaterial DRILL3_MATERIAL;
-    public static Item.ToolMaterial DRILL4_MATERIAL;
-    public static Item.ToolMaterial BREAKER_MATERIAL;
-
-    public static Item.ToolMaterial CHAINSAW1_MATERIAL;
-    public static Item.ToolMaterial CHAINSAW2_MATERIAL;
-    public static Item.ToolMaterial CHAINSAW3_MATERIAL;
-    public static Item.ToolMaterial CHAINSAW4_MATERIAL;
 
     public Item.ToolMaterial material;
     public int maxEnergy;
