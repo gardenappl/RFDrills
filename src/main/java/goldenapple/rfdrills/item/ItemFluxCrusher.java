@@ -32,7 +32,7 @@ import net.minecraftforge.event.world.BlockEvent;
 import java.util.List;
 import java.util.Set;
 
-public class ItemFluxCrusher extends ItemTool implements IEnergyContainerItem{
+public class ItemFluxCrusher extends ItemTool implements IEnergyTool{
     private static final Set<Block> vanillaBlocks = Sets.newHashSet(Blocks.cobblestone, Blocks.double_stone_slab, Blocks.stone_slab, Blocks.stone, Blocks.sandstone, Blocks.mossy_cobblestone, Blocks.iron_ore, Blocks.iron_block, Blocks.coal_ore, Blocks.gold_block, Blocks.gold_ore, Blocks.diamond_ore, Blocks.diamond_block, Blocks.ice, Blocks.netherrack, Blocks.lapis_ore, Blocks.lapis_block, Blocks.redstone_ore, Blocks.lit_redstone_ore, Blocks.rail, Blocks.detector_rail, Blocks.golden_rail, Blocks.activator_rail, Blocks.grass, Blocks.dirt, Blocks.sand, Blocks.gravel, Blocks.snow_layer, Blocks.snow, Blocks.clay, Blocks.farmland, Blocks.soul_sand, Blocks.mycelium, Blocks.planks, Blocks.bookshelf, Blocks.log, Blocks.log2, Blocks.chest, Blocks.pumpkin, Blocks.lit_pumpkin);
     private static final Set<Material> effectiveMaterials = Sets.newHashSet(Material.anvil, Material.clay, Material.craftedSnow, Material.glass, Material.dragonEgg, Material.grass, Material.ground, Material.ice, Material.snow, Material.iron, Material.rock, Material.sand, Material.coral, Material.wood, Material.leaves, Material.plants, Material.vine, Material.cloth, Material.gourd);
 
@@ -86,8 +86,8 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyContainerItem{
     private int getEnergyPerBlock(ItemStack itemStack, Block block){
         switch (getMode(itemStack)){
             case 0: return tier.energyPerBlock;
-            case 1: return tier.energyPerBlock * 9;
-            case 2: return tier.energyPerBlock * 25;
+            case 1: return tier.energyPerBlock * 5;
+            case 2: return tier.energyPerBlock * 10;
             default:
                 LogHelper.warn("Illegal drill mode!");
                 return tier.energyPerBlock;
@@ -306,20 +306,22 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyContainerItem{
         }
     }
 
+    /* IEnergyTool methods */
+
+    @Override
     public ItemStack setEnergy(ItemStack itemStack, int energy){
         if(itemStack.stackTagCompound == null){
             itemStack.stackTagCompound = new NBTTagCompound();
         }
 
-        itemStack.stackTagCompound.setInteger("Energy", energy);
+        itemStack.stackTagCompound.setInteger("Energy", Math.min(energy, getMaxEnergyStored(itemStack)));
         return itemStack;
     }
 
+    @Override
     public ItemStack drainEnergy(ItemStack itemStack, int energy){
         return setEnergy(itemStack, Math.max(getEnergyStored(itemStack) - energy, 0));
     }
-
-    /* IEnergyContainerItem stuff */
 
     @Override
     public int receiveEnergy(ItemStack itemStack, int maxReceive, boolean simulate) { //stolen from ItemEnergyContainer

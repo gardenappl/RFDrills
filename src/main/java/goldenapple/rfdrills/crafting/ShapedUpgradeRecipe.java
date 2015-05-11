@@ -1,6 +1,8 @@
 package goldenapple.rfdrills.crafting;
 
 import cofh.api.energy.IEnergyContainerItem;
+import cofh.lib.util.helpers.EnergyHelper;
+import goldenapple.rfdrills.item.IEnergyTool;
 import goldenapple.rfdrills.item.ItemDrill;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
@@ -19,7 +21,7 @@ public class ShapedUpgradeRecipe extends ShapedOreRecipe {
     @Override
     public ItemStack getCraftingResult(InventoryCrafting inventoryCrafting) {
         int energy = 0;
-        ItemDrill drillItem = (ItemDrill) getRecipeOutput().getItem();
+        IEnergyTool energyTool = (IEnergyTool) getRecipeOutput().getItem();
 
         for(int slot = 0; slot < inventoryCrafting.getSizeInventory(); slot++){
             if(inventoryCrafting.getStackInSlot(slot) != null) {
@@ -30,6 +32,6 @@ public class ShapedUpgradeRecipe extends ShapedOreRecipe {
             }
         }
 
-        return drillItem.setEnergy(getRecipeOutput(), Math.min(energy, drillItem.getMaxEnergyStored(getRecipeOutput())));
+        return energyTool.setEnergy(getRecipeOutput(), energy);
     }
 }

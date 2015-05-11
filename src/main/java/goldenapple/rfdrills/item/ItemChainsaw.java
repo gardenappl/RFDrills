@@ -9,6 +9,7 @@ import goldenapple.rfdrills.util.LogHelper;
 import goldenapple.rfdrills.util.MiscUtil;
 import goldenapple.rfdrills.util.StringHelper;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
@@ -27,7 +28,7 @@ import net.minecraftforge.common.IShearable;
 
 import java.util.List;
 
-public class ItemChainsaw extends ItemAxe implements IEnergyContainerItem{
+public class ItemChainsaw extends ItemAxe implements IEnergyTool{
     private final String name;
     private final DrillTier tier;
 
@@ -65,6 +66,8 @@ public class ItemChainsaw extends ItemAxe implements IEnergyContainerItem{
         if(getEnergyStored(itemStack) >= tier.energyPerBlock){
             if(block instanceof IShearable && getMode(itemStack) == 1) {
                 return 100.0F;
+            }else if(block.getMaterial() == Material.cloth){
+                return super.getDigSpeed(itemStack, block, meta) * 3;
             }else {
                 return super.getDigSpeed(itemStack, block, meta);
             }
@@ -229,20 +232,22 @@ public class ItemChainsaw extends ItemAxe implements IEnergyContainerItem{
         }
     }
 
+    /* IEnergyTool methods */
+
+    @Override
     public ItemStack setEnergy(ItemStack itemStack, int energy){
         if(itemStack.stackTagCompound == null){
             itemStack.stackTagCompound = new NBTTagCompound();
         }
 
-        itemStack.stackTagCompound.setInteger("Energy", energy);
+        itemStack.stackTagCompound.setInteger("Energy", Math.min(energy, getMaxEnergyStored(itemStack)));
         return itemStack;
     }
 
+    @Override
     public ItemStack drainEnergy(ItemStack itemStack, int energy){
         return setEnergy(itemStack, Math.max(getEnergyStored(itemStack) - energy, 0));
     }
-
-    /* IEnergyContainerItem stuff */
 
     @Override
     public int receiveEnergy(ItemStack itemStack, int maxReceive, boolean simulate) { //stolen from ItemEnergyContainer
