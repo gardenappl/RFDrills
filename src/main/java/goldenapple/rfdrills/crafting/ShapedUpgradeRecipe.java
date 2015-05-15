@@ -32,6 +32,6 @@ public class ShapedUpgradeRecipe extends ShapedOreRecipe {
             }
         }
 
-        return energyTool.setEnergy(getRecipeOutput(), energy);
+        return energyTool.setEnergy(getRecipeOutput().copy(), energy).copy(); //might be redundant but in my experience a spare .copy() never hurts
     }
 }
