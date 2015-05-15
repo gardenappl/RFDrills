@@ -15,9 +15,10 @@ import net.minecraftforge.oredict.ShapedOreRecipe;
 public class ModRecipes {
 
     public static void init(){
-        RecipeSorter.register(Reference.MOD_ID + ":upgrading", ShapedUpgradeRecipe.class, RecipeSorter.Category.SHAPED, "after:minecraft:shapeless");
+        RecipeSorter.register(Reference.MOD_ID + ":upgrading", ShapedUpgradeRecipe.class, RecipeSorter.Category.SHAPED, "after:minecraft:shaped before:minecraft:shapeless");
         if(Loader.isModLoaded("ThermalExpansion") && ConfigHandler.integrateTE) initTE();
         if(Loader.isModLoaded("EnderIO") && ConfigHandler.integrateEIO) initEIO();
+        if(Loader.isModLoaded("RedstoneArsenal") && ConfigHandler.integrateRArs) initRArs();
     }
 
     private static void initTE(){
@@ -159,5 +160,17 @@ public class ModRecipes {
                 " iS",
                 "IMi",
                 "CI ", 'I', "ingotEnergeticAlloy", 'i', "ingotElectricalSteel", 'C', capacitorAdvanced.copy(), 'M', motorAdvanced.copy(), 'S', new ItemStack(ModItems.basicChainsaw)));
+    }
+
+    public static void initRArs(){
+        ItemStack fluxRod = new ItemStack(GameRegistry.findItem("RedstoneArsenal", "material"), 1, 193);
+        ItemStack fluxPickaxe = new ItemStack(GameRegistry.findItem("RedstoneArsenal", "tool.pickaxeFlux"), 1, 0);
+        ItemStack fluxShovel = new ItemStack(GameRegistry.findItem("RedstoneArsenal", "tool.shovelFlux"), 1, 0);
+        ItemStack fluxAxe = new ItemStack(GameRegistry.findItem("RedstoneArsenal", "tool.axeFlux"), 1, 0);
+
+        GameRegistry.addRecipe(new ShapedUpgradeRecipe(ModItems.fluxBreaker,
+                "PSA",
+                "DBC",
+                " R ", 'B', "blockElectrumFlux", 'R', fluxRod, 'P', fluxPickaxe, 'S', fluxShovel, 'A', fluxAxe, 'D', new ItemStack(ModItems.resonantDrill), 'C', new ItemStack(ModItems.resonantChainsaw)));
     }
 }

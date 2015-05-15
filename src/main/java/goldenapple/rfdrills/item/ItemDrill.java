@@ -21,6 +21,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.stats.StatList;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
@@ -155,6 +156,11 @@ public class ItemDrill extends ItemTool implements IEnergyTool {
     }
 
     @Override
+    public void setDamage(ItemStack itemStack, int damage) {
+        //do nothing, other methods are responsible for energy consumption
+    }
+
+    @Override
     public boolean onBlockDestroyed(ItemStack itemStack, World world, Block block, int x, int y, int z, EntityLivingBase entity) {
         if(getMode(itemStack) == 1 && entity instanceof EntityPlayer && !world.isRemote && getEnergyStored(itemStack) >= getEnergyPerBlock(itemStack, block)){
             for (int b = y - 1; b <= y + 1; b++) {
@@ -169,7 +175,10 @@ public class ItemDrill extends ItemTool implements IEnergyTool {
             entity.setCurrentItemOrArmor(0, drainEnergy(itemStack, getEnergyPerBlock(itemStack, block)));
 
             if (this.getEnergyStored(itemStack) == 0 && tier.canBreak) {
-                itemStack.damageItem(1000000, entity);
+              //itemStack.damageItem(1000000, entity);
+                entity.renderBrokenItemStack(itemStack);
+                ((EntityPlayer)entity).destroyCurrentEquippedItem();
+                ((EntityPlayer)entity).addStat(StatList.objectBreakStats[Item.getIdFromItem(itemStack.getItem())], 1);
             }
             return true;
         }
@@ -183,7 +192,9 @@ public class ItemDrill extends ItemTool implements IEnergyTool {
             entityAttacker.setCurrentItemOrArmor(0, drainEnergy(itemStack, tier.energyPerBlock * 2));
 
             if (this.getEnergyStored(itemStack) == 0 && tier.canBreak) {
-                itemStack.damageItem(1000000, entityAttacker);
+                entityAttacker.renderBrokenItemStack(itemStack);
+                ((EntityPlayer)entityAttacker).destroyCurrentEquippedItem();
+                ((EntityPlayer)entityAttacker).addStat(StatList.objectBreakStats[Item.getIdFromItem(itemStack.getItem())], 1);
             }
             return true;
         }

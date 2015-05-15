@@ -22,6 +22,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.stats.StatList;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.StatCollector;
@@ -146,6 +147,11 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool{
         return itemStack;
     }
 
+    @Override
+    public void setDamage(ItemStack itemStack, int damage) {
+        //do nothing, other methods are responsible for energy consumption
+    }
+
     private void harvestBlock(World world, int x, int y, int z, EntityPlayer player){
         Block block = world.getBlock(x, y, z);
         if (block.getBlockHardness(world, x, y, z) < 0) {
@@ -187,7 +193,9 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool{
             entity.setCurrentItemOrArmor(0, drainEnergy(itemStack, getEnergyPerBlock(itemStack, block)));
 
             if (this.getEnergyStored(itemStack) == 0 && tier.canBreak) {
-                itemStack.damageItem(1000000, entity);
+                entity.renderBrokenItemStack(itemStack);
+                ((EntityPlayer)entity).destroyCurrentEquippedItem();
+                ((EntityPlayer)entity).addStat(StatList.objectBreakStats[Item.getIdFromItem(itemStack.getItem())], 1);
             }
             return true;
         }
@@ -201,7 +209,9 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool{
             entityAttacker.setCurrentItemOrArmor(0, drainEnergy(itemStack, tier.energyPerBlock * 2));
 
             if (this.getEnergyStored(itemStack) == 0 && tier.canBreak) {
-                itemStack.damageItem(1000000, entityAttacker);
+                entityAttacker.renderBrokenItemStack(itemStack);
+                ((EntityPlayer)entityAttacker).destroyCurrentEquippedItem();
+                ((EntityPlayer)entityAttacker).addStat(StatList.objectBreakStats[Item.getIdFromItem(itemStack.getItem())], 1);
             }
             return true;
         }
