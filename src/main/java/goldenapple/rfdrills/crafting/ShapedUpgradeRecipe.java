@@ -1,9 +1,7 @@
 package goldenapple.rfdrills.crafting;
 
 import cofh.api.energy.IEnergyContainerItem;
-import cofh.lib.util.helpers.EnergyHelper;
 import goldenapple.rfdrills.item.IEnergyTool;
-import goldenapple.rfdrills.item.ItemDrill;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -32,6 +30,6 @@ public class ShapedUpgradeRecipe extends ShapedOreRecipe {
             }
         }
 
-        return energyTool.setEnergy(getRecipeOutput().copy(), energy).copy(); //might be redundant but in my experience a spare .copy() never hurts
+        return energyTool.setEnergy(getRecipeOutput().copy(), energy).copy(); //might be redundant but in my a spare .copy() never hurts
     }
 }
