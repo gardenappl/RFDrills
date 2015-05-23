@@ -74,7 +74,8 @@ public class ConfigHandler {
         efficiency = config.getFloat("efficiency", tool + "_tier" + tierNumber, efficiency, 0, Float.MAX_VALUE, "Efficiency of the tool");
         damage = config.getFloat("damage", tool + "_tier" + tierNumber, damage, 0, Float.MAX_VALUE, "Damage that the tool does when attacking enemies");
         enchant = config.getInt("enchant", tool + "_tier" + tierNumber, enchant, 0, Integer.MAX_VALUE, "Enchantablity of the tool (0 - not enchantable)");
-        Item.ToolMaterial material = EnumHelper.addToolMaterial(tool.toUpperCase() + tierNumber, miningLevel, Integer.MAX_VALUE, efficiency, damage, enchant);
+
+        Item.ToolMaterial material = EnumHelper.addToolMaterial(tool.toUpperCase() + tierNumber, miningLevel, 9000, efficiency, damage, enchant);
         return new DrillTier(material, maxEnergy, rechargeRate, energyPerBlock, rarity, canBreak, hasModes);
     }
 

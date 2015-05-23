@@ -1,6 +1,5 @@
 package goldenapple.rfdrills.item;
 
-import cofh.api.energy.IEnergyContainerItem;
 import goldenapple.rfdrills.DrillTier;
 import goldenapple.rfdrills.RFDrills;
 import goldenapple.rfdrills.config.ConfigHandler;
@@ -12,6 +11,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -77,6 +78,12 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool{
         }
     }
 
+    private int getEnergyPerUse(ItemStack itemStack){
+        int energy = tier.energyPerBlock;
+        float multiplier = Math.max(1F - (EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, itemStack)) / 5F, 0.2F);
+        return Math.round(energy * multiplier);
+    }
+
     @Override
     public double getDurabilityForDisplay(ItemStack itemStack) {
         return Math.max(1.0 - (double)getEnergyStored(itemStack) / (double)tier.maxEnergy, 0);
@@ -112,10 +119,10 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool{
     @Override
     public boolean itemInteractionForEntity(ItemStack itemStack, EntityPlayer player, EntityLivingBase entity) {
         if(getMode(itemStack) == 1) {
-            if ((getEnergyStored(itemStack) >= tier.energyPerBlock || tier.canBreak) && Items.shears.itemInteractionForEntity(itemStack, player, entity)) {
+            if ((getEnergyStored(itemStack) >= getEnergyPerUse(itemStack) || tier.canBreak) && Items.shears.itemInteractionForEntity(itemStack, player, entity)) {
                 itemStack.setItemDamage(0);
                 if(!player.capabilities.isCreativeMode) {
-                    player.setCurrentItemOrArmor(0, drainEnergy(itemStack, tier.energyPerBlock));
+                    player.setCurrentItemOrArmor(0, drainEnergy(itemStack, getEnergyPerUse(itemStack)));
 
                     if (this.getEnergyStored(itemStack) == 0 && tier.canBreak) {
                         itemStack.damageItem(1000000, entity);
@@ -132,7 +139,7 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool{
 
     @Override
     public boolean onBlockStartBreak(ItemStack itemStack, int x, int y, int z, EntityPlayer player) {
-        if(getMode(itemStack) == 1 && getEnergyStored(itemStack) >= tier.energyPerBlock / 5) {
+        if(getMode(itemStack) == 1 && getEnergyStored(itemStack) >= getEnergyPerUse(itemStack) / 5) {
             if (Items.shears.onBlockStartBreak(itemStack, x, y, z, player)) {
                 itemStack.setItemDamage(0);
                 return true;
@@ -147,7 +154,7 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool{
     @Override
     public boolean onBlockDestroyed(ItemStack itemStack, World world, Block block, int x, int y, int z, EntityLivingBase entity) {
         if(entity instanceof EntityPlayer && !((EntityPlayer)entity).capabilities.isCreativeMode) {
-            entity.setCurrentItemOrArmor(0, drainEnergy(itemStack, (block instanceof IShearable && getMode(itemStack) == 1) ? tier.energyPerBlock / 5 : tier.energyPerBlock));
+            entity.setCurrentItemOrArmor(0, drainEnergy(itemStack, (block instanceof IShearable && getMode(itemStack) == 1) ? getEnergyPerUse(itemStack) / 5 : getEnergyPerUse(itemStack)));
 
             if (this.getEnergyStored(itemStack) == 0 && tier.canBreak) {
                 entity.renderBrokenItemStack(itemStack);
@@ -184,6 +191,20 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool{
 
             if (MiscUtil.isShiftPressed()) {
                 list.add(StringHelper.writeEnergyPerBlockInfo(tier.energyPerBlock));
+                if(tier.hasModes) {
+                    switch (getMode(itemStack)){
+                        case 0:
+                            list.add(StatCollector.translateToLocal("rfdrills.shears_off.mode"));
+                            break;
+                        case 1:
+                            list.add(StatCollector.translateToLocal("rfdrills.shears_on.mode"));
+                            break;
+                        default:
+                            list.add(StatCollector.translateToLocal("rfdrills.shears_off.mode"));
+                            LogHelper.warn("Illegal drill mode!");
+                            break;
+                    }
+                }
                 if (tier.canBreak) {
                     list.add(StatCollector.translateToLocal("rfdrills.can_break.tooltip"));
                 }

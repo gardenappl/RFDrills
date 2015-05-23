@@ -1,6 +1,5 @@
 package goldenapple.rfdrills.item;
 
-import cofh.api.energy.IEnergyContainerItem;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import goldenapple.rfdrills.DrillTier;
@@ -14,6 +13,8 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -84,15 +85,21 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool{
         }
     }
 
+    private int getEnergyPerUse(ItemStack itemStack){
+        int energy = tier.energyPerBlock;
+        float multiplier = Math.max(1F - (EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, itemStack)) / 5F, 0.2F);
+        return Math.round(energy * multiplier);
+    }
+
     private int getEnergyPerBlock(ItemStack itemStack, Block block){
+        int energy = getEnergyPerUse(itemStack);
         switch (getMode(itemStack)){
-            case 0: return tier.energyPerBlock;
-            case 1: return tier.energyPerBlock * 5;
-            case 2: return tier.energyPerBlock * 10;
-            default:
-                LogHelper.warn("Illegal drill mode!");
-                return tier.energyPerBlock;
+            case 0: break;
+            case 1: energy = energy * 5; break;
+            case 2: energy = energy * 10; break;
+            default: LogHelper.warn("Illegal drill mode!"); break;
         }
+        return energy;
     }
 
     @Override
@@ -206,7 +213,7 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool{
     @Override
     public boolean hitEntity(ItemStack itemStack, EntityLivingBase entityAttacked, EntityLivingBase entityAttacker) {
         if(entityAttacker instanceof EntityPlayer && !((EntityPlayer)entityAttacker).capabilities.isCreativeMode) {
-            entityAttacker.setCurrentItemOrArmor(0, drainEnergy(itemStack, tier.energyPerBlock * 2));
+            entityAttacker.setCurrentItemOrArmor(0, drainEnergy(itemStack, getEnergyPerUse(itemStack) * 2));
 
             if (this.getEnergyStored(itemStack) == 0 && tier.canBreak) {
                 entityAttacker.renderBrokenItemStack(itemStack);
