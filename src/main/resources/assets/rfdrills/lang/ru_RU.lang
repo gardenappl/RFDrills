@@ -24,6 +24,9 @@ item.rfdrills:basic_motor.name=Основной электромотор
 item.rfdrills:advanced_motor.name=Продвинутый электромотор
 
 
+rfdrills.drill.tooltip=§aРаботает как кирка и лопата
+rfdrills.chainsaw.tooltip=§aРаботает как топор и ножницы
+rfdrills.crusher.tooltip=§aРаботает как кирка, лопата и топор
 rfdrills.energy_per_block.tooltip=Энергии за блок: %s RF
 rfdrills.can_break.tooltip=§cСломается при нехватке энергии.
 rfdrills.chainsaw_has_modes.tooltip=§b§oИспользуйте сидя, чтобы активировать ножницы

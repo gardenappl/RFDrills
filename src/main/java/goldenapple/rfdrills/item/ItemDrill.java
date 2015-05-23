@@ -63,7 +63,7 @@ public class ItemDrill extends ItemTool implements IEnergyTool {
         if(getEnergyStored(itemStack) >= tier.energyPerBlock && canHarvestBlock(block, itemStack)){
             switch (getMode(itemStack)){
                 case 0: return effectiveMaterials.contains(block.getMaterial()) ? efficiencyOnProperMaterial : 1.0F;
-                case 1: return effectiveMaterials.contains(block.getMaterial()) ? efficiencyOnProperMaterial / 5 : 1.0F;
+                case 1: return effectiveMaterials.contains(block.getMaterial()) ? efficiencyOnProperMaterial / 3 : 1.0F;
                 default:
                     LogHelper.warn("Illegal drill mode!");
                     return effectiveMaterials.contains(block.getMaterial()) ? efficiencyOnProperMaterial : 1.0F;
@@ -83,12 +83,10 @@ public class ItemDrill extends ItemTool implements IEnergyTool {
     }
 
     private int getEnergyPerUse(ItemStack itemStack){
-        int energy = tier.energyPerBlock;
-        float multiplier = Math.max(1F - (EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, itemStack)) / 5F, 0.2F);
-        return Math.round(energy * multiplier);
+        return Math.round(tier.energyPerBlock / (EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, itemStack) + 1)); //Vanilla formula: a 100% / (unbreaking level + 1) chance to not take damage
     }
 
-    private int getEnergyPerBlock(ItemStack itemStack, Block block){
+    private int getEnergyPerUseWithMode(ItemStack itemStack){
         int energy = getEnergyPerUse(itemStack);
         switch (getMode(itemStack)){
             case 0: break;
@@ -169,7 +167,7 @@ public class ItemDrill extends ItemTool implements IEnergyTool {
 
     @Override
     public boolean onBlockDestroyed(ItemStack itemStack, World world, Block block, int x, int y, int z, EntityLivingBase entity) {
-        if(getMode(itemStack) == 1 && entity instanceof EntityPlayer && !world.isRemote && getEnergyStored(itemStack) >= getEnergyPerBlock(itemStack, block)){
+        if(getMode(itemStack) == 1 && entity instanceof EntityPlayer && !world.isRemote && getEnergyStored(itemStack) >= getEnergyPerUseWithMode(itemStack)){
             for (int b = y - 1; b <= y + 1; b++) {
                 if (world.blockExists(x, b, z) && effectiveMaterials.contains(world.getBlock(x, b, z).getMaterial())) {
                     if (b != y) { //don't harvest the same block twice
@@ -179,7 +177,7 @@ public class ItemDrill extends ItemTool implements IEnergyTool {
             }
         }
         if(entity instanceof EntityPlayer && !((EntityPlayer)entity).capabilities.isCreativeMode) {
-            entity.setCurrentItemOrArmor(0, drainEnergy(itemStack, getEnergyPerBlock(itemStack, block)));
+            entity.setCurrentItemOrArmor(0, drainEnergy(itemStack, getEnergyPerUseWithMode(itemStack)));
 
             if (this.getEnergyStored(itemStack) == 0 && tier.canBreak) {
               //itemStack.damageItem(1000000, entity);
@@ -216,7 +214,7 @@ public class ItemDrill extends ItemTool implements IEnergyTool {
             list.add(StringHelper.writeEnergyInfo(getEnergyStored(itemStack), tier.maxEnergy));
 
             if (MiscUtil.isShiftPressed()) {
-                list.add(StringHelper.writeEnergyPerBlockInfo(tier.energyPerBlock));
+                list.add(StringHelper.writeEnergyPerBlockInfo(getEnergyPerUseWithMode(itemStack)));
                 if(tier.hasModes) {
                     switch (getMode(itemStack)) {
                         case 0:
@@ -231,6 +229,7 @@ public class ItemDrill extends ItemTool implements IEnergyTool {
                             break;
                     }
                 }
+                list.add(StatCollector.translateToLocal("rfdrills.drill.tooltip"));
                 if (tier.canBreak) {
                     list.add(StatCollector.translateToLocal("rfdrills.can_break.tooltip"));
                 }
@@ -244,7 +243,7 @@ public class ItemDrill extends ItemTool implements IEnergyTool {
               //list.add(StatCollector.translateToLocal("info.cofh.hold") + " §e§o" + StatCollector.translateToLocal("info.cofh.shift") + " §r§7" + StatCollector.translateToLocal("info.cofh.forDetails"));
                 list.add(cofh.lib.util.helpers.StringHelper.shiftForDetails());
             }
-        }catch (Throwable e){
+        }catch (Exception e){
             LogHelper.warn("Something went wrong with the tooltips!");
             e.printStackTrace();
         }

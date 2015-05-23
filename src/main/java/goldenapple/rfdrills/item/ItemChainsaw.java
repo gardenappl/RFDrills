@@ -79,9 +79,7 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool{
     }
 
     private int getEnergyPerUse(ItemStack itemStack){
-        int energy = tier.energyPerBlock;
-        float multiplier = Math.max(1F - (EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, itemStack)) / 5F, 0.2F);
-        return Math.round(energy * multiplier);
+        return Math.round(tier.energyPerBlock / (EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, itemStack) + 1)); //Vanilla formula: a 100% / (unbreaking level + 1) chance to not take damage
     }
 
     @Override
@@ -190,7 +188,7 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool{
             list.add(StringHelper.writeEnergyInfo(getEnergyStored(itemStack), tier.maxEnergy));
 
             if (MiscUtil.isShiftPressed()) {
-                list.add(StringHelper.writeEnergyPerBlockInfo(tier.energyPerBlock));
+                list.add(StringHelper.writeEnergyPerBlockInfo(getEnergyPerUse(itemStack)));
                 if(tier.hasModes) {
                     switch (getMode(itemStack)){
                         case 0:
@@ -205,6 +203,7 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool{
                             break;
                     }
                 }
+                list.add(StatCollector.translateToLocal("rfdrills.chainsaw.tooltip"));
                 if (tier.canBreak) {
                     list.add(StatCollector.translateToLocal("rfdrills.can_break.tooltip"));
                 }
@@ -218,7 +217,7 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool{
               //list.add(StatCollector.translateToLocal("info.cofh.hold") + " §e§o" + StatCollector.translateToLocal("info.cofh.shift") + " §r§7" + StatCollector.translateToLocal("info.cofh.forDetails"));
                 list.add(cofh.lib.util.helpers.StringHelper.shiftForDetails());
             }
-        }catch (Throwable e){
+        }catch (Exception e){
             e.printStackTrace();
         }
     }

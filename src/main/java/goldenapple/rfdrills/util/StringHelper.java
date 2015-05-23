@@ -12,9 +12,9 @@ public class StringHelper {
         }else return Integer.toString(energy);
     }
 
-    public static String writeEnergyPerBlockInfo(int energyPerBlock){
-        String energy = formatEnergy(energyPerBlock);
-        return StatCollector.translateToLocalFormatted("rfdrills.energy_per_block.tooltip", energy);
+    public static String writeEnergyPerBlockInfo(int energy){
+        String energyFormatted = formatEnergy(energy);
+        return StatCollector.translateToLocalFormatted("rfdrills.energy_per_block.tooltip", energyFormatted);
     }
 
     public static String writeEnergyInfo(int energyLevel, int maxEnergy){
