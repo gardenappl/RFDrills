@@ -28,10 +28,10 @@ rfdrills.drill.tooltip=§aРаботает как кирка и лопата
 rfdrills.chainsaw.tooltip=§aРаботает как топор и ножницы
 rfdrills.crusher.tooltip=§aРаботает как кирка, лопата и топор
 rfdrills.energy_per_block.tooltip=Энергии за блок: %s RF
-rfdrills.can_break.tooltip=§cСломается при нехватке энергии.
+rfdrills.can_break.tooltip=§cСломается при нехватке энергии
 rfdrills.chainsaw_has_modes.tooltip=§b§oИспользуйте сидя, чтобы активировать ножницы
 rfdrills.drill_has_modes.tooltip=§b§oИспользуйте сидя, чтобы изменить режим копания
-rfdrills.enchantable.tooltip=§aМожет быть зачарована.
+rfdrills.enchantable.tooltip=§aМожет быть зачарована
 
 rfdrills.shears_on.mode=Ножницы: §aВкл
 rfdrills.shears_off.mode=Ножницы: §cВыкл
@@ -51,5 +51,9 @@ config.chainsaw_tier2.tooltip=Конфигурировать свойства п
 config.chainsaw_tier3.tooltip=Конфигурировать свойства пил 3-го класса
 config.chainsaw_tier4.tooltip=Конфигурировать свойства пил 4-го класса
 
+option.rfdrills.waila_rf=Использование RF
+option.rfdrills.waila_mode=Режим копания
+option.rfdrills.waila_rf=Присев: Использование RF
+option.rfdrills.waila_mode=Присев: Режим копания
 
 itemGroup.rfdrills=RFDrills

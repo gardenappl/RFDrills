@@ -42,6 +42,11 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool{
     }
 
     @Override
+    public DrillTier getTier(ItemStack itemStack) {
+        return tier;
+    }
+
+    @Override
     @SuppressWarnings({"unchecked"})
     public void getSubItems(Item item, CreativeTabs creativeTab, List list) {
         list.add(setEnergy(new ItemStack(item, 1, 0), 0));
@@ -80,6 +85,15 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool{
 
     private int getEnergyPerUse(ItemStack itemStack){
         return Math.round(tier.energyPerBlock / (EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, itemStack) + 1)); //Vanilla formula: a 100% / (unbreaking level + 1) chance to not take damage
+    }
+
+    @Override
+    public int getEnergyPerUse(ItemStack itemStack, Block block, int meta) {
+        if(getMode(itemStack) == 1) {
+            return block instanceof IShearable ? getEnergyPerUse(itemStack) / 5 : getEnergyPerUse(itemStack);
+        }else {
+            return getEnergyPerUse(itemStack);
+        }
     }
 
     @Override
@@ -152,7 +166,7 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool{
     @Override
     public boolean onBlockDestroyed(ItemStack itemStack, World world, Block block, int x, int y, int z, EntityLivingBase entity) {
         if(entity instanceof EntityPlayer && !((EntityPlayer)entity).capabilities.isCreativeMode) {
-            entity.setCurrentItemOrArmor(0, drainEnergy(itemStack, (block instanceof IShearable && getMode(itemStack) == 1) ? getEnergyPerUse(itemStack) / 5 : getEnergyPerUse(itemStack)));
+            entity.setCurrentItemOrArmor(0, drainEnergy(itemStack, getEnergyPerUse(itemStack, block, world.getBlockMetadata(x, y, z))));
 
             if (this.getEnergyStored(itemStack) == 0 && tier.canBreak) {
                 entity.renderBrokenItemStack(itemStack);
@@ -190,18 +204,7 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool{
             if (MiscUtil.isShiftPressed()) {
                 list.add(StringHelper.writeEnergyPerBlockInfo(getEnergyPerUse(itemStack)));
                 if(tier.hasModes) {
-                    switch (getMode(itemStack)){
-                        case 0:
-                            list.add(StatCollector.translateToLocal("rfdrills.shears_off.mode"));
-                            break;
-                        case 1:
-                            list.add(StatCollector.translateToLocal("rfdrills.shears_on.mode"));
-                            break;
-                        default:
-                            list.add(StatCollector.translateToLocal("rfdrills.shears_off.mode"));
-                            LogHelper.warn("Illegal drill mode!");
-                            break;
-                    }
+                    writeModeInfo(itemStack);
                 }
                 list.add(StatCollector.translateToLocal("rfdrills.chainsaw.tooltip"));
                 if (tier.canBreak) {
@@ -312,5 +315,19 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool{
     @Override
     public int getMaxEnergyStored(ItemStack itemStack) {
         return tier.maxEnergy;
+    }
+    
+    public String writeModeInfo(ItemStack itemStack){
+        if(!tier.hasModes) return "";
+        
+        switch (getMode(itemStack)){
+            case 0:
+                return StatCollector.translateToLocal("rfdrills.shears_off.mode");
+            case 1:
+                return StatCollector.translateToLocal("rfdrills.shears_on.mode");
+            default:
+                LogHelper.warn("Illegal drill mode!");
+                return StatCollector.translateToLocal("rfdrills.shears_off.mode");
+        }
     }
 }

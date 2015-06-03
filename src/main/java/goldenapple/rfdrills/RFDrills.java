@@ -4,6 +4,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import goldenapple.rfdrills.config.ConfigHandler;
@@ -54,6 +55,7 @@ public class RFDrills {
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
+        FMLInterModComms.sendMessage("Waila", "register", "goldenapple.rfdrills.compat.waila.WailaHandler.register");
         ModRecipes.init();
     }
 

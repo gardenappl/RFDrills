@@ -28,10 +28,10 @@ rfdrills.drill.tooltip=§aWorks as a pick and a shovel
 rfdrills.chainsaw.tooltip=§aWorks as an axe and shears
 rfdrills.crusher.tooltip=§aWorks as a pick, a shovel and an axe
 rfdrills.energy_per_block.tooltip=Energy per block: %s RF
-rfdrills.can_break.tooltip=§cWill break when it runs out of energy.
+rfdrills.can_break.tooltip=§cWill break when it runs out of energy
 rfdrills.chainsaw_has_modes.tooltip=§aUse while sneaking to toggle shears
 rfdrills.drill_has_modes.tooltip=§aUse while sneaking to switch mining modes
-rfdrills.enchantable.tooltip=§aCan be enchanted.
+rfdrills.enchantable.tooltip=§aCan be enchanted
 
 rfdrills.shears_on.mode=Shears: §aOn
 rfdrills.shears_off.mode=Shears: §cOff
@@ -50,6 +50,11 @@ config.chainsaw_tier1.tooltip=Configure properties of Tier 1 chainsaws
 config.chainsaw_tier2.tooltip=Configure properties of Tier 2 chainsaws
 config.chainsaw_tier3.tooltip=Configure properties of Tier 3 chainsaws
 config.chainsaw_tier4.tooltip=Configure properties of Tier 4 chainsaws
+
+option.rfdrills.waila_rf=Show RF usage
+option.rfdrills.waila_rf.sneakingonly=Sneak only: Show RF usage
+option.rfdrills.waila_mode=Show mining mode
+option.rfdrills.waila_mode.sneakingonly=Sneak only: Show mining mode
 
 
 itemGroup.rfdrills=RFDrills

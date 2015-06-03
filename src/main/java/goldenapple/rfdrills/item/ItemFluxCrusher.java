@@ -51,6 +51,11 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool{
     }
 
     @Override
+    public DrillTier getTier(ItemStack itemStack) {
+        return tier;
+    }
+
+    @Override
     public Set<String> getToolClasses(ItemStack stack) {
         return ImmutableSet.of("pickaxe", "shovel", "axe", "sickle");
     }
@@ -98,6 +103,11 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool{
             default: LogHelper.warn("Illegal drill mode!"); break;
         }
         return energy;
+    }
+
+    @Override
+    public int getEnergyPerUse(ItemStack itemStack, Block block, int meta) {
+        return getEnergyPerUseWithMode(itemStack);
     }
 
     @Override
@@ -233,21 +243,7 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool{
             if (MiscUtil.isShiftPressed()) {
                 list.add(StringHelper.writeEnergyPerBlockInfo(getEnergyPerUseWithMode(itemStack)));
                 if(tier.hasModes) {
-                    switch (getMode(itemStack)) {
-                        case 0:
-                            list.add(StatCollector.translateToLocal("rfdrills.1x1x1.mode"));
-                            break;
-                        case 1:
-                            list.add(StatCollector.translateToLocal("rfdrills.3x3x3.mode"));
-                            break;
-                        case 2:
-                            list.add(StatCollector.translateToLocal("rfdrills.5x5x5.mode"));
-                            break;
-                        default:
-                            list.add(StatCollector.translateToLocal("rfdrills.1x1x1.mode"));
-                            LogHelper.warn("Illegal drill mode!");
-                            break;
-                    }
+                    list.add(writeModeInfo(itemStack));
                 }
                 list.add(StatCollector.translateToLocal("rfdrills.crusher.tooltip"));
                 if (tier.canBreak) {
@@ -377,5 +373,20 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool{
     @Override
     public int getMaxEnergyStored(ItemStack itemStack) {
         return tier.maxEnergy;
+    }
+
+    public String writeModeInfo(ItemStack itemStack){
+        if(!tier.hasModes) return "";
+        switch (getMode(itemStack)) {
+            case 0:
+                return StatCollector.translateToLocal("rfdrills.1x1x1.mode");
+            case 1:
+                return StatCollector.translateToLocal("rfdrills.3x3x3.mode");
+            case 2:
+                return StatCollector.translateToLocal("rfdrills.5x5x5.mode");
+            default:
+                LogHelper.warn("Illegal drill mode!");
+                return StatCollector.translateToLocal("rfdrills.1x1x1.mode");
+        }
     }
 }
