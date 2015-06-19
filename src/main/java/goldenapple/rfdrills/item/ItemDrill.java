@@ -1,5 +1,8 @@
 package goldenapple.rfdrills.item;
 
+import cofh.api.item.IEmpowerableItem;
+import cofh.core.item.IEqualityOverrideItem;
+import cofh.core.util.KeyBindingEmpower;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import goldenapple.rfdrills.DrillTier;
@@ -32,7 +35,7 @@ import net.minecraftforge.event.world.BlockEvent;
 import java.util.List;
 import java.util.Set;
 
-public class ItemDrill extends ItemTool implements IEnergyTool {
+public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrideItem, IEmpowerableItem {
     private static final Set<Block> vanillaBlocks = Sets.newHashSet(Blocks.cobblestone, Blocks.double_stone_slab, Blocks.stone_slab, Blocks.stone, Blocks.sandstone, Blocks.mossy_cobblestone, Blocks.iron_ore, Blocks.iron_block, Blocks.coal_ore, Blocks.gold_block, Blocks.gold_ore, Blocks.diamond_ore, Blocks.diamond_block, Blocks.ice, Blocks.netherrack, Blocks.lapis_ore, Blocks.lapis_block, Blocks.redstone_ore, Blocks.lit_redstone_ore, Blocks.rail, Blocks.detector_rail, Blocks.golden_rail, Blocks.activator_rail, Blocks.grass, Blocks.dirt, Blocks.sand, Blocks.gravel, Blocks.snow_layer, Blocks.snow, Blocks.clay, Blocks.farmland, Blocks.soul_sand, Blocks.mycelium);
     private static final Set<Material> effectiveMaterials = Sets.newHashSet(Material.anvil, Material.clay, Material.craftedSnow, Material.glass, Material.dragonEgg, Material.grass, Material.ground, Material.ice, Material.snow, Material.iron, Material.rock, Material.sand, Material.coral);
 
@@ -66,12 +69,10 @@ public class ItemDrill extends ItemTool implements IEnergyTool {
     @Override
     public float getDigSpeed(ItemStack itemStack, Block block, int meta) {
         if(getEnergyStored(itemStack) >= tier.energyPerBlock && canHarvestBlock(block, itemStack)){
-            switch (getMode(itemStack)){
-                case 0: return effectiveMaterials.contains(block.getMaterial()) ? efficiencyOnProperMaterial : 1.0F;
-                case 1: return effectiveMaterials.contains(block.getMaterial()) ? efficiencyOnProperMaterial / 3 : 1.0F;
-                default:
-                    LogHelper.warn("Illegal drill mode!");
-                    return effectiveMaterials.contains(block.getMaterial()) ? efficiencyOnProperMaterial : 1.0F;
+            if(isEmpowered(itemStack)) {
+                return effectiveMaterials.contains(block.getMaterial()) ? efficiencyOnProperMaterial : 1.0F;
+            }else {
+                return effectiveMaterials.contains(block.getMaterial()) ? efficiencyOnProperMaterial / 3 : 1.0F;
             }
         }else{
             return effectiveMaterials.contains(block.getMaterial()) ? 0.5F : 1.0F;
@@ -93,11 +94,8 @@ public class ItemDrill extends ItemTool implements IEnergyTool {
 
     private int getEnergyPerUseWithMode(ItemStack itemStack){
         int energy = getEnergyPerUse(itemStack);
-        switch (getMode(itemStack)){
-            case 0: break;
-            case 1: energy = energy * 3; break;
-            default: LogHelper.warn("Illegal drill mode!"); break;
-        }
+        if(isEmpowered(itemStack)) energy = energy * 3;
+
         return energy;
     }
 
@@ -128,12 +126,12 @@ public class ItemDrill extends ItemTool implements IEnergyTool {
 
     @Override
     public double getDurabilityForDisplay(ItemStack itemStack) {
-        return Math.max(1.0 - (double)getEnergyStored(itemStack) / (double)tier.maxEnergy, 0);
+        return Math.max(1.0 - (double) getEnergyStored(itemStack) / (double) tier.maxEnergy, 0);
     }
 
     @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
-        if(!world.isRemote && player.isSneaking() && tier.hasModes) {
+        /* if(!world.isRemote && player.isSneaking() && tier.hasModes) {
             switch (getMode(itemStack)) {
                 case 0:
                     setMode(itemStack, (byte) 1);
@@ -150,7 +148,8 @@ public class ItemDrill extends ItemTool implements IEnergyTool {
                     break;
             }
         }
-        return itemStack;
+        return itemStack; */
+        return super.onItemRightClick(itemStack, world, player);
     }
 
     private void harvestBlock(World world, int x, int y, int z, EntityPlayer player){
@@ -177,7 +176,7 @@ public class ItemDrill extends ItemTool implements IEnergyTool {
 
     @Override
     public boolean onBlockDestroyed(ItemStack itemStack, World world, Block block, int x, int y, int z, EntityLivingBase entity) {
-        if(getMode(itemStack) == 1 && entity instanceof EntityPlayer && !world.isRemote && getEnergyStored(itemStack) >= getEnergyPerUseWithMode(itemStack)){
+        if(isEmpowered(itemStack) && entity instanceof EntityPlayer && !world.isRemote && getEnergyStored(itemStack) >= getEnergyPerUseWithMode(itemStack)){
             for (int b = y - 1; b <= y + 1; b++) {
                 if (world.blockExists(x, b, z) && effectiveMaterials.contains(world.getBlock(x, b, z).getMaterial())) {
                     if (b != y) { //don't harvest the same block twice
@@ -236,7 +235,7 @@ public class ItemDrill extends ItemTool implements IEnergyTool {
                     list.add(StatCollector.translateToLocal("rfdrills.enchantable.tooltip"));
                 }
                 if (tier.hasModes){
-                    list.add(StatCollector.translateToLocal("rfdrills.drill_has_modes.tooltip"));
+                    list.add(StringHelper.writeModeSwitchInfo("rfdrills.drill_has_modes.tooltip", KeyBindingEmpower.instance));
                 }
             } else {
               //list.add(StatCollector.translateToLocal("info.cofh.hold") + " §e§o" + StatCollector.translateToLocal("info.cofh.shift") + " §r§7" + StatCollector.translateToLocal("info.cofh.forDetails"));
@@ -263,32 +262,16 @@ public class ItemDrill extends ItemTool implements IEnergyTool {
         return "item." + Reference.MOD_ID.toLowerCase() + ":" + name;
     }
 
-    public static ItemStack setMode(ItemStack itemStack, byte mode){
-        if(itemStack.stackTagCompound == null){
-            itemStack.stackTagCompound = new NBTTagCompound();
-        }
+    public String writeModeInfo(ItemStack itemStack){
+        if(!tier.hasModes) return "";
 
-        itemStack.stackTagCompound.setByte("Mode", mode);
-        return itemStack;
+        if(isEmpowered(itemStack))
+            return StatCollector.translateToLocal("rfdrills.1x1x1.mode");
+        else
+            return StatCollector.translateToLocal("rfdrills.1x3x1.mode");
     }
 
-    public byte getMode(ItemStack itemStack){
-        if(!tier.hasModes){
-            return 0;
-        }
-
-        if(itemStack.stackTagCompound == null){
-            return 0;
-        }
-
-        if(itemStack.stackTagCompound.hasKey("Mode")) {
-            return itemStack.stackTagCompound.getByte("Mode");
-        }else{
-            return 0;
-        }
-    }
-
-    /* IEnergyTool methods*/
+    /* IEnergyTool */
 
     @Override
     public ItemStack setEnergy(ItemStack itemStack, int energy){
@@ -344,18 +327,47 @@ public class ItemDrill extends ItemTool implements IEnergyTool {
     public int getMaxEnergyStored(ItemStack itemStack) {
         return tier.maxEnergy;
     }
-    
-    public String writeModeInfo(ItemStack itemStack){
-        if(!tier.hasModes) return "";
-        
-        switch (getMode(itemStack)) {
-            case 0:
-                return StatCollector.translateToLocal("rfdrills.1x1x1.mode");
-            case 1:
-                return StatCollector.translateToLocal("rfdrills.1x3x1.mode");
-            default:
-                LogHelper.warn("Illegal drill mode!");
-                return StatCollector.translateToLocal("rfdrills.1x1x1.mode");
+
+    /* IEqualityOverrideItem */
+
+    @Override
+    public boolean isLastHeldItemEqual(ItemStack current, ItemStack previous) {
+        return previous.getItem() == current.getItem();
+    }
+
+    /* IEmpowerableItem */
+
+    @Override
+    public boolean isEmpowered(ItemStack itemStack) {
+        if(!tier.hasModes){
+            return false;
         }
+
+        if(itemStack.stackTagCompound == null){
+            return false;
+        }
+
+        if(itemStack.stackTagCompound.hasKey("Mode")) {
+            return itemStack.stackTagCompound.getByte("Mode") == 1;
+        }else{
+            return false;
+        }
+    }
+
+    @Override
+    public boolean setEmpoweredState(ItemStack itemStack, boolean b) {
+        if(!tier.hasModes) return false;
+
+        if(itemStack.stackTagCompound == null){
+            itemStack.stackTagCompound = new NBTTagCompound();
+        }
+
+        itemStack.stackTagCompound.setByte("Mode", b ? (byte)1 : 0);
+        return true;
+    }
+
+    @Override
+    public void onStateChange(EntityPlayer player, ItemStack itemStack) {
+        player.addChatComponentMessage(new ChatComponentText(writeModeInfo(itemStack)));
     }
 }

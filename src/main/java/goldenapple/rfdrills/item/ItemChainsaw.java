@@ -1,10 +1,12 @@
 package goldenapple.rfdrills.item;
 
+import cofh.api.item.IEmpowerableItem;
+import cofh.core.item.IEqualityOverrideItem;
+import cofh.core.util.KeyBindingEmpower;
 import goldenapple.rfdrills.DrillTier;
 import goldenapple.rfdrills.RFDrills;
 import goldenapple.rfdrills.config.ConfigHandler;
 import goldenapple.rfdrills.reference.Reference;
-import goldenapple.rfdrills.util.LogHelper;
 import goldenapple.rfdrills.util.MiscUtil;
 import goldenapple.rfdrills.util.StringHelper;
 import net.minecraft.block.Block;
@@ -30,7 +32,7 @@ import net.minecraftforge.common.IShearable;
 
 import java.util.List;
 
-public class ItemChainsaw extends ItemAxe implements IEnergyTool{
+public class ItemChainsaw extends ItemAxe implements IEnergyTool, IEqualityOverrideItem, IEmpowerableItem{
     private final String name;
     private final DrillTier tier;
 
@@ -71,7 +73,7 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool{
     public float getDigSpeed(ItemStack itemStack, Block block, int meta) {
         itemStack.setItemDamage(0);
         if(getEnergyStored(itemStack) >= tier.energyPerBlock){
-            if(block instanceof IShearable && getMode(itemStack) == 1) {
+            if(block instanceof IShearable && isEmpowered(itemStack)) {
                 return 100.0F;
             }else if(block.getMaterial() == Material.cloth){
                 return super.getDigSpeed(itemStack, block, meta) * 3;
@@ -89,7 +91,7 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool{
 
     @Override
     public int getEnergyPerUse(ItemStack itemStack, Block block, int meta) {
-        if(getMode(itemStack) == 1) {
+        if(isEmpowered(itemStack)) {
             return block instanceof IShearable ? getEnergyPerUse(itemStack) / 5 : getEnergyPerUse(itemStack);
         }else {
             return getEnergyPerUse(itemStack);
@@ -103,7 +105,7 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool{
 
     @Override
     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
-        if(!world.isRemote && player.isSneaking() && tier.hasModes) {
+        /* if(!world.isRemote && player.isSneaking() && tier.hasModes) {
             switch (getMode(itemStack)) {
                 case 0:
                     setMode(itemStack, (byte) 1);
@@ -120,7 +122,8 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool{
                     break;
             }
         }
-        return itemStack;
+        return itemStack; */
+        return super.onItemRightClick(itemStack, world, player);
     }
 
     @Override
@@ -130,7 +133,7 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool{
 
     @Override
     public boolean itemInteractionForEntity(ItemStack itemStack, EntityPlayer player, EntityLivingBase entity) {
-        if(getMode(itemStack) == 1) {
+        if(isEmpowered(itemStack)) {
             if ((getEnergyStored(itemStack) >= getEnergyPerUse(itemStack) || tier.canBreak) && Items.shears.itemInteractionForEntity(itemStack, player, entity)) {
                 itemStack.setItemDamage(0);
                 if(!player.capabilities.isCreativeMode) {
@@ -151,7 +154,7 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool{
 
     @Override
     public boolean onBlockStartBreak(ItemStack itemStack, int x, int y, int z, EntityPlayer player) {
-        if(getMode(itemStack) == 1 && getEnergyStored(itemStack) >= getEnergyPerUse(itemStack) / 5) {
+        if(isEmpowered(itemStack) && getEnergyStored(itemStack) >= getEnergyPerUse(itemStack) / 5) {
             if (Items.shears.onBlockStartBreak(itemStack, x, y, z, player)) {
                 itemStack.setItemDamage(0);
                 return true;
@@ -173,7 +176,7 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool{
                 ((EntityPlayer)entity).destroyCurrentEquippedItem();
                 ((EntityPlayer)entity).addStat(StatList.objectBreakStats[Item.getIdFromItem(itemStack.getItem())], 1);
             }
-            return !(block instanceof IShearable && getMode(itemStack) == 1);
+            return !(block instanceof IShearable && isEmpowered(itemStack));
         }
 
         return false;
@@ -204,7 +207,7 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool{
             if (MiscUtil.isShiftPressed()) {
                 list.add(StringHelper.writeEnergyPerBlockInfo(getEnergyPerUse(itemStack)));
                 if(tier.hasModes) {
-                    writeModeInfo(itemStack);
+                    list.add(writeModeInfo(itemStack));
                 }
                 list.add(StatCollector.translateToLocal("rfdrills.chainsaw.tooltip"));
                 if (tier.canBreak) {
@@ -214,7 +217,7 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool{
                     list.add(StatCollector.translateToLocal("rfdrills.enchantable.tooltip"));
                 }
                 if (tier.hasModes) {
-                    list.add(StatCollector.translateToLocal("rfdrills.chainsaw_has_modes.tooltip"));
+                    list.add(StringHelper.writeModeSwitchInfo("rfdrills.chainsaw_has_modes.tooltip", KeyBindingEmpower.instance));
                 }
             } else {
               //list.add(StatCollector.translateToLocal("info.cofh.hold") + " §e§o" + StatCollector.translateToLocal("info.cofh.shift") + " §r§7" + StatCollector.translateToLocal("info.cofh.forDetails"));
@@ -240,32 +243,16 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool{
         return "item." + Reference.MOD_ID.toLowerCase() + ":" + name;
     }
 
-    public ItemStack setMode(ItemStack itemStack, byte mode){
-        if(itemStack.stackTagCompound == null){
-            itemStack.stackTagCompound = new NBTTagCompound();
-        }
+    public String writeModeInfo(ItemStack itemStack){
+        if(!tier.hasModes) return "";
 
-        itemStack.stackTagCompound.setByte("Mode", mode);
-        return itemStack;
+        if(isEmpowered(itemStack))
+            return StatCollector.translateToLocal("rfdrills.shears_off.mode");
+        else
+            return StatCollector.translateToLocal("rfdrills.shears_on.mode");
     }
 
-    public byte getMode(ItemStack itemStack){
-        if(!tier.hasModes){
-            return ConfigHandler.shearsDefault ? (byte)1 : 0;
-        }
-
-        if(itemStack.stackTagCompound == null){
-            return ConfigHandler.shearsDefault ? (byte)1 : 0;
-        }
-
-        if(itemStack.stackTagCompound.hasKey("Mode")) {
-            return itemStack.stackTagCompound.getByte("Mode");
-        }else{
-            return ConfigHandler.shearsDefault ? (byte)1 : 0;
-        }
-    }
-
-    /* IEnergyTool methods */
+    /* IEnergyTool */
 
     @Override
     public ItemStack setEnergy(ItemStack itemStack, int energy){
@@ -316,18 +303,45 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool{
     public int getMaxEnergyStored(ItemStack itemStack) {
         return tier.maxEnergy;
     }
-    
-    public String writeModeInfo(ItemStack itemStack){
-        if(!tier.hasModes) return "";
-        
-        switch (getMode(itemStack)){
-            case 0:
-                return StatCollector.translateToLocal("rfdrills.shears_off.mode");
-            case 1:
-                return StatCollector.translateToLocal("rfdrills.shears_on.mode");
-            default:
-                LogHelper.warn("Illegal drill mode!");
-                return StatCollector.translateToLocal("rfdrills.shears_off.mode");
+
+    /* IEmpowerableItem */
+
+    @Override
+    public boolean isEmpowered(ItemStack itemStack) {
+        if(!tier.hasModes){
+            return ConfigHandler.shearsDefault;
         }
+
+        if(itemStack.stackTagCompound == null){
+            return ConfigHandler.shearsDefault;
+        }
+
+        if(itemStack.stackTagCompound.hasKey("Mode")) {
+            return itemStack.stackTagCompound.getByte("Mode") == 1;
+        }else{
+            return ConfigHandler.shearsDefault;
+        }
+    }
+
+    @Override
+    public boolean setEmpoweredState(ItemStack itemStack, boolean b) {
+        if(!tier.hasModes) return false;
+
+        if(itemStack.stackTagCompound == null){
+           itemStack.stackTagCompound = new NBTTagCompound();
+        }
+
+        itemStack.stackTagCompound.setByte("Mode", b ? (byte) 1 : 0);
+        return true;
+    }
+
+    @Override
+    public void onStateChange(EntityPlayer player, ItemStack itemStack) {
+        player.addChatComponentMessage(new ChatComponentText(writeModeInfo(itemStack)));
+    }
+
+    @Override
+    public boolean isLastHeldItemEqual(ItemStack current, ItemStack previous) {
+        return current.getItem() == previous.getItem();
     }
 }

@@ -1,5 +1,8 @@
 package goldenapple.rfdrills.item;
 
+import cofh.api.item.IMultiModeItem;
+import cofh.core.item.IEqualityOverrideItem;
+import cofh.core.util.KeyBindingMultiMode;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import goldenapple.rfdrills.DrillTier;
@@ -34,7 +37,7 @@ import net.minecraftforge.event.world.BlockEvent;
 import java.util.List;
 import java.util.Set;
 
-public class ItemFluxCrusher extends ItemTool implements IEnergyTool{
+public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityOverrideItem, IMultiModeItem{
     private static final Set<Block> vanillaBlocks = Sets.newHashSet(Blocks.cobblestone, Blocks.double_stone_slab, Blocks.stone_slab, Blocks.stone, Blocks.sandstone, Blocks.mossy_cobblestone, Blocks.iron_ore, Blocks.iron_block, Blocks.coal_ore, Blocks.gold_block, Blocks.gold_ore, Blocks.diamond_ore, Blocks.diamond_block, Blocks.ice, Blocks.netherrack, Blocks.lapis_ore, Blocks.lapis_block, Blocks.redstone_ore, Blocks.lit_redstone_ore, Blocks.rail, Blocks.detector_rail, Blocks.golden_rail, Blocks.activator_rail, Blocks.grass, Blocks.dirt, Blocks.sand, Blocks.gravel, Blocks.snow_layer, Blocks.snow, Blocks.clay, Blocks.farmland, Blocks.soul_sand, Blocks.mycelium, Blocks.planks, Blocks.bookshelf, Blocks.log, Blocks.log2, Blocks.chest, Blocks.pumpkin, Blocks.lit_pumpkin);
     private static final Set<Material> effectiveMaterials = Sets.newHashSet(Material.anvil, Material.clay, Material.craftedSnow, Material.glass, Material.dragonEgg, Material.grass, Material.ground, Material.ice, Material.snow, Material.iron, Material.rock, Material.sand, Material.coral, Material.wood, Material.leaves, Material.plants, Material.vine, Material.cloth, Material.gourd);
 
@@ -131,7 +134,7 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool{
     public double getDurabilityForDisplay(ItemStack itemStack) {
         return Math.max(1.0 - (double)getEnergyStored(itemStack) / (double)tier.maxEnergy, 0);
     }
-
+/*
     @Override
      public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
         if(!world.isRemote && player.isSneaking() && tier.hasModes) {
@@ -161,7 +164,7 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool{
         }
         return itemStack;
     }
-
+*/
     @Override
     public void setDamage(ItemStack itemStack, int damage) {
         //do nothing, other methods are responsible for energy consumption
@@ -253,7 +256,7 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool{
                     list.add(StatCollector.translateToLocal("rfdrills.enchantable.tooltip"));
                 }
                 if (tier.hasModes){
-                    list.add(StatCollector.translateToLocal("rfdrills.drill_has_modes.tooltip"));
+                    list.add(StringHelper.writeModeSwitchInfo("rfdrills.crusher_has_modes.tooltip", KeyBindingMultiMode.instance));
                 }
             } else {
               //list.add(StatCollector.translateToLocal("info.cofh.hold") + " §e§o" + StatCollector.translateToLocal("info.cofh.shift") + " §r§7" + StatCollector.translateToLocal("info.cofh.forDetails"));
@@ -293,16 +296,25 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool{
         return "item." + Reference.MOD_ID.toLowerCase() + ":" + Names.FLUX_CRUSHER;
     }
 
-    public ItemStack setMode(ItemStack itemStack, byte mode){
-        if(itemStack.stackTagCompound == null){
-            itemStack.stackTagCompound = new NBTTagCompound();
+    public String writeModeInfo(ItemStack itemStack){
+        if(!tier.hasModes) return "";
+        switch (getMode(itemStack)) {
+            case 0:
+                return StatCollector.translateToLocal("rfdrills.1x1x1.mode");
+            case 1:
+                return StatCollector.translateToLocal("rfdrills.3x3x3.mode");
+            case 2:
+                return StatCollector.translateToLocal("rfdrills.5x5x5.mode");
+            default:
+                LogHelper.warn("Illegal drill mode!");
+                return StatCollector.translateToLocal("rfdrills.1x1x1.mode");
         }
-
-        itemStack.stackTagCompound.setByte("Mode", mode);
-        return itemStack;
     }
 
-    public byte getMode(ItemStack itemStack){
+    /* IMultiModeItem */
+
+    @Override
+    public int getMode(ItemStack itemStack){
         if(!tier.hasModes){
             return 0;
         }
@@ -318,7 +330,53 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool{
         }
     }
 
-    /* IEnergyTool methods */
+    @Override
+    public boolean setMode(ItemStack itemStack, int mode) {
+        if(itemStack.stackTagCompound == null){
+            itemStack.stackTagCompound = new NBTTagCompound();
+        }
+
+        itemStack.stackTagCompound.setByte("Mode", (byte)mode);
+        return true;
+    }
+
+    @Override
+    public boolean incrMode(ItemStack itemStack) {
+        if(getMode(itemStack) < 2){
+            setMode(itemStack, getMode(itemStack) + 1);
+        }else{
+            setMode(itemStack, 0);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean decrMode(ItemStack itemStack) {
+        if(getMode(itemStack) > 0){
+            setMode(itemStack, getMode(itemStack) - 1);
+            return true;
+        }else{
+            setMode(itemStack, 2);
+            return false;
+        }
+    }
+
+    @Override
+    public int getNumModes(ItemStack itemStack) {
+        return 3;
+    }
+
+    @Override
+    public void onModeChange(EntityPlayer player, ItemStack itemStack) {
+        if(getMode(itemStack) == 0){
+            player.worldObj.playSoundAtEntity(player, "random.orb", 0.2F, 0.6F);
+        }else {
+            player.worldObj.playSoundAtEntity(player, "ambient.weather.thunder", 0.4F, 1.0F);
+        }
+        player.addChatComponentMessage(new ChatComponentText(writeModeInfo(itemStack)));
+    }
+
+    /* IEnergyTool */
 
     @Override
     public ItemStack setEnergy(ItemStack itemStack, int energy){
@@ -375,18 +433,10 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool{
         return tier.maxEnergy;
     }
 
-    public String writeModeInfo(ItemStack itemStack){
-        if(!tier.hasModes) return "";
-        switch (getMode(itemStack)) {
-            case 0:
-                return StatCollector.translateToLocal("rfdrills.1x1x1.mode");
-            case 1:
-                return StatCollector.translateToLocal("rfdrills.3x3x3.mode");
-            case 2:
-                return StatCollector.translateToLocal("rfdrills.5x5x5.mode");
-            default:
-                LogHelper.warn("Illegal drill mode!");
-                return StatCollector.translateToLocal("rfdrills.1x1x1.mode");
-        }
+    /* IEqualityOverrideItem */
+
+    @Override
+    public boolean isLastHeldItemEqual(ItemStack current, ItemStack previous) {
+        return false;
     }
 }
