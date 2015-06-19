@@ -266,9 +266,9 @@ public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrid
         if(!tier.hasModes) return "";
 
         if(isEmpowered(itemStack))
-            return StatCollector.translateToLocal("rfdrills.1x1x1.mode");
-        else
             return StatCollector.translateToLocal("rfdrills.1x3x1.mode");
+        else
+            return StatCollector.translateToLocal("rfdrills.1x1x1.mode");
     }
 
     /* IEnergyTool */

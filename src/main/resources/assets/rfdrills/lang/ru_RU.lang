@@ -24,15 +24,15 @@ item.rfdrills:basic_motor.name=Основной электромотор
 item.rfdrills:advanced_motor.name=Продвинутый электромотор
 
 
-rfdrills.drill.tooltip=§aРаботает как кирка и лопата
-rfdrills.chainsaw.tooltip=§aРаботает как топор и ножницы
-rfdrills.crusher.tooltip=§aРаботает как кирка, лопата и топор
+rfdrills.drill.tooltip=§aРаботает как кирка и лопата.
+rfdrills.chainsaw.tooltip=§aРаботает как топор и ножницы.
+rfdrills.crusher.tooltip=§aРаботает как кирка, лопата и топор.
 rfdrills.energy_per_block.tooltip=Энергии за блок: %s RF
-rfdrills.can_break.tooltip=§cСломается при нехватке энергии
-rfdrills.chainsaw_has_modes.tooltip=§9§oНажмите %s, чтобы переключить ножницы
-rfdrills.drill_has_modes.tooltip=§9§oНажмите %s, чтобы изменить режим копания
-rfdrills.crusher_has_modes.tooltip=§9§oНажмите %s, чтобы изменить режим копания
-rfdrills.enchantable.tooltip=§aМожет быть зачарована
+rfdrills.can_break.tooltip=§cСломается при нехватке энергии.
+rfdrills.chainsaw_has_modes.tooltip=§b§oНажмите %s, чтобы переключить ножницы.
+rfdrills.drill_has_modes.tooltip=§b§oНажмите %s, чтобы изменить режим копания.
+rfdrills.crusher_has_modes.tooltip=§b§oНажмите %s, чтобы изменить режим копания.
+rfdrills.enchantable.tooltip=§aМожет быть зачарована.
 
 rfdrills.shears_on.mode=Ножницы: §aВкл
 rfdrills.shears_off.mode=Ножницы: §cВыкл

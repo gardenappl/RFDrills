@@ -29,9 +29,9 @@ rfdrills.chainsaw.tooltip=§aWorks as an axe and shears.
 rfdrills.crusher.tooltip=§aWorks as a pick, a shovel and an axe.
 rfdrills.energy_per_block.tooltip=Energy per block: %s RF
 rfdrills.can_break.tooltip=§cWill break when it runs out of energy.
-rfdrills.chainsaw_has_modes.tooltip=§9§oPress %s to toggle shears.
-rfdrills.drill_has_modes.tooltip=§9§oPress %s to switch mining modes.
-rfdrills.crusher_has_modes.tooltip=§9§oPress the %s key to switch mining modes.
+rfdrills.chainsaw_has_modes.tooltip=§b§oPress %s to toggle shears.
+rfdrills.drill_has_modes.tooltip=§b§oPress %s to switch mining modes.
+rfdrills.crusher_has_modes.tooltip=§b§oPress the %s key to switch mining modes.
 rfdrills.enchantable.tooltip=§aCan be enchanted.
 
 rfdrills.shears_on.mode=Shears: §aOn

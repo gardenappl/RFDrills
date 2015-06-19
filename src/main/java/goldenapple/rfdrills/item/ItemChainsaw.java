@@ -247,9 +247,9 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool, IEqualityOverr
         if(!tier.hasModes) return "";
 
         if(isEmpowered(itemStack))
-            return StatCollector.translateToLocal("rfdrills.shears_off.mode");
-        else
             return StatCollector.translateToLocal("rfdrills.shears_on.mode");
+        else
+            return StatCollector.translateToLocal("rfdrills.shears_off.mode");
     }
 
     /* IEnergyTool */
