@@ -61,7 +61,7 @@ public class WailaHandler implements IWailaDataProvider {
         }
 
         if(equipStack.getItem() instanceof IEnergyTool){
-            if(config.getConfig("rfdrills.waila_rf") && (accessor.getPlayer().isSneaking() || !(config.getConfig("rfdrills.waila_rf.sneakingonly"))))
+            if(config.getConfig("rfdrills.waila_rf"))
                 currenttip.add(StringHelper.writeEnergyPerBlockInfo(energyTool.getEnergyPerUse(equipStack, block, meta)));
 
             if(config.getConfig("rfdrills.waila_mode") && (accessor.getPlayer().isSneaking() || !(config.getConfig("rfdrills.waila_mode.sneakingonly")))) {
