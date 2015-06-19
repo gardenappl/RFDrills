@@ -5,7 +5,7 @@ item.rfdrills:resonant_drill.name=Broca de Endério
 item.rfdrills:basic_drill.name=Broca Elétrica Básica
 item.rfdrills:advanced_drill.name=Broca Elétrica Avançada
 
-item.rfdrills:flux_infused_crusher.name=Esmagador Infuso em Flux
+item.rfdrills:flux_infused_crusher.name=Esmagador Fluxo-Infuso
 
 item.rfdrills:leadstone_chainsaw.name=Motosserra de Chumbo
 item.rfdrills:hardened_chainsaw.name=Motossera de Invar
@@ -24,11 +24,15 @@ item.rfdrills:basic_motor.name=Motor Elétrico Básico
 item.rfdrills:advanced_motor.name=Motor Elétrico Avançado
 
 
+rfdrills.drill.tooltip=§aFunciona como picareta e pá.
+rfdrills.chainsaw.tooltip=§aFunciona como machado e tesouras.
+rfdrills.crusher.tooltip=§aFunciona como picareta, pá e machado.
 rfdrills.energy_per_block.tooltip=Energia por bloco: %s RF
-rfdrills.can_break.tooltip=§cSe destrói quando a bateria esvazia.
-rfdrills.chainsaw_has_modes.tooltip=§aSegure shift enquanto usa para alternar as tesouras.
-rfdrills.drill_has_modes.tooltip=§aSegure shift enquanto usa para alternar modos de mineração.
-rfdrills.enchantable.tooltip=§aPode ser encantada.
+rfdrills.can_break.tooltip=§cSe destrói quando a energia acabar.
+rfdrills.chainsaw_has_modes.tooltip=§b§oAperte %s para alternar as tesouras.
+rfdrills.drill_has_modes.tooltip=§b§oAperte %s para mudar o modo de mineração.
+rfdrills.crusher_has_modes.tooltip=§b§oAperte %s para mudar o modo de mineração.
+rfdrills.enchantable.tooltip=§aEncantável.
 
 rfdrills.shears_on.mode=Tesouras: §aLigadas
 rfdrills.shears_off.mode=Tesouras: §cDesligadas
@@ -38,15 +42,20 @@ rfdrills.1x3x1.mode=Modo: §a1x3x1
 rfdrills.1x1x1.mode=Modo: §c1x1x1
 
 config.general.tooltip=Configura opções principais
-config.drill_tier1.tooltip=Configura as prpriedades de brocas Nível 1
-config.drill_tier2.tooltip=Configura as prpriedades de brocas Nível 2
-config.drill_tier3.tooltip=Configura as prpriedades de brocas Nível 3
-config.drill_tier4.tooltip=Configura as prpriedades de brocas Nível 4
+config.drill_tier1.tooltip=Configura as propriedades de brocas Nível 1
+config.drill_tier2.tooltip=Configura as propriedades de brocas Nível 2
+config.drill_tier3.tooltip=Configura as propriedades de brocas Nível 3
+config.drill_tier4.tooltip=Configura as propriedades de brocas Nível 4
 config.crusher.tooltip=Configura as propriedades dos Esmagadores
 config.chainsaw_tier1.tooltip=Configura as propriedades de motosserras Nível 1
 config.chainsaw_tier2.tooltip=Configura as propriedades de motosserras Nível 2
 config.chainsaw_tier3.tooltip=Configura as propriedades de motosserras Nível 3
 config.chainsaw_tier4.tooltip=Configura as propriedades de motosserras Nível 4
+
+option.rfdrills.waila_rf=Mostra o uso de RF
+option.rfdrills.waila_rf.sneakingonly=Shift apenas: Mostrar uso de RF
+option.rfdrills.waila_mode=Mostrar modo de mineração
+option.rfdrills.waila_mode.sneakingonly=Shift apenas: Mostrar modo de mineração
 
 
 itemGroup.rfdrills=RFDrills
