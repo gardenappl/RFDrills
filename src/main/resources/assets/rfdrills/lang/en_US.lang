@@ -24,14 +24,15 @@ item.rfdrills:basic_motor.name=Basic Electric Motor
 item.rfdrills:advanced_motor.name=Advanced Electric Motor
 
 
-rfdrills.drill.tooltip=§aWorks as a pick and a shovel
-rfdrills.chainsaw.tooltip=§aWorks as an axe and shears
-rfdrills.crusher.tooltip=§aWorks as a pick, a shovel and an axe
+rfdrills.drill.tooltip=§aWorks as a pick and a shovel.
+rfdrills.chainsaw.tooltip=§aWorks as an axe and shears.
+rfdrills.crusher.tooltip=§aWorks as a pick, a shovel and an axe.
 rfdrills.energy_per_block.tooltip=Energy per block: %s RF
-rfdrills.can_break.tooltip=§cWill break when it runs out of energy
-rfdrills.chainsaw_has_modes.tooltip=§aUse while sneaking to toggle shears
-rfdrills.drill_has_modes.tooltip=§aUse while sneaking to switch mining modes
-rfdrills.enchantable.tooltip=§aCan be enchanted
+rfdrills.can_break.tooltip=§cWill break when it runs out of energy.
+rfdrills.chainsaw_has_modes.tooltip=§9§oPress %s to toggle shears.
+rfdrills.drill_has_modes.tooltip=§9§oPress %s to switch mining modes.
+rfdrills.crusher_has_modes.tooltip=§9§oPress the %s key to switch mining modes.
+rfdrills.enchantable.tooltip=§aCan be enchanted.
 
 rfdrills.shears_on.mode=Shears: §aOn
 rfdrills.shears_off.mode=Shears: §cOff
