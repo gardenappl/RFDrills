@@ -7,9 +7,11 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
+import goldenapple.rfdrills.compat.versionchecker.VersionCheckerCompat;
 import goldenapple.rfdrills.config.ConfigHandler;
 import goldenapple.rfdrills.init.ModItems;
 import goldenapple.rfdrills.init.ModRecipes;
+import goldenapple.rfdrills.reference.LibReflection;
 import goldenapple.rfdrills.reference.Reference;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -55,7 +57,8 @@ public class RFDrills {
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
-        FMLInterModComms.sendMessage("Waila", "register", "goldenapple.rfdrills.compat.waila.WailaHandler.register");
+        FMLInterModComms.sendMessage("Waila", "register", LibReflection.WAILA_INIT_METHOD);
+        VersionCheckerCompat.init();
         ModRecipes.init();
     }
 

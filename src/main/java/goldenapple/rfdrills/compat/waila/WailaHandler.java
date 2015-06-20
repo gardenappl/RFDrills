@@ -91,7 +91,7 @@ public class WailaHandler implements IWailaDataProvider {
         return null;
     }
 
-    public static void register(IWailaRegistrar registrar){
+    public static void init(IWailaRegistrar registrar){
 
         registrar.addConfig(Reference.MOD_NAME, "rfdrills.waila_rf", "option.rfdrills.waila_rf");
         registrar.addConfig(Reference.MOD_NAME, "rfdrills.waila_mode", "option.rfdrills.waila_mode");
