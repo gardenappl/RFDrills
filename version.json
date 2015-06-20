@@ -1,0 +1,16 @@
+{
+	"versionList": [
+		{
+			"mcVersion": "Minecraft 1.7.*",
+			"modVersion": "1.7.10-1.4.2",
+			"changeLog": [
+				"Fixed drills mining a lot slower than usual when not empowered.",
+				"Changed Leadstone tool textures to be more... ThermalExpansiony?",
+				"Updated Portuguese (Brazil) localization (thanks MrKunji!)"
+			],
+			"updateURL": "http://minecraft.curseforge.com/mc-mods/229846-rfdrills/files/2243562/download",
+			"isDirectLink": "true",
+			"newFileName": ""
+		}
+	]
+}
