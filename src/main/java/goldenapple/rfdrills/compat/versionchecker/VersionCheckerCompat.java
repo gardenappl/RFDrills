@@ -5,6 +5,6 @@ import goldenapple.rfdrills.reference.Reference;
 
 public class VersionCheckerCompat {
     public static void init(){
-        FMLInterModComms.sendRuntimeMessage(Reference.MOD_ID, "VersionChecker", "addVersionCheck", "https://github.com/goldenapple3/RFDrills/blob/master/version.json");
+        FMLInterModComms.sendRuntimeMessage(Reference.MOD_ID, "VersionChecker", "addVersionCheck", "https://raw.githubusercontent.com/goldenapple3/RFDrills/master/version.json");
     }
 }
