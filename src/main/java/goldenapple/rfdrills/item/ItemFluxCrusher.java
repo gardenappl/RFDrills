@@ -124,7 +124,7 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityO
     public double getDurabilityForDisplay(ItemStack itemStack) {
         return Math.max(1.0 - (double)getEnergyStored(itemStack) / (double)tier.maxEnergy, 0);
     }
-    
+
     @Override
     public void setDamage(ItemStack itemStack, int damage) {
         //do nothing, other methods are responsible for energy consumption

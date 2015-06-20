@@ -1,5 +1,5 @@
 #Issue tracker
-If you came here to report a bug or suggest something related to the development/code of the mod, then you are in the right place! However,  if you want to suggest a gameplay feature, you should probably do it at the [FTB forum page](http://forum.feed-the-beast.com/threads/1-7-10-rfdrills-addon-for-thermalexpansion-and-enderio.82764/) instead. This issue tracker is only intended for bugs, crashes and other dev-related things.
+If you came here to report a bug or suggest something related to the development/code of the mod, then you are in the right place! However, if you want to suggest a gameplay feature, you should probably do it at the [FTB forum page](http://forum.feed-the-beast.com/threads/1-7-10-rfdrills-addon-for-thermalexpansion-and-enderio.82764/) instead. This issue tracker is only intended for bugs, crashes and other dev-related things.
 
 ##Writing the thing
 First, you need to register your account on Github. This should be pretty easy.
