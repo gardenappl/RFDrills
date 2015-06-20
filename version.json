@@ -2,7 +2,7 @@
 	"versionList": [
 		{
 			"mcVersion": "Minecraft 1.7.10",
-			"modVersion": "1.7.10-1.4.2",
+			"modVersion": "1.4.2",
 			"changeLog": [
 				"Fixed drills mining a lot slower than usual when not empowered.",
 				"Changed Leadstone tool textures to be more... ThermalExpansiony?",
