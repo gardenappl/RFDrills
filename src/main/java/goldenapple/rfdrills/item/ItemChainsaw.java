@@ -44,11 +44,6 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool, IEqualityOverr
     }
 
     @Override
-    public DrillTier getTier(ItemStack itemStack) {
-        return tier;
-    }
-
-    @Override
     @SuppressWarnings({"unchecked"})
     public void getSubItems(Item item, CreativeTabs creativeTab, List list) {
         list.add(setEnergy(new ItemStack(item, 1, 0), 0));
@@ -60,10 +55,6 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool, IEqualityOverr
         return tier.rarity;
     }
 
-    @Override
-    public boolean showDurabilityBar(ItemStack itemStack) {
-        return true;
-    }
 
     public boolean func_150897_b(Block p_150897_1_){ //stolen from ItemShears
         return p_150897_1_ == Blocks.web || p_150897_1_ == Blocks.redstone_wire || p_150897_1_ == Blocks.tripwire;
@@ -72,7 +63,7 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool, IEqualityOverr
     @Override
     public float getDigSpeed(ItemStack itemStack, Block block, int meta) {
         itemStack.setItemDamage(0);
-        if(getEnergyStored(itemStack) >= tier.energyPerBlock){
+        if(getEnergyStored(itemStack) >= getEnergyPerUse(itemStack, block, meta)){
             if(block instanceof IShearable && isEmpowered(itemStack)) {
                 return 100.0F;
             }else if(block.getMaterial() == Material.cloth){
@@ -90,12 +81,8 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool, IEqualityOverr
     }
 
     @Override
-    public int getEnergyPerUse(ItemStack itemStack, Block block, int meta) {
-        if(isEmpowered(itemStack)) {
-            return block instanceof IShearable ? getEnergyPerUse(itemStack) / 5 : getEnergyPerUse(itemStack);
-        }else {
-            return getEnergyPerUse(itemStack);
-        }
+    public boolean showDurabilityBar(ItemStack itemStack) {
+        return true;
     }
 
     @Override
@@ -255,6 +242,11 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool, IEqualityOverr
     /* IEnergyTool */
 
     @Override
+    public DrillTier getTier(ItemStack itemStack) {
+        return tier;
+    }
+
+    @Override
     public ItemStack setEnergy(ItemStack itemStack, int energy){
         if(itemStack.stackTagCompound == null){
             itemStack.stackTagCompound = new NBTTagCompound();
@@ -270,12 +262,23 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool, IEqualityOverr
     }
 
     @Override
+    public int getEnergyPerUse(ItemStack itemStack, Block block, int meta) {
+        if(isEmpowered(itemStack)) {
+            return block instanceof IShearable ? getEnergyPerUse(itemStack) / 5 : getEnergyPerUse(itemStack);
+        }else {
+            return getEnergyPerUse(itemStack);
+        }
+    }
+
+    /* IEnergyContainerItem */
+
+    @Override
     public int receiveEnergy(ItemStack itemStack, int maxReceive, boolean simulate) { //stolen from ItemEnergyContainer
         int energy = getEnergyStored(itemStack);
         int energyReceived = Math.min(tier.maxEnergy - energy, Math.min(tier.rechargeRate, maxReceive));
 
         if (!simulate) {
-            setEnergy(itemStack, energy += energyReceived);
+            setEnergy(itemStack, energy + energyReceived);
         }
         return energyReceived;
     }
@@ -340,8 +343,10 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool, IEqualityOverr
         player.addChatComponentMessage(new ChatComponentText(writeModeInfo(itemStack)));
     }
 
+    /* IEqualityOverrideItem */
+
     @Override
     public boolean isLastHeldItemEqual(ItemStack current, ItemStack previous) {
-        return current.getItem() == previous.getItem();
+        return current.getItem() == previous.getItem(); //used to prevent not being able to mine while the drill is recharging. Otherwise, the mining progress gets reset every tick because of NBT changes
     }
 }

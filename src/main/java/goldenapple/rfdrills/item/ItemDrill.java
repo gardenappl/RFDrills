@@ -52,11 +52,6 @@ public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrid
     }
 
     @Override
-    public DrillTier getTier(ItemStack itemStack) {
-        return tier;
-    }
-
-    @Override
     public Set<String> getToolClasses(ItemStack stack) {
         return ImmutableSet.of("pickaxe", "shovel");
     }
@@ -70,9 +65,9 @@ public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrid
     public float getDigSpeed(ItemStack itemStack, Block block, int meta) {
         if(getEnergyStored(itemStack) >= tier.energyPerBlock && canHarvestBlock(block, itemStack)){
             if(isEmpowered(itemStack)) {
-                return effectiveMaterials.contains(block.getMaterial()) ? efficiencyOnProperMaterial : 1.0F;
-            }else {
                 return effectiveMaterials.contains(block.getMaterial()) ? efficiencyOnProperMaterial / 3 : 1.0F;
+            }else {
+                return effectiveMaterials.contains(block.getMaterial()) ? efficiencyOnProperMaterial : 1.0F;
             }
         }else{
             return effectiveMaterials.contains(block.getMaterial()) ? 0.5F : 1.0F;
@@ -100,11 +95,6 @@ public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrid
     }
 
     @Override
-    public int getEnergyPerUse(ItemStack itemStack, Block block, int meta) {
-        return getEnergyPerUseWithMode(itemStack);
-    }
-
-    @Override
     @SuppressWarnings({"unchecked"})
     public void getSubItems(Item item, CreativeTabs creativeTab, List list) {
         list.add(setEnergy(new ItemStack(item, 1, 0), 0));
@@ -118,38 +108,15 @@ public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrid
 
     @Override
     public boolean showDurabilityBar(ItemStack itemStack) {
-        if(itemStack.hasTagCompound()){
+        if(itemStack.hasTagCompound())
             return !itemStack.stackTagCompound.getBoolean("isCreativeTabIcon");
-        }
-        return true;
+        else
+            return true;
     }
 
     @Override
     public double getDurabilityForDisplay(ItemStack itemStack) {
         return Math.max(1.0 - (double) getEnergyStored(itemStack) / (double) tier.maxEnergy, 0);
-    }
-
-    @Override
-    public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
-        /* if(!world.isRemote && player.isSneaking() && tier.hasModes) {
-            switch (getMode(itemStack)) {
-                case 0:
-                    setMode(itemStack, (byte) 1);
-                    player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("rfdrills.1x3x1.mode")));
-                    break;
-                case 1:
-                    setMode(itemStack, (byte) 0);
-                    player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("rfdrills.1x1x1.mode")));
-                    break;
-                default:
-                    setMode(itemStack, (byte) 0);
-                    player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("rfdrills.1x1x1.mode")));
-                    LogHelper.warn("Illegal drill mode! Resetting to 0");
-                    break;
-            }
-        }
-        return itemStack; */
-        return super.onItemRightClick(itemStack, world, player);
     }
 
     private void harvestBlock(World world, int x, int y, int z, EntityPlayer player){
@@ -274,6 +241,11 @@ public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrid
     /* IEnergyTool */
 
     @Override
+    public DrillTier getTier(ItemStack itemStack) {
+        return tier;
+    }
+
+    @Override
     public ItemStack setEnergy(ItemStack itemStack, int energy){
         if(itemStack.stackTagCompound == null){
             itemStack.stackTagCompound = new NBTTagCompound();
@@ -287,6 +259,13 @@ public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrid
     public ItemStack drainEnergy(ItemStack itemStack, int energy){
         return setEnergy(itemStack, Math.max(getEnergyStored(itemStack) - energy, 0));
     }
+
+    @Override
+    public int getEnergyPerUse(ItemStack itemStack, Block block, int meta) {
+        return getEnergyPerUseWithMode(itemStack);
+    }
+
+    /* IEnergyContainerItem */
 
     @Override
     public int receiveEnergy(ItemStack itemStack, int maxReceive, boolean simulate) { //stolen from ItemEnergyContainer
@@ -332,7 +311,7 @@ public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrid
 
     @Override
     public boolean isLastHeldItemEqual(ItemStack current, ItemStack previous) {
-        return previous.getItem() == current.getItem();
+        return previous.getItem() == current.getItem(); //used to prevent not being able to mine while the drill is recharging. Otherwise, the mining progress gets reset every tick because of NBT changes
     }
 
     /* IEmpowerableItem */
