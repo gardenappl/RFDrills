@@ -54,11 +54,6 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityO
     }
 
     @Override
-    public DrillTier getTier(ItemStack itemStack) {
-        return tier;
-    }
-
-    @Override
     public Set<String> getToolClasses(ItemStack stack) {
         return ImmutableSet.of("pickaxe", "shovel", "axe", "sickle");
     }
@@ -109,11 +104,6 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityO
     }
 
     @Override
-    public int getEnergyPerUse(ItemStack itemStack, Block block, int meta) {
-        return getEnergyPerUseWithMode(itemStack);
-    }
-
-    @Override
     @SuppressWarnings({"unchecked"})
     public void getSubItems(Item item, CreativeTabs creativeTab, List list) {
         list.add(setEnergy(new ItemStack(item, 1, 0), 0));
@@ -134,37 +124,7 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityO
     public double getDurabilityForDisplay(ItemStack itemStack) {
         return Math.max(1.0 - (double)getEnergyStored(itemStack) / (double)tier.maxEnergy, 0);
     }
-/*
-    @Override
-     public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
-        if(!world.isRemote && player.isSneaking() && tier.hasModes) {
-            switch (getMode(itemStack)) {
-                case 0:
-                    player.worldObj.playSoundAtEntity(player, "ambient.weather.thunder", 0.4F, 1.0F); //sounds stolen from RedstoneArsenal
-                    setMode(itemStack, (byte) 1);
-                    player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("rfdrills.3x3x3.mode")));
-                    break;
-                case 1:
-                    player.worldObj.playSoundAtEntity(player, "ambient.weather.thunder", 0.4F, 1.0F);
-                    setMode(itemStack, (byte) 2);
-                    player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("rfdrills.5x5x5.mode")));
-                    break;
-                case 2:
-                    player.worldObj.playSoundAtEntity(player, "random.orb", 0.2F, 0.6F);
-                    setMode(itemStack, (byte)0);
-                    player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("rfdrills.1x1x1.mode")));
-                    break;
-                default:
-                    player.worldObj.playSoundAtEntity(player, "random.orb", 0.2F, 0.6F);
-                    setMode(itemStack, (byte) 0);
-                    player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("rfdrills.1x1x1.mode")));
-                    LogHelper.warn("Illegal drill mode! Resetting to 0");
-                    break;
-            }
-        }
-        return itemStack;
-    }
-*/
+    
     @Override
     public void setDamage(ItemStack itemStack, int damage) {
         //do nothing, other methods are responsible for energy consumption
@@ -314,6 +274,11 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityO
     /* IMultiModeItem */
 
     @Override
+    public DrillTier getTier(ItemStack itemStack) {
+        return tier;
+    }
+
+    @Override
     public int getMode(ItemStack itemStack){
         if(!tier.hasModes){
             return 0;
@@ -392,6 +357,13 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityO
     public ItemStack drainEnergy(ItemStack itemStack, int energy){
         return setEnergy(itemStack, Math.max(getEnergyStored(itemStack) - energy, 0));
     }
+
+    @Override
+    public int getEnergyPerUse(ItemStack itemStack, Block block, int meta) {
+        return getEnergyPerUseWithMode(itemStack);
+    }
+
+    /* IEnergyContainerItem */
 
     @Override
     public int receiveEnergy(ItemStack itemStack, int maxReceive, boolean simulate) { //stolen from ItemEnergyContainer
