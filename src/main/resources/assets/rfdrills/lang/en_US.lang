@@ -41,7 +41,7 @@ rfdrills.drill_has_modes.tooltip=§b§oPress %s to switch mining modes.
 rfdrills.crusher_has_modes.tooltip=§b§oPress the %s key to switch mining modes.
 rfdrills.enchantable.tooltip=§aCan be enchanted.
 
-rfdrills.soul_upgrade.tooltip=Upgrade for Soul Crusher
+rfdrills.soul_upgrade.tooltip=Upgrade for the Soul Crusher
 
 rfdrills.shears_on.mode=Shears: §aOn
 rfdrills.shears_off.mode=Shears: §cOff
