@@ -262,6 +262,6 @@ public class ModRecipes {
         GameRegistry.addRecipe(new ShapedUpgradeRecipe(ModItems.fluxBreaker,
                 "iFi",
                 "DRC",
-                " R ", 'i', "ingotElectrumFlux", 'R', fluxRod, 'D', ModItems.resonantDrill, 'C', ModItems.resonantChainsaw, 'F', fluctuatingCore.copy()));
+                " R ", 'i', "ingotElectrumFlux", 'R', fluxRod, 'D', ModItems.resonantDrill, 'C', ModItems.resonantChainsaw, 'F', fluctuatingCore.copy()).setMirrored(true));
     }
 }

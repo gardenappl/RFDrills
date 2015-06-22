@@ -205,6 +205,12 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityO
 
             if (MiscUtil.isShiftPressed()) {
                 list.add(StringHelper.writeEnergyPerBlockInfo(getEnergyPerUseWithMode(itemStack)));
+                if(tier.hasModes){
+                    list.add(writeModeInfo(itemStack));
+                }
+                if(tier.material.getEnchantability() > 0){
+                    list.add(StatCollector.translateToLocal("rfdrills.enchantable.tooltip"));
+                }
                 if (tier.hasModes){
                     list.add(StringHelper.writeModeSwitchInfo("rfdrills.crusher_has_modes.tooltip", KeyBindingMultiMode.instance));
                 }

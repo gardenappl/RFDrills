@@ -58,7 +58,7 @@ public class ConfigHandler {
         DrillTier.DRILL4 = getDrillTierInfo("drill", 4, 5000000, 1500, 5000, EnumRarity.rare, false, true, 4, 12.0F, 5.0F, 15);
         DrillTier.FLUX_CRUSHER = getDrillTierInfo("drill", 5, 25000000, 5000, 10000, EnumRarity.epic, false, true, 5, 15.0F, 8.0F, 20);
         int soulCrusherMiningLevel = config.getInt("Mining Level", "soulcrusher", 5, 0, Integer.MAX_VALUE, "Mining level of the tool (1 - can mine iron, 2 - can mine diamonds etc.)");
-        float soulCrusherEfficiency = config.getFloat("Efficiency", "soulcrusher", 10.0F, 0, Float.MAX_VALUE, "Efficiency of the tool without upgrades");
+        float soulCrusherEfficiency = config.getFloat("Efficiency", "soulcrusher", 12.0F, 0, Float.MAX_VALUE, "Efficiency of the tool without upgrades");
         float soulCrusherDamage = config.getFloat("Damage", "soulcrusher", 8.0F, 0, Float.MAX_VALUE, "Damage that the tool does when attacking enemies");
         int soulCrusherEnchant = config.getInt("Enchantability", "soulcrusher", 20, 0, Integer.MAX_VALUE, "Enchantablity of the tool (0 - not enchantable)");
         boolean soulCrusherHasModes = config.getBoolean("Has Modes", "soulcrusher", true, "Can the tool change modes on shift+right click");
