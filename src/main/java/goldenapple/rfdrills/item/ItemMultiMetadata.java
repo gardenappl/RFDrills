@@ -4,6 +4,7 @@ import goldenapple.rfdrills.RFDrills;
 import goldenapple.rfdrills.reference.Reference;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -16,18 +17,27 @@ public class ItemMultiMetadata extends Item {
     private IIcon[] icons;
     private String defaultName;
     private EnumRarity[] rarities;
+    private String[][] tooltips;
+    private boolean[] effects; //enchantement glow
 
-    public ItemMultiMetadata(String[] names, String defaultName, EnumRarity[] rarities){
+    public ItemMultiMetadata(String[] names, String defaultName){
         this.names = names;
         this.icons = new IIcon[names.length];
         this.defaultName = defaultName;
-        this.rarities = rarities;
         this.setCreativeTab(RFDrills.OmniDrillsTab);
         this.setHasSubtypes(true);
     }
 
-    public ItemMultiMetadata(String[] names, String defaultName){
-        this(names, defaultName, null);
+    public void setRarities(EnumRarity[] rarities){
+        this.rarities = rarities;
+    }
+
+    public void setTooltips(String[][] tooltips){
+        this.tooltips = tooltips;
+    }
+
+    public void setEffects(boolean[] effects){
+        this.effects = effects;
     }
 
     @Override
@@ -38,6 +48,29 @@ public class ItemMultiMetadata extends Item {
             return EnumRarity.common;
         }else{
             return rarities[itemStack.getItemDamage()];
+        }
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean iHaveNoIdea) {
+        if(tooltips == null) return;
+
+        if(!(itemStack.getItemDamage() >= tooltips.length)){
+            for(String string : tooltips[itemStack.getItemDamage()]){
+                list.add(string);
+            }
+        }
+    }
+
+    @Override
+    public boolean hasEffect(ItemStack itemStack, int pass) {
+        if(effects == null) {
+            return false;
+        }else if(itemStack.getItemDamage() >= effects.length){
+            return false;
+        }else{
+            return effects[itemStack.getItemDamage()];
         }
     }
 
