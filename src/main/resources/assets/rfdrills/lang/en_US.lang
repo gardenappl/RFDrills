@@ -29,6 +29,9 @@ item.rfdrills:destructive_crystal.name=Destructive Crystal
 item.rfdrills:earthshaking_crystal.name=Earthshaking Crystal
 item.rfdrills:soularium_nugget.name=Soularium Nugget
 item.rfdrills:dark_soularium_nugget.name=Enriched Soularium Alloy Nugget
+item.rfdrills:superconductance_coil.name=Redstone Superconductance Coil
+item.rfdrills:fluctuating_core.name=Fluctuating Core
+item.rfdrills:fluctuating_core_frame.name=Fluctuating Core Frame
 
 
 rfdrills.drill.tooltip=§aWorks as a pick and a shovel.

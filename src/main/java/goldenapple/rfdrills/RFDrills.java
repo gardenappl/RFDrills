@@ -29,6 +29,7 @@ public class RFDrills {
     public static boolean isTELoaded;
     public static boolean isEIOLoaded;
     public static boolean isRArsLoaded;
+    public static boolean isRArmLoaded;
     public static boolean isSJLoaded;
 
     @EventHandler
@@ -36,6 +37,7 @@ public class RFDrills {
         isTELoaded = Loader.isModLoaded("ThermalExpansion");
         isEIOLoaded = Loader.isModLoaded("EnderIO");
         isRArsLoaded = Loader.isModLoaded("RedstoneArsenal");
+        isRArmLoaded = Loader.isModLoaded("RArm");
         isSJLoaded = Loader.isModLoaded("simplyjetpacks");
 
         configHandler = new ConfigHandler(event.getSuggestedConfigurationFile());

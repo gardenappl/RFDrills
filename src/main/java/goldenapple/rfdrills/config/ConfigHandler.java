@@ -18,6 +18,7 @@ public class ConfigHandler {
     public static boolean integrateEIO;
     public static boolean integrateRArs;
     public static boolean integrateSJ;
+    public static boolean integrateRArm;
     public static boolean shearsDefault;
   /*public static String energyUnitName;
     public static EnumEnergyUnit energyUnit = EnumEnergyUnit.RF; */
@@ -46,7 +47,8 @@ public class ConfigHandler {
 
         integrateTE = config.getBoolean("Integrate TE", Configuration.CATEGORY_GENERAL, true, "Set this to false to disable Thermal Expansion integration");
         integrateEIO = config.getBoolean("Integrate EIO", Configuration.CATEGORY_GENERAL, true, "Set this to false to disable EnderIO integration");
-        integrateRArs = config.getBoolean("Integrate Redstone Arsenal", Configuration.CATEGORY_GENERAL, true, "Set this to false to disable Redstone Arsenal integration");
+        integrateRArs = config.getBoolean("Integrate Redstone Arsenal", Configuration.CATEGORY_GENERAL, true, "Set this to false to disable using Redstone Arsenal items in the mod's recipes");
+        integrateRArm = config.getBoolean("Integrate Redstone Armory", Configuration.CATEGORY_GENERAL, true, "Set this to false to disable using Redstone Armory items in the mod's recipes");
         integrateSJ = config.getBoolean("Integrate Simply Jetpacks", Configuration.CATEGORY_GENERAL, true, "Set this to false to disable Simply Jetpacks integration");
         shearsDefault = config.getBoolean("Shears Default", Configuration.CATEGORY_GENERAL, true, "Set this to false to disable shears functionality for lower tier chainsaws");
 

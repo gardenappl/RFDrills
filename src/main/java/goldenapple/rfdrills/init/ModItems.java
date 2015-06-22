@@ -44,7 +44,7 @@ public class ModItems {
     }
 
     private static void initTE(){
-        componentTE.setRarities(new EnumRarity[]{EnumRarity.common, EnumRarity.common, EnumRarity.uncommon, EnumRarity.common, EnumRarity.rare, EnumRarity.common});
+        componentTE.setRarities(new EnumRarity[]{EnumRarity.common, EnumRarity.common, EnumRarity.uncommon, EnumRarity.common, EnumRarity.rare, EnumRarity.common, EnumRarity.rare, EnumRarity.rare, EnumRarity.uncommon});
 
         GameRegistry.registerItem(componentTE, Names.COMPONENT_TE);
 

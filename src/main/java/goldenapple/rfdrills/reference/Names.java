@@ -26,7 +26,8 @@ public class Names {
                                               "resonant_motor",
                                               "resonant_motor_frame",
                                               "fluctuating_core",
-                                              "fluctuating_core_frame"};
+                                              "fluctuating_core_frame",
+                                              "superconductance_coil"};
     public static final String COMPONENT_EIO = "motor_eio";
     public static final String[] COMPONENTS_EIO = {"basic_motor",
                                                "advanced_motor",

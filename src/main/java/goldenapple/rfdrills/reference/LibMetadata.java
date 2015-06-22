@@ -7,6 +7,9 @@ public class LibMetadata {
     public static final int MOTOR_REDSTONE_FRAME = 3;
     public static final int MOTOR_RESONANT = 4;
     public static final int MOTOR_RESONANT_FRAME = 5;
+    public static final int FLUCTUATING_CORE = 6;
+    public static final int FLUCTUATING_CORE_FRAME = 7;
+    public static final int SUPERCONDUCTANCE_COIL = 8;
 
     public static final int MOTOR_BASIC = 0;
     public static final int MOTOR_ADVANCED = 1;

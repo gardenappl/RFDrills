@@ -164,13 +164,13 @@ public class ModRecipes {
         GameRegistry.addRecipe(new ShapedUpgradeRecipe(ModItems.advancedDrill,
                 " D ",
                 "iMi",
-                "ICI", 'I', "ingotEnergeticAlloy", 'i', "ingotElectricalSteel", 'C', capacitorAdvanced.copy(), 'M', motorAdvanced.copy(), 'D', new ItemStack(ModItems.basicDrill)));
+                "ICI", 'I', "ingotEnergeticAlloy", 'i', "ingotElectricalSteel", 'C', capacitorAdvanced.copy(), 'M', motorAdvanced.copy(), 'D', ModItems.basicDrill));
 
         //Advanced chainsaw
         GameRegistry.addRecipe(new ShapedUpgradeRecipe(ModItems.advancedChainsaw,
                 " iS",
                 "IMi",
-                "CI ", 'I', "ingotEnergeticAlloy", 'i', "ingotElectricalSteel", 'C', capacitorAdvanced.copy(), 'M', motorAdvanced.copy(), 'S', new ItemStack(ModItems.basicChainsaw)).setMirrored(true));
+                "CI ", 'I', "ingotEnergeticAlloy", 'i', "ingotElectricalSteel", 'C', capacitorAdvanced.copy(), 'M', motorAdvanced.copy(), 'S', ModItems.basicChainsaw).setMirrored(true));
 
         //Soularium nuggets -> ingot
         GameRegistry.addRecipe(new ShapedOreRecipe(soulariumIngot.copy(),
@@ -200,7 +200,7 @@ public class ModRecipes {
                 "nnn", 'n', "nuggetDarkSoularium", 'G', "gemDiamond"));
 
             //Soul Crusher
-            GameRegistry.addRecipe(new ShapedOreRecipe(ModItems.soulCrusher,
+            GameRegistry.addRecipe(new ShapedUpgradeRecipe(ModItems.soulCrusher,
                 "iGi",
                 "DSC",
                 " S ", 'i', darkSoulariumIngot.copy(), 'G', resonatingCrystal.copy(), 'S', "ingotDarkSteel", 'D', ModItems.advancedDrill, 'C', ModItems.advancedChainsaw).setMirrored(true));
@@ -212,28 +212,56 @@ public class ModRecipes {
                 "nnn", 'n', "nuggetSoularium", 'G', pulsatingCrystal.copy()));
 
             //Soul Crusher
-            GameRegistry.addRecipe(new ShapedOreRecipe(ModItems.soulCrusher,
+            GameRegistry.addRecipe(new ShapedUpgradeRecipe(ModItems.soulCrusher,
                 "iGi",
                 "DSC",
                 " S ", 'i', "ingotSoularium", 'G', resonatingCrystal.copy(), 'S', "ingotDarkSteel", 'D', ModItems.advancedDrill, 'C', ModItems.advancedChainsaw).setMirrored(true));
         }
 
         //Destructive Crystal
-        EnderIOHelper.addSoulBinderRecipe(Reference.MOD_ID, 100000, 10, "Creeper", resonatingCrystal.copy(), destructiveCrystal.copy());
+        EnderIOHelper.addSoulBinderRecipe("Destructive Crystal", 100000, 10, "Creeper", resonatingCrystal.copy(), destructiveCrystal.copy());
 
         //Earthshakind Crystal
-        EnderIOHelper.addSoulBinderRecipe(Reference.MOD_ID, 200000, 15, "Ghast", destructiveCrystal.copy(), earthshakingCrystal.copy());
+        EnderIOHelper.addSoulBinderRecipe("Earthshaking Crystal", 200000, 15, "Ghast", destructiveCrystal.copy(), earthshakingCrystal.copy());
     }
 
     public static void initRArs(){
         ItemStack fluxRod = new ItemStack(GameRegistry.findItem("RedstoneArsenal", "material"), 1, 193);
-        ItemStack fluxPickaxe = new ItemStack(GameRegistry.findItem("RedstoneArsenal", "tool.pickaxeFlux"), 1, 0);
-        ItemStack fluxShovel = new ItemStack(GameRegistry.findItem("RedstoneArsenal", "tool.shovelFlux"), 1, 0);
-        ItemStack fluxAxe = new ItemStack(GameRegistry.findItem("RedstoneArsenal", "tool.axeFlux"), 1, 0);
+        ItemStack fluxArmorPlate = new ItemStack(GameRegistry.findItem("RedstoneArsenal", "material"), 1, 128);
+        ItemStack coolantUnit = new ItemStack(GameRegistry.findItem("simplyjetpacks", "components"), 1, 63);
+        ItemStack superConductanceCoil = new ItemStack(ModItems.componentTE, 1, LibMetadata.SUPERCONDUCTANCE_COIL);
+        ItemStack fluctuatingCoreFrame = new ItemStack(ModItems.componentTE, 1, LibMetadata.FLUCTUATING_CORE_FRAME);
+        ItemStack fluctuatingCore = new ItemStack(ModItems.componentTE, 1, LibMetadata.FLUCTUATING_CORE);
+
+        GameRegistry.addRecipe(new ShapedOreRecipe(superConductanceCoil.copy(),
+                "sc ",
+                "cFc",
+                " cs", 's', "ingotSignalum", 'F', "ingotElectrumFlux", 'c', "dustCryotheum").setMirrored(true));
+
+        GameRegistry.addRecipe(new ShapedOreRecipe(fluctuatingCoreFrame.copy(),
+                "eFe",
+                "FGF",
+                "eCe", 'e', "ingotEnderium", 'F', fluxArmorPlate.copy(), 'G', "gemCrystalFlux", 'C', superConductanceCoil.copy()));
+
+        ThermalExpansionHelper.addTransposerFill(16000, fluctuatingCoreFrame.copy(), fluctuatingCore.copy(), FluidRegistry.getFluidStack("cryotheum", 8000), false);
+
+        if(RFDrills.isSJLoaded && ConfigHandler.integrateSJ){
+            GameRegistry.addRecipe(new ShapedOreRecipe(fluctuatingCore.copy(),
+                "ece",
+                "FGF",
+                "eCe", 'e', "ingotEnderium", 'F', fluxArmorPlate.copy(), 'G', "gemCrystalFlux", 'C', superConductanceCoil.copy(), 'c', coolantUnit.copy()));
+        }
+
+        if(RFDrills.isRArmLoaded && ConfigHandler.integrateRArm){
+            GameRegistry.addRecipe(new ShapedOreRecipe(fluctuatingCore.copy(),
+                "eFe",
+                "FGF",
+                "eCe", 'e', "ingotGelidEnderium", 'F', fluxArmorPlate.copy(), 'G', "gemCrystalFlux", 'C', superConductanceCoil.copy()));
+        }
 
         GameRegistry.addRecipe(new ShapedUpgradeRecipe(ModItems.fluxBreaker,
-                "PSA",
-                "DBC",
-                " R ", 'B', "blockElectrumFlux", 'R', fluxRod, 'P', fluxPickaxe, 'S', fluxShovel, 'A', fluxAxe, 'D', new ItemStack(ModItems.resonantDrill), 'C', new ItemStack(ModItems.resonantChainsaw)));
+                "iFi",
+                "DRC",
+                " R ", 'i', "ingotElectrumFlux", 'R', fluxRod, 'D', ModItems.resonantDrill, 'C', ModItems.resonantChainsaw, 'F', fluctuatingCore.copy()));
     }
 }
