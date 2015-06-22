@@ -41,7 +41,7 @@ rfdrills.energy_per_block.tooltip=Energy per block: %s RF
 rfdrills.can_break.tooltip=§cWill break when it runs out of energy.
 rfdrills.chainsaw_has_modes.tooltip=§b§oPress %s to toggle shears.
 rfdrills.drill_has_modes.tooltip=§b§oPress %s to switch mining modes.
-rfdrills.crusher_has_modes.tooltip=§b§oPress the %s key to switch mining modes.
+rfdrills.crusher_has_modes.tooltip=§b§oPress %s to switch mining modes.
 rfdrills.enchantable.tooltip=§aCan be enchanted.
 
 rfdrills.soul_upgrade.tooltip=Upgrade for the Soul Crusher
@@ -52,6 +52,12 @@ rfdrills.5x5x5.mode=Mode: §a5x5x5
 rfdrills.3x3x3.mode=Mode: §e3x3x3
 rfdrills.1x3x1.mode=Mode: §a1x3x1
 rfdrills.1x1x1.mode=Mode: §c1x1x1
+
+rfdrills.upgrade.beast_mode=Beast Mode
+rfdrills.upgrade.beast_mode.recipe1=Destructive Crystal + 10 lvs
+rfdrills.upgrade.beast_mode.recipe2=Earthshaking Crystal + 10 lvs
+rfdrills.upgrade.beast_mode.desc1=Allows for 3x3x3 mining
+rfdrills.upgrade.beast_mode.desc2=Allows for 5x5x5 mining
 
 config.general.tooltip=Configure main gameplay settings
 config.drill_tier1.tooltip=Configure properties of Tier 1 drills

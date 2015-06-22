@@ -276,13 +276,11 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityO
 
     @Override
     public int getMode(ItemStack itemStack){
-        if(!tier.hasModes){
-            return 0;
-        }
+        if(!tier.hasModes) return 0;
 
-        if(itemStack.stackTagCompound == null){
-            return 0;
-        }
+        if(getEnergyStored(itemStack) == 0) return 0;
+
+        if(itemStack.stackTagCompound == null) return 0;
 
         if(itemStack.stackTagCompound.hasKey("Mode")) {
             return itemStack.stackTagCompound.getByte("Mode");
@@ -293,6 +291,8 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityO
 
     @Override
     public boolean setMode(ItemStack itemStack, int mode) {
+        if(getEnergyStored(itemStack) == 0) return false;
+
         if(itemStack.stackTagCompound == null){
             itemStack.stackTagCompound = new NBTTagCompound();
         }
@@ -304,21 +304,18 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityO
     @Override
     public boolean incrMode(ItemStack itemStack) {
         if(getMode(itemStack) < 2){
-            setMode(itemStack, getMode(itemStack) + 1);
+            return setMode(itemStack, getMode(itemStack) + 1);
         }else{
-            setMode(itemStack, 0);
+            return setMode(itemStack, 0);
         }
-        return true;
     }
 
     @Override
     public boolean decrMode(ItemStack itemStack) {
         if(getMode(itemStack) > 0){
-            setMode(itemStack, getMode(itemStack) - 1);
-            return true;
+            return setMode(itemStack, getMode(itemStack) - 1);
         }else{
-            setMode(itemStack, 2);
-            return false;
+            return setMode(itemStack, 2);
         }
     }
 

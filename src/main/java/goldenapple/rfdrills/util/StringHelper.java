@@ -1,7 +1,10 @@
 package goldenapple.rfdrills.util;
 
 import cofh.core.key.IKeyBinding;
+import goldenapple.rfdrills.item.soulupgrade.AbstractSoulUpgrade;
+import goldenapple.rfdrills.item.soulupgrade.SoulUpgradeHelper;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 import org.lwjgl.input.Keyboard;
 
@@ -13,6 +16,12 @@ public class StringHelper {
         } else if (energy >= 10000) {
             return String.format("%.1fk", (float) energy / 1000);
         } else return Integer.toString(energy);
+    }
+
+    public static String writeUpgradeInfo(ItemStack itemStack, AbstractSoulUpgrade upgrade){
+        String upgradeName = StatCollector.translateToLocal("rfdrills.upgrade." + upgrade.getUnlocalizedName());
+        String level = StatCollector.translateToLocal("enchantement.level." + SoulUpgradeHelper.getUpgradeLevel(itemStack, upgrade));
+        return upgradeName + " " + level;
     }
 
     public static String writeEnergyPerBlockInfo(int energy) {

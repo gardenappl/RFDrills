@@ -12,6 +12,7 @@ import goldenapple.rfdrills.compat.versionchecker.VersionCheckerCompat;
 import goldenapple.rfdrills.config.ConfigHandler;
 import goldenapple.rfdrills.init.ModItems;
 import goldenapple.rfdrills.init.ModRecipes;
+import goldenapple.rfdrills.item.soulupgrade.SoulUpgradeRecipeHandler;
 import goldenapple.rfdrills.reference.LibReflection;
 import goldenapple.rfdrills.reference.Reference;
 import net.minecraft.creativetab.CreativeTabs;
@@ -71,6 +72,8 @@ public class RFDrills {
         FMLInterModComms.sendMessage("Waila", "register", LibReflection.WAILA_INIT_METHOD);
         VersionCheckerCompat.init();
         ModRecipes.init();
+
+        FMLCommonHandler.instance().bus().register(new SoulUpgradeRecipeHandler());
     }
 
     @EventHandler
