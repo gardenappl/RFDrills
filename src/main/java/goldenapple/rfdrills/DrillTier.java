@@ -8,7 +8,8 @@ public class DrillTier {
     public static DrillTier DRILL2;
     public static DrillTier DRILL3;
     public static DrillTier DRILL4;
-    public static DrillTier CRUSHER;
+    public static DrillTier FLUX_CRUSHER;
+    public static DrillTier SOUL_CRUSHER;
 
     public static DrillTier CHAINSAW1;
     public static DrillTier CHAINSAW2;

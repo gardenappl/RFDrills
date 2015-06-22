@@ -6,6 +6,7 @@ item.rfdrills:basic_drill.name=Basic Electric Drill
 item.rfdrills:advanced_drill.name=Advanced Electric Drill
 
 item.rfdrills:flux_infused_crusher.name=Flux-Infused Crusher
+item.rfdrills:soul_crusher.name=Soul Crusher
 
 item.rfdrills:leadstone_chainsaw.name=Leadstone Chainsaw
 item.rfdrills:hardened_chainsaw.name=Hardened Chainsaw
@@ -23,6 +24,12 @@ item.rfdrills:resonant_motor.name=Resonant Motor
 item.rfdrills:basic_motor.name=Basic Electric Motor
 item.rfdrills:advanced_motor.name=Advanced Electric Motor
 
+item.rfdrills:resonating_crystal.name=Resonating Crystal
+item.rfdrills:destructive_crystal.name=Destructive Crystal
+item.rfdrills:earthshaking_crystal.name=Earthshaking Crystal
+item.rfdrills:soularium_nugget.name=Soularium Nugget
+item.rfdrills:dark_soularium_nugget.name=Enriched Soularium Alloy Nugget
+
 
 rfdrills.drill.tooltip=§aWorks as a pick and a shovel.
 rfdrills.chainsaw.tooltip=§aWorks as an axe and shears.
@@ -33,6 +40,8 @@ rfdrills.chainsaw_has_modes.tooltip=§b§oPress %s to toggle shears.
 rfdrills.drill_has_modes.tooltip=§b§oPress %s to switch mining modes.
 rfdrills.crusher_has_modes.tooltip=§b§oPress the %s key to switch mining modes.
 rfdrills.enchantable.tooltip=§aCan be enchanted.
+
+rfdrills.soul_upgrade.tooltip=Upgrade for Soul Crusher
 
 rfdrills.shears_on.mode=Shears: §aOn
 rfdrills.shears_off.mode=Shears: §cOff
@@ -46,7 +55,8 @@ config.drill_tier1.tooltip=Configure properties of Tier 1 drills
 config.drill_tier2.tooltip=Configure properties of Tier 2 drills
 config.drill_tier3.tooltip=Configure properties of Tier 3 drills
 config.drill_tier4.tooltip=Configure properties of Tier 4 drills
-config.crusher.tooltip=Configure properties of Crushers
+config.flux_crusher.tooltip=Configure properties of the Flux-Infused Crusher
+config.soul_crusher.tooltip=Configure properties of the Soul Crusher
 config.chainsaw_tier1.tooltip=Configure properties of Tier 1 chainsaws
 config.chainsaw_tier2.tooltip=Configure properties of Tier 2 chainsaws
 config.chainsaw_tier3.tooltip=Configure properties of Tier 3 chainsaws

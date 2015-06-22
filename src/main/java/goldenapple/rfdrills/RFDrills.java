@@ -1,6 +1,7 @@
 package goldenapple.rfdrills;
 
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
@@ -22,13 +23,21 @@ import net.minecraft.nbt.NBTTagByte;
 public class RFDrills {
     @Mod.Instance
     public static RFDrills instance;
-
     public static ConfigHandler configHandler;
-
     public static CreativeTabs OmniDrillsTab;
+
+    public static boolean isTELoaded;
+    public static boolean isEIOLoaded;
+    public static boolean isRArsLoaded;
+    public static boolean isSJLoaded;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+        isTELoaded = Loader.isModLoaded("ThermalExpansion");
+        isEIOLoaded = Loader.isModLoaded("EnderIO");
+        isRArsLoaded = Loader.isModLoaded("RedstoneArsenal");
+        isSJLoaded = Loader.isModLoaded("simplyjetpacks");
+
         configHandler = new ConfigHandler(event.getSuggestedConfigurationFile());
         FMLCommonHandler.instance().bus().register(configHandler);
 

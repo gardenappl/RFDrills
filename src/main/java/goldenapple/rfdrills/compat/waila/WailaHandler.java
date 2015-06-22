@@ -1,9 +1,6 @@
 package goldenapple.rfdrills.compat.waila;
 
-import goldenapple.rfdrills.item.IEnergyTool;
-import goldenapple.rfdrills.item.ItemChainsaw;
-import goldenapple.rfdrills.item.ItemDrill;
-import goldenapple.rfdrills.item.ItemFluxCrusher;
+import goldenapple.rfdrills.item.*;
 import goldenapple.rfdrills.reference.Reference;
 import goldenapple.rfdrills.util.StringHelper;
 import mcp.mobius.waila.api.IWailaConfigHandler;
@@ -74,6 +71,9 @@ public class WailaHandler implements IWailaDataProvider {
 
                     if (equipStack.getItem() instanceof ItemFluxCrusher)
                         currenttip.add(((ItemFluxCrusher) equipStack.getItem()).writeModeInfo(equipStack));
+
+                    if (equipStack.getItem() instanceof ItemSoulCrusher)
+                        currenttip.add(((ItemSoulCrusher) equipStack.getItem()).writeModeInfo(equipStack));
                 }
             }
         }

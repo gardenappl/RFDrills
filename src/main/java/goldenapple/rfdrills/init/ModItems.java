@@ -4,13 +4,13 @@ import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.GameRegistry;
 import goldenapple.rfdrills.DrillTier;
 import goldenapple.rfdrills.config.ConfigHandler;
-import goldenapple.rfdrills.item.ItemChainsaw;
-import goldenapple.rfdrills.item.ItemDrill;
-import goldenapple.rfdrills.item.ItemFluxCrusher;
-import goldenapple.rfdrills.item.ItemMultiMetadata;
+import goldenapple.rfdrills.item.*;
+import goldenapple.rfdrills.reference.LibMetadata;
 import goldenapple.rfdrills.reference.Names;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.oredict.OreDictionary;
 
 public class ModItems {
     //Thermal Expansion
@@ -28,9 +28,13 @@ public class ModItems {
     public static Item resonantChainsaw = new ItemChainsaw(Names.RESONANT_CHAINSAW, DrillTier.CHAINSAW4);
 
     //EnderIO
-    public static Item motorEIO = new ItemMultiMetadata(Names.MOTORS_EIO, Names.MOTOR_EIO, new EnumRarity[]{EnumRarity.common, EnumRarity.common});
+    private 
+    public static Item motorEIO = new ItemMultiMetadata(Names.MOTORS_EIO, Names.MOTOR_EIO, new EnumRarity[]{EnumRarity.common, EnumRarity.uncommon, EnumRarity.common, EnumRarity.common, EnumRarity.uncommon});
+    public static Item soulUpgrades = new ItemMultiMetadata(Names.SOUL_UPGRADES, Names.SOUL_UPGRADE);
+
     public static Item basicDrill = new ItemDrill(Names.BASIC_DRILL, DrillTier.DRILL1);
     public static Item advancedDrill = new ItemDrill(Names.ADVANCED_DRILL, DrillTier.DRILL3);
+    public static Item soulCrusher = new ItemSoulCrusher();
 
     public static Item basicChainsaw = new ItemChainsaw(Names.BASIC_CHAINSAW, DrillTier.CHAINSAW1);
     public static Item advancedChainsaw = new ItemChainsaw(Names.ADVANCED_CHAINSAW, DrillTier.CHAINSAW3);
@@ -54,16 +58,22 @@ public class ModItems {
         GameRegistry.registerItem(redstoneChainsaw, Names.REDSTONE_CHAINSAW);
         GameRegistry.registerItem(resonantChainsaw, Names.RESONANT_CHAINSAW);
 
-        GameRegistry.registerItem(fluxBreaker, Names.FLUX_CRUSHER);
+        if(Loader.isModLoaded("RedstoneArsenal"))
+            GameRegistry.registerItem(fluxBreaker, Names.FLUX_CRUSHER);
     }
 
     private static void initEIO(){
         GameRegistry.registerItem(motorEIO, Names.MOTOR_EIO);
+        GameRegistry.registerItem(soulUpgrades, Names.SOUL_UPGRADE);
+        OreDictionary.registerOre("nuggetSoularium", new ItemStack(ModItems.motorEIO, 1, LibMetadata.SOULARIUM_NUGGET));
+        OreDictionary.registerOre("nuggetDarkSoularium", new ItemStack(ModItems.motorEIO, 1, LibMetadata.DARK_SOULARIUM_NUGGET));
 
         GameRegistry.registerItem(basicDrill, Names.BASIC_DRILL);
         GameRegistry.registerItem(advancedDrill, Names.ADVANCED_DRILL);
 
         GameRegistry.registerItem(basicChainsaw, Names.BASIC_CHAINSAW);
         GameRegistry.registerItem(advancedChainsaw, Names.ADVANCED_CHAINSAW);
+
+        GameRegistry.registerItem(soulCrusher, Names.SOUL_CRUSHER);
     }
 }

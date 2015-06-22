@@ -15,17 +15,24 @@ public class Names {
     public static final String BASIC_CHAINSAW = "basic_chainsaw";
     public static final String ADVANCED_CHAINSAW = "advanced_chainsaw";
 
-    public static final String DARK_SOULARIUM_CRUSHER = "dark_soularium_crusher";
+    public static final String SOUL_CRUSHER = "soul_crusher";
     public static final String FLUX_CRUSHER = "flux_infused_crusher";
 
     public static final String MOTOR_TE = "motor_te";
     public static final String[] MOTORS_TE = {"leadstone_motor",
-                                             "hardened_motor",
-                                             "redstone_motor",
-                                             "redstone_motor_frame",
-                                             "resonant_motor",
-                                             "resonant_motor_frame"};
+                                              "hardened_motor",
+                                              "redstone_motor",
+                                              "redstone_motor_frame",
+                                              "resonant_motor",
+                                              "resonant_motor_frame"};
     public static final String MOTOR_EIO = "motor_eio";
     public static final String[] MOTORS_EIO = {"basic_motor",
-                                               "advanced_motor"};
+                                               "advanced_motor",
+                                               "resonating_crystal",
+                                               "soularium_nugget",
+                                               "dark_soularium_nugget"};
+
+    public static final String SOUL_UPGRADE = "soul_upgrade";
+    public static final String[] SOUL_UPGRADES = {"destructive_crystal",
+                                                  "earthshaking_crystal"};
 }

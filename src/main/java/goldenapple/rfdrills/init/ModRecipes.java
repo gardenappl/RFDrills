@@ -1,8 +1,8 @@
 package goldenapple.rfdrills.init;
 
 import cofh.api.modhelpers.ThermalExpansionHelper;
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.GameRegistry;
+import goldenapple.rfdrills.RFDrills;
 import goldenapple.rfdrills.config.ConfigHandler;
 import goldenapple.rfdrills.crafting.ShapedUpgradeRecipe;
 import goldenapple.rfdrills.reference.LibMetadata;
@@ -12,16 +12,17 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.FluidRegistry;
 import net.minecraftforge.oredict.RecipeSorter;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
 
 public class ModRecipes {
 
     public static void init(){
         RecipeSorter.register(Reference.MOD_ID + ":upgrading", ShapedUpgradeRecipe.class, RecipeSorter.Category.SHAPED, "after:minecraft:shaped before:minecraft:shapeless");
-        if(Loader.isModLoaded("ThermalExpansion") && ConfigHandler.integrateTE){
+        if(RFDrills.isTELoaded && ConfigHandler.integrateTE){
             initTE();
-            if(Loader.isModLoaded("RedstoneArsenal") && ConfigHandler.integrateRArs) initRArs();
+            if(RFDrills.isRArsLoaded && ConfigHandler.integrateRArs) initRArs();
         }
-        if(Loader.isModLoaded("EnderIO") && ConfigHandler.integrateEIO) initEIO();
+        if(RFDrills.isEIOLoaded && ConfigHandler.integrateEIO) initEIO();
     }
 
     private static void initTE(){
@@ -128,6 +129,12 @@ public class ModRecipes {
         ItemStack capacitorBasic = new ItemStack(GameRegistry.findItem("EnderIO", "itemBasicCapacitor"), 1, 0);
         ItemStack capacitorAdvanced = new ItemStack(GameRegistry.findItem("EnderIO", "itemBasicCapacitor"), 1, 1);
 
+        ItemStack resonatingCrystal = new ItemStack(ModItems.motorEIO, 1, LibMetadata.RESONATING_CRYSTAL);
+        ItemStack destructiveCrystal = new ItemStack(ModItems.soulUpgrades, 1, LibMetadata.DESTRUCTIVE_CRYSTAL);
+        ItemStack earthshakingCrystal = new ItemStack(ModItems.soulUpgrades, 1, LibMetadata.EARTHSHAKING_CRYSTAL);
+        ItemStack darkSoulariumIngot = new ItemStack(GameRegistry.findItem("simplyjetpacks", "components"), 1, 70);
+        ItemStack soulariumIngot = new ItemStack(GameRegistry.findItem("EnderIO", "itemAlloy"), 1, 7);
+
         //Basic motor
         GameRegistry.addRecipe(new ShapedOreRecipe(motorBasic.copy(),
                 "RGR",
@@ -163,6 +170,52 @@ public class ModRecipes {
                 " iS",
                 "IMi",
                 "CI ", 'I', "ingotEnergeticAlloy", 'i', "ingotElectricalSteel", 'C', capacitorAdvanced.copy(), 'M', motorAdvanced.copy(), 'S', new ItemStack(ModItems.basicChainsaw)).setMirrored(true));
+
+        //Dark Soularium nuggets -> ingot
+        GameRegistry.addRecipe(new ShapedOreRecipe(darkSoulariumIngot.copy(),
+                "nnn",
+                "nnn",
+                "nnn", 'n', "nuggetDarkSoularium"));
+
+        //Dark Soularium ingot -> nuggets
+        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModItems.motorEIO, 9, LibMetadata.DARK_SOULARIUM_NUGGET),
+                darkSoulariumIngot.copy()));
+
+        //Soularium nuggets -> ingot
+        GameRegistry.addRecipe(new ShapedOreRecipe(soulariumIngot.copy(),
+                "nnn",
+                "nnn",
+                "nnn", 'n', "nuggetSoularium"));
+
+        //Soularium ingot -> nuggets
+        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModItems.motorEIO, 9, LibMetadata.SOULARIUM_NUGGET),
+                soulariumIngot.copy()));
+
+        if(RFDrills.isSJLoaded && ConfigHandler.integrateSJ){
+            //Resonating Crystal
+            GameRegistry.addRecipe(new ShapedOreRecipe(resonatingCrystal.copy(),
+                "nnn",
+                "nDn",
+                "nnn", 'n', "nuggetDarkSoularium", 'D', "gemDiamond"));
+
+            //Soul Crusher
+            GameRegistry.addRecipe(new ShapedOreRecipe(ModItems.soulCrusher,
+                "iCi",
+                "iSi",
+                " S ", 'i', darkSoulariumIngot.copy(), 'C', resonatingCrystal.copy(), 'S', "ingotDarkSteel"));
+        }else{
+            //Resonating Crystal
+            GameRegistry.addRecipe(new ShapedOreRecipe(resonatingCrystal.copy(),
+                "nnn",
+                "nDn",
+                "nnn", 'n', "nuggetSoularium", 'D', "gemDiamond"));
+
+            //Soul Crusher
+            GameRegistry.addRecipe(new ShapedOreRecipe(ModItems.soulCrusher,
+                "iCi",
+                "iSi",
+                " S ", 'i', "ingotSoularium", 'C', resonatingCrystal.copy(), 'S', "ingotDarkSteel"));
+        }
     }
 
     public static void initRArs(){
