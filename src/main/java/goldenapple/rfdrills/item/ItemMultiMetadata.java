@@ -9,6 +9,7 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.StatCollector;
 
 import java.util.List;
 
@@ -58,7 +59,7 @@ public class ItemMultiMetadata extends Item {
 
         if(itemStack.getItemDamage() < tooltips.length && tooltips[itemStack.getItemDamage()] != null){
             for(String string : tooltips[itemStack.getItemDamage()]){
-                list.add(string);
+                list.add(StatCollector.translateToLocal(string));
             }
         }
     }

@@ -63,7 +63,7 @@ public class ModItems {
     }
 
     private static void initEIO(){
-        componentEIO.setEffects(new boolean[]{false, false, false, false, true, true, true});
+        componentEIO.setEffects(new boolean[]{false, false, true, false, true, true, true});
         componentEIO.setRarities(new EnumRarity[]{EnumRarity.common, EnumRarity.uncommon, EnumRarity.common, EnumRarity.common, EnumRarity.uncommon});
         componentEIO.setTooltips(new String[][]{null, null, null, null, null, new String[]{"rfdrills.soul_upgrade.tooltip"}, new String[]{"rfdrills.soul_upgrade.tooltip"}});
 
