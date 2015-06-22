@@ -56,7 +56,7 @@ public class ItemMultiMetadata extends Item {
     public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean iHaveNoIdea) {
         if(tooltips == null) return;
 
-        if(!(itemStack.getItemDamage() >= tooltips.length)){
+        if(itemStack.getItemDamage() < tooltips.length && tooltips[itemStack.getItemDamage()] != null){
             for(String string : tooltips[itemStack.getItemDamage()]){
                 list.add(string);
             }

@@ -26,12 +26,12 @@ public class ModRecipes {
     }
 
     private static void initTE(){
-        ItemStack motorLeadstone = new ItemStack(ModItems.motorTE, 1, LibMetadata.MOTOR_LEASDSTONE);
-        ItemStack motorHardened = new ItemStack(ModItems.motorTE, 1, LibMetadata.MOTOR_HARDENED);
-        ItemStack motorRedstoneFrame = new ItemStack(ModItems.motorTE, 1, LibMetadata.MOTOR_REDSTONE_FRAME);
-        ItemStack motorRedstone = new ItemStack(ModItems.motorTE, 1, LibMetadata.MOTOR_REDSTONE);
-        ItemStack motorResonantFrame = new ItemStack(ModItems.motorTE, 1, LibMetadata.MOTOR_RESONANT_FRAME);
-        ItemStack motorResonant = new ItemStack(ModItems.motorTE, 1, LibMetadata.MOTOR_RESONANT);
+        ItemStack motorLeadstone = new ItemStack(ModItems.componentTE, 1, LibMetadata.MOTOR_LEASDSTONE);
+        ItemStack motorHardened = new ItemStack(ModItems.componentTE, 1, LibMetadata.MOTOR_HARDENED);
+        ItemStack motorRedstoneFrame = new ItemStack(ModItems.componentTE, 1, LibMetadata.MOTOR_REDSTONE_FRAME);
+        ItemStack motorRedstone = new ItemStack(ModItems.componentTE, 1, LibMetadata.MOTOR_REDSTONE);
+        ItemStack motorResonantFrame = new ItemStack(ModItems.componentTE, 1, LibMetadata.MOTOR_RESONANT_FRAME);
+        ItemStack motorResonant = new ItemStack(ModItems.componentTE, 1, LibMetadata.MOTOR_RESONANT);
 
         ItemStack pneumaticServo = new ItemStack(GameRegistry.findItem("ThermalExpansion", "material"), 1, 0);
         ItemStack receptionCoil = new ItemStack(GameRegistry.findItem("ThermalExpansion", "material"), 1, 1);
@@ -122,16 +122,16 @@ public class ModRecipes {
     }
 
     private static void initEIO(){
-        ItemStack motorBasic = new ItemStack(ModItems.motorEIO, 1, LibMetadata.MOTOR_BASIC);
-        ItemStack motorAdvanced = new ItemStack(ModItems.motorEIO, 1, LibMetadata.MOTOR_ADVANCED);
+        ItemStack motorBasic = new ItemStack(ModItems.componentEIO, 1, LibMetadata.MOTOR_BASIC);
+        ItemStack motorAdvanced = new ItemStack(ModItems.componentEIO, 1, LibMetadata.MOTOR_ADVANCED);
         ItemStack machineChassis = new ItemStack(GameRegistry.findItem("EnderIO", "itemMachinePart"), 1, 0);
         ItemStack pulsatingCrystal = new ItemStack(GameRegistry.findItem("EnderIO", "itemMaterial"), 1, 5);
         ItemStack capacitorBasic = new ItemStack(GameRegistry.findItem("EnderIO", "itemBasicCapacitor"), 1, 0);
         ItemStack capacitorAdvanced = new ItemStack(GameRegistry.findItem("EnderIO", "itemBasicCapacitor"), 1, 1);
 
-        ItemStack resonatingCrystal = new ItemStack(ModItems.motorEIO, 1, LibMetadata.RESONATING_CRYSTAL);
-        ItemStack destructiveCrystal = new ItemStack(ModItems.soulUpgrades, 1, LibMetadata.DESTRUCTIVE_CRYSTAL);
-        ItemStack earthshakingCrystal = new ItemStack(ModItems.soulUpgrades, 1, LibMetadata.EARTHSHAKING_CRYSTAL);
+        ItemStack resonatingCrystal = new ItemStack(ModItems.componentEIO, 1, LibMetadata.RESONATING_CRYSTAL);
+        ItemStack destructiveCrystal = new ItemStack(ModItems.componentEIO, 1, LibMetadata.DESTRUCTIVE_CRYSTAL);
+        ItemStack earthshakingCrystal = new ItemStack(ModItems.componentEIO, 1, LibMetadata.EARTHSHAKING_CRYSTAL);
         ItemStack darkSoulariumIngot = new ItemStack(GameRegistry.findItem("simplyjetpacks", "components"), 1, 70);
         ItemStack soulariumIngot = new ItemStack(GameRegistry.findItem("EnderIO", "itemAlloy"), 1, 7);
 
@@ -178,7 +178,7 @@ public class ModRecipes {
                 "nnn", 'n', "nuggetDarkSoularium"));
 
         //Dark Soularium ingot -> nuggets
-        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModItems.motorEIO, 9, LibMetadata.DARK_SOULARIUM_NUGGET),
+        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModItems.componentEIO, 9, LibMetadata.DARK_SOULARIUM_NUGGET),
                 darkSoulariumIngot.copy()));
 
         //Soularium nuggets -> ingot
@@ -188,7 +188,7 @@ public class ModRecipes {
                 "nnn", 'n', "nuggetSoularium"));
 
         //Soularium ingot -> nuggets
-        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModItems.motorEIO, 9, LibMetadata.SOULARIUM_NUGGET),
+        GameRegistry.addRecipe(new ShapelessOreRecipe(new ItemStack(ModItems.componentEIO, 9, LibMetadata.SOULARIUM_NUGGET),
                 soulariumIngot.copy()));
 
         if(RFDrills.isSJLoaded && ConfigHandler.integrateSJ){

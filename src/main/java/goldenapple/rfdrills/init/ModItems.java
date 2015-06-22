@@ -14,7 +14,7 @@ import net.minecraftforge.oredict.OreDictionary;
 
 public class ModItems {
     //Thermal Expansion
-    public static Item motorTE = new ItemMultiMetadata(Names.MOTORS_TE, Names.MOTOR_TE, new EnumRarity[]{EnumRarity.common, EnumRarity.common, EnumRarity.uncommon, EnumRarity.common, EnumRarity.rare, EnumRarity.common});
+    public static ItemMultiMetadata componentTE = new ItemMultiMetadata(Names.COMPONENTS_TE, Names.COMPONENT_TE);
 
     public static Item leadstoneDrill = new ItemDrill(Names.LEADSTONE_DRILL, DrillTier.DRILL1);
     public static Item hardenedDrill = new ItemDrill(Names.HARDENED_DRILL, DrillTier.DRILL2);
@@ -28,9 +28,7 @@ public class ModItems {
     public static Item resonantChainsaw = new ItemChainsaw(Names.RESONANT_CHAINSAW, DrillTier.CHAINSAW4);
 
     //EnderIO
-    private 
-    public static Item motorEIO = new ItemMultiMetadata(Names.MOTORS_EIO, Names.MOTOR_EIO, new EnumRarity[]{EnumRarity.common, EnumRarity.uncommon, EnumRarity.common, EnumRarity.common, EnumRarity.uncommon});
-    public static Item soulUpgrades = new ItemMultiMetadata(Names.SOUL_UPGRADES, Names.SOUL_UPGRADE);
+    public static ItemMultiMetadata componentEIO = new ItemMultiMetadata(Names.COMPONENTS_EIO, Names.COMPONENT_EIO);
 
     public static Item basicDrill = new ItemDrill(Names.BASIC_DRILL, DrillTier.DRILL1);
     public static Item advancedDrill = new ItemDrill(Names.ADVANCED_DRILL, DrillTier.DRILL3);
@@ -46,7 +44,9 @@ public class ModItems {
     }
 
     private static void initTE(){
-        GameRegistry.registerItem(motorTE, Names.MOTOR_TE);
+        componentTE.setRarities(new EnumRarity[]{EnumRarity.common, EnumRarity.common, EnumRarity.uncommon, EnumRarity.common, EnumRarity.rare, EnumRarity.common});
+
+        GameRegistry.registerItem(componentTE, Names.COMPONENT_TE);
 
         GameRegistry.registerItem(leadstoneDrill, Names.LEADSTONE_DRILL);
         GameRegistry.registerItem(hardenedDrill, Names.HARDENED_DRILL);
@@ -63,10 +63,13 @@ public class ModItems {
     }
 
     private static void initEIO(){
-        GameRegistry.registerItem(motorEIO, Names.MOTOR_EIO);
-        GameRegistry.registerItem(soulUpgrades, Names.SOUL_UPGRADE);
-        OreDictionary.registerOre("nuggetSoularium", new ItemStack(ModItems.motorEIO, 1, LibMetadata.SOULARIUM_NUGGET));
-        OreDictionary.registerOre("nuggetDarkSoularium", new ItemStack(ModItems.motorEIO, 1, LibMetadata.DARK_SOULARIUM_NUGGET));
+        componentEIO.setEffects(new boolean[]{false, false, false, false, true, true, true});
+        componentEIO.setRarities(new EnumRarity[]{EnumRarity.common, EnumRarity.uncommon, EnumRarity.common, EnumRarity.common, EnumRarity.uncommon});
+        componentEIO.setTooltips(new String[][]{null, null, null, null, null, new String[]{"rfdrills.soul_upgrade.tooltip"}, new String[]{"rfdrills.soul_upgrade.tooltip"}});
+
+        GameRegistry.registerItem(componentEIO, Names.COMPONENT_EIO);
+        OreDictionary.registerOre("nuggetSoularium", new ItemStack(ModItems.componentEIO, 1, LibMetadata.SOULARIUM_NUGGET));
+        OreDictionary.registerOre("nuggetDarkSoularium", new ItemStack(ModItems.componentEIO, 1, LibMetadata.DARK_SOULARIUM_NUGGET));
 
         GameRegistry.registerItem(basicDrill, Names.BASIC_DRILL);
         GameRegistry.registerItem(advancedDrill, Names.ADVANCED_DRILL);

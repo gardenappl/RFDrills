@@ -18,21 +18,21 @@ public class Names {
     public static final String SOUL_CRUSHER = "soul_crusher";
     public static final String FLUX_CRUSHER = "flux_infused_crusher";
 
-    public static final String MOTOR_TE = "motor_te";
-    public static final String[] MOTORS_TE = {"leadstone_motor",
+    public static final String COMPONENT_TE = "motor_te";
+    public static final String[] COMPONENTS_TE = {"leadstone_motor",
                                               "hardened_motor",
                                               "redstone_motor",
                                               "redstone_motor_frame",
                                               "resonant_motor",
-                                              "resonant_motor_frame"};
-    public static final String MOTOR_EIO = "motor_eio";
-    public static final String[] MOTORS_EIO = {"basic_motor",
+                                              "resonant_motor_frame",
+                                              "fluctuating_core",
+                                              "fluctuating_core_frame"};
+    public static final String COMPONENT_EIO = "motor_eio";
+    public static final String[] COMPONENTS_EIO = {"basic_motor",
                                                "advanced_motor",
                                                "resonating_crystal",
                                                "soularium_nugget",
-                                               "dark_soularium_nugget"};
-
-    public static final String SOUL_UPGRADE = "soul_upgrade";
-    public static final String[] SOUL_UPGRADES = {"destructive_crystal",
-                                                  "earthshaking_crystal"};
+                                               "dark_soularium_nugget",
+                                               "destructive_crystal",
+                                               "earthshaking_crystal"};
 }
