@@ -2,11 +2,15 @@
 	"versionList": [
 		{
 			"mcVersion": "Minecraft 1.7.10",
-			"modVersion": "1.4.3",
+			"modVersion": "1.5",
 			"changeLog": [
-				"Added VersionChecker compatibility!"
+				"Added the Dark Soularium Crusher for EnderIO! Unlike it's Flux counterpart, you have to upgrade it to unlock its true potential.",
+				"Changed config value names to be more user-friendly. Delete the old config file to see the changes!",
+				"Changed a lot of recipes, mainly the Crushers.",
+				"Retextured motors and some lower-tier drills.",
+				"Fixed some Flux-Infused Crusher tooltips."
 			],
-			"updateURL": "http://minecraft.curseforge.com/mc-mods/229846-rfdrills/files/2243566/download",
+			"updateURL": "http://minecraft.curseforge.com/mc-mods/229846-rfdrills/files/2244227/download",
 			"isDirectLink": "true",
 			"newFileName": ""
 		}
