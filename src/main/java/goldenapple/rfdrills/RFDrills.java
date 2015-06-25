@@ -19,6 +19,7 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagByte;
+import net.minecraftforge.common.MinecraftForge;
 
 @Mod(modid = Reference.MOD_ID, version = Reference.VERSION, name = Reference.MOD_NAME, guiFactory = Reference.GUI_FACTORY, dependencies = Reference.DEPENDECIES)
 public class RFDrills {
@@ -73,7 +74,7 @@ public class RFDrills {
         VersionCheckerCompat.init();
         ModRecipes.init();
 
-        FMLCommonHandler.instance().bus().register(new SoulUpgradeRecipeHandler());
+        MinecraftForge.EVENT_BUS.register(new SoulUpgradeRecipeHandler());
     }
 
     @EventHandler

@@ -1,14 +1,12 @@
 package goldenapple.rfdrills.item.soulupgrade;
 
-import goldenapple.rfdrills.util.MiscUtil;
-import goldenapple.rfdrills.util.StringHelper;
+import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 
 import java.util.List;
 
-public class UpgradeEmpowered extends AbstractSoulUpgrade { //TODO
+public class UpgradeEmpowered extends AbstractSoulUpgrade {
     @Override
     public String getUnlocalizedName() {
         return "empowered";
@@ -16,29 +14,22 @@ public class UpgradeEmpowered extends AbstractSoulUpgrade { //TODO
 
     @Override
     public byte getMaxLevel() {
-        return 3;
-    }
-
-    @Override
-    public void addRecipeDescription(ItemStack itemStack, List<String> list) {
-
+        return 2;
     }
 
     @Override
     public void addDescription(ItemStack itemStack, List<String> list) {
-        list.add(EnumChatFormatting.BLUE.toString() + StringHelper.writeUpgradeInfo(itemStack, this));
-        if(MiscUtil.isShiftPressed()){
-            list.add(StatCollector.translateToLocal("rfdrills.upgrade.empowered.desc" + SoulUpgradeHelper.getUpgradeLevel(itemStack, this)));
-        }
+        list.add(StatCollector.translateToLocal("rfdrills.upgrade.empowered.desc1"));
+        list.add(StatCollector.translateToLocal("rfdrills.upgrade.empowered.desc2"));
     }
 
     @Override
-    public boolean isRecipeValid(ItemStack itemStack) {
-        return false;
+    public boolean isRecipeValid(int level, ItemStack itemStack) {
+        return itemStack.getItem() == GameRegistry.findItem("EnderIO", "itemBasicCapacitor") && itemStack.getItemDamage() + 1 == level;
     }
 
     @Override
-    public int getLevelCost(ItemStack itemStack) {
+    public int getLevelCost(int level) {
         return 10;
     }
 }

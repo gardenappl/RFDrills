@@ -9,10 +9,12 @@ public class SoulUpgradeRecipeHandler {
     public void onAnvilRepair(AnvilUpdateEvent event){
         if(event.left.getItem() == ModItems.soulCrusher){
             for(AbstractSoulUpgrade upgrade : SoulUpgrades.registry){
-                if(upgrade.isUpgradeAvailable(event.left) && upgrade.isRecipeValid(event.right)){
-                    event.output = SoulUpgradeHelper.applyUpgrade(event.left, upgrade, (byte)(SoulUpgradeHelper.getUpgradeLevel(event.left, upgrade) + 1));
-                    event.materialCost = 1;
-                    event.cost = upgrade.getLevelCost(event.left);
+                int currentLevel = SoulUpgradeHelper.getUpgradeLevel(event.left, upgrade);
+
+                if(upgrade.isUpgradeAvailable(event.left) && upgrade.isRecipeValid(currentLevel + 1, event.right)){
+                    event.output = SoulUpgradeHelper.applyUpgrade(event.left, upgrade, (byte)(currentLevel + 1));
+                    event.materialCost = upgrade.getItemCost(currentLevel + 1);
+                    event.cost = upgrade.getLevelCost(currentLevel + 1);
                 }
             }
         }

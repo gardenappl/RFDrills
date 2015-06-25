@@ -6,7 +6,7 @@ item.rfdrills:basic_drill.name=Основной бур
 item.rfdrills:advanced_drill.name=Продвинутый бур
 
 item.rfdrills:flux_infused_crusher.name=Наполненый флаксом крушитель
-item.rfdrills:soul_crusher.name=Крушитель душ
+item.rfdrills:soul_crusher.name=Крушитель из тёмного соулария
 
 item.rfdrills:leadstone_chainsaw.name=Свинцовая пила
 item.rfdrills:hardened_chainsaw.name=Усиленная пила
@@ -24,9 +24,18 @@ item.rfdrills:resonant_motor.name=Резонирующий мотор
 item.rfdrills:basic_motor.name=Основной электромотор
 item.rfdrills:advanced_motor.name=Продвинутый электромотор
 
+item.rfdrills:resonating_crystal.name=Резонирующий кристалл
+item.rfdrills:destructive_crystal.name=Разрушающий кристалл
+item.rfdrills:earthshaking_crystal.name=Землетрясущий кристалл
+item.rfdrills:soularium_nugget.name=Самородок соулария
+item.rfdrills:dark_soularium_nugget.name=Самородок обогащённого сплава соулария
+item.rfdrills:superconductance_coil.name=Красная сверхпроводящая катушка
+item.rfdrills:fluctuating_core.name=Неустойчивое ядро
+item.rfdrills:fluctuating_core_frame.name=Рамка неустойчивого ядра
+
 
 rfdrills.drill.tooltip=§aРаботает как кирка и лопата.
-rfdrills.chainsaw.tooltip=§aРаботает как топор и ножницы.
+rfdrills.chainsaw.tooltip=§aТакже работает как ножницы.
 rfdrills.crusher.tooltip=§aРаботает как кирка, лопата и топор.
 rfdrills.energy_per_block.tooltip=Энергии за блок: %s RF
 rfdrills.can_break.tooltip=§cСломается при нехватке энергии.
@@ -34,6 +43,30 @@ rfdrills.chainsaw_has_modes.tooltip=§b§oНажмите %s, чтобы пере
 rfdrills.drill_has_modes.tooltip=§b§oНажмите %s, чтобы изменить режим копания.
 rfdrills.crusher_has_modes.tooltip=§b§oНажмите %s, чтобы изменить режим копания.
 rfdrills.enchantable.tooltip=§aМожет быть зачарована.
+
+rfdrills.soul_upgrade.tooltip=Улучшение для Крушителя
+rfdrills.soul_upgrade.recipe=Улучшения на наковальне:
+
+rfdrills.upgrade.beast_mode=Режим монстра
+rfdrills.upgrade.beast_mode.recipe1=Разрушающий кристалл + 10 lvs
+rfdrills.upgrade.beast_mode.recipe2=Землетрясущий кристалл + 10 lvs
+rfdrills.upgrade.beast_mode.desc1=Позволяет копание 3x3x3
+rfdrills.upgrade.beast_mode.desc2=Позволяет копание 5x5x5
+rfdrills.upgrade.beast_mode.desc1.fork=Позволяет копание/вспахивание 3x3x3
+rfdrills.upgrade.beast_mode.desc2.fork=Позволяет копание/вспахивание 5х5х5
+
+rfdrills.upgrade.empowered=Усиление
+rfdrills.upgrade.empowered.recipe1=Основной конденсатор + 10 lvs
+rfdrills.upgrade.empowered.recipe2=Двухслойный конденсатор + 10 lvs
+rfdrills.upgrade.empowered.recipe3=Восьмислойный конденсатор + 10 lvs
+rfdrills.upgrade.empowered.desc1=Увеличивает энергоёмкость
+rfdrills.upgrade.empowered.desc2=Открывает другие улучшения
+
+rfdrills.upgrade.fork=Вилка
+rfdrills.upgrade.fork.recipe1=Алмазная мотыга + 10 lvs
+rfdrills.upgrade.fork.desc1.1=Кому нужна мотыга,
+rfdrills.upgrade.fork.desc1.2=когда есть вилка
+
 
 rfdrills.shears_on.mode=Ножницы: §aВкл
 rfdrills.shears_off.mode=Ножницы: §cВыкл
@@ -48,7 +81,7 @@ config.drill_tier2.tooltip=Конфигурировать свойства др�
 config.drill_tier3.tooltip=Конфигурировать свойства дрелей 3-го класса
 config.drill_tier4.tooltip=Конфигурировать свойства дрелей 4-го класса
 config.flux_crusher.tooltip=Конфигурировать свойства Наполненого флаксом крушителя
-config.soul_crusher.tooltip=Конфигурировать свойства Крушителя душ
+config.soul_crusher.tooltip=Конфигурировать свойства Крушителя из тёмного соулария
 config.chainsaw_tier1.tooltip=Конфигурировать свойства пил 1-го класса
 config.chainsaw_tier2.tooltip=Конфигурировать свойства пил 2-го класса
 config.chainsaw_tier3.tooltip=Конфигурировать свойства пил 3-го класса

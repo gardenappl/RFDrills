@@ -61,8 +61,8 @@ public class ConfigHandler {
         float soulCrusherEfficiency = config.getFloat("Efficiency", "soulcrusher", 12.0F, 0, Float.MAX_VALUE, "Efficiency of the tool without upgrades");
         float soulCrusherDamage = config.getFloat("Damage", "soulcrusher", 8.0F, 0, Float.MAX_VALUE, "Damage that the tool does when attacking enemies");
         int soulCrusherEnchant = config.getInt("Enchantability", "soulcrusher", 20, 0, Integer.MAX_VALUE, "Enchantablity of the tool (0 - not enchantable)");
-        boolean soulCrusherHasModes = config.getBoolean("Has Modes", "soulcrusher", true, "Can the tool change modes on shift+right click");
-        DrillTier.SOUL_CRUSHER = new DrillTier(EnumHelper.addToolMaterial("SOUL_CRUSHER", soulCrusherMiningLevel, 9000, soulCrusherEfficiency, soulCrusherDamage, soulCrusherEnchant), 200000, 400, 750, EnumRarity.rare, true, soulCrusherHasModes);
+        boolean soulCrusherCanBreak = config.getBoolean("Can Break", "soulcrusher", false, "Can the tool break when it runs out of energy");
+        DrillTier.SOUL_CRUSHER = new DrillTier(EnumHelper.addToolMaterial("SOUL_CRUSHER", soulCrusherMiningLevel, 9000, soulCrusherEfficiency, soulCrusherDamage, soulCrusherEnchant), 200000, 400, 400, EnumRarity.epic, soulCrusherCanBreak, true);
 
         DrillTier.CHAINSAW1 = getDrillTierInfo("chainsaw", 1, 20000, 80, 80, EnumRarity.common, true, false, 2, 6.0F, 3.0F, 0);
         DrillTier.CHAINSAW2 = getDrillTierInfo("chainsaw", 2, 100000, 200, 400, EnumRarity.common, false, false, 3, 7.0F, 4.0F, 0);

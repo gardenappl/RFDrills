@@ -19,9 +19,17 @@ public class StringHelper {
     }
 
     public static String writeUpgradeInfo(ItemStack itemStack, AbstractSoulUpgrade upgrade){
+        return writeUpgradeInfo(SoulUpgradeHelper.getUpgradeLevel(itemStack, upgrade), upgrade);
+    }
+
+    public static String writeUpgradeInfo(int level, AbstractSoulUpgrade upgrade){
         String upgradeName = StatCollector.translateToLocal("rfdrills.upgrade." + upgrade.getUnlocalizedName());
-        String level = StatCollector.translateToLocal("enchantement.level." + SoulUpgradeHelper.getUpgradeLevel(itemStack, upgrade));
-        return upgradeName + " " + level;
+        if(level == 1) {
+            return upgradeName;
+        }else{
+            String levelName = StatCollector.translateToLocal("rfdrills.level." + level);
+            return upgradeName + " " + levelName;
+        }
     }
 
     public static String writeEnergyPerBlockInfo(int energy) {

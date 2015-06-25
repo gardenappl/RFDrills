@@ -3,6 +3,7 @@ package goldenapple.rfdrills.item;
 import cofh.api.item.IMultiModeItem;
 import cofh.core.item.IEqualityOverrideItem;
 import com.google.common.collect.Sets;
+import cpw.mods.fml.common.eventhandler.Event;
 import goldenapple.rfdrills.DrillTier;
 import goldenapple.rfdrills.RFDrills;
 import goldenapple.rfdrills.item.soulupgrade.AbstractSoulUpgrade;
@@ -22,18 +23,19 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemTool;
+import net.minecraft.item.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.event.world.BlockEvent;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityOverrideItem, IMultiModeItem {
@@ -69,8 +71,9 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
         if(getEnergyStored(itemStack) >= getEnergyPerUse(itemStack, block, meta) && canHarvestBlock(block, itemStack)){
             switch (getMode(itemStack)){
                 case 0: return effectiveMaterials.contains(block.getMaterial()) ? efficiencyOnProperMaterial : 1.0F;
-                case 1: return effectiveMaterials.contains(block.getMaterial()) ? efficiencyOnProperMaterial / 3 : 1.0F;
-                case 2: return effectiveMaterials.contains(block.getMaterial()) ? efficiencyOnProperMaterial / 6 : 1.0F;
+                case 1: //same as case 2
+                case 2: return effectiveMaterials.contains(block.getMaterial()) ? efficiencyOnProperMaterial / 3 : 1.0F;
+                case 3: return effectiveMaterials.contains(block.getMaterial()) ? efficiencyOnProperMaterial / 6 : 1.0F;
                 default:
                     LogHelper.warn("Illegal drill mode!");
                     return effectiveMaterials.contains(block.getMaterial()) ? efficiencyOnProperMaterial : 1.0F;
@@ -88,8 +91,9 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
         int energy = getEnergyPerUse(itemStack);
         switch (getMode(itemStack)){
             case 0: break;
-            case 1: energy = energy * 5; break;
-            case 2: energy = energy * 10; break;
+            case 1: energy = energy * 3; break;
+            case 2: energy = energy * 5; break;
+            case 3: energy = energy * 10; break;
             default: LogHelper.warn("Illegal drill mode!"); break;
         }
         return energy;
@@ -98,8 +102,18 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
     @Override
     @SuppressWarnings({"unchecked"})
     public void getSubItems(Item item, CreativeTabs creativeTab, List list) {
-        list.add(setEnergy(new ItemStack(item, 1, 0), 0));
-        list.add(setEnergy(new ItemStack(item, 1, 0), tier.maxEnergy));
+        list.add(setEnergy(new ItemStack(item), 0));
+
+        ItemStack upgradedStack = new ItemStack(item);
+        upgradedStack = SoulUpgradeHelper.applyUpgrade(upgradedStack, SoulUpgrades.upgradeEmpowered, (byte)2);
+        upgradedStack = SoulUpgradeHelper.applyUpgrade(upgradedStack, SoulUpgrades.upgradeBeastMode, (byte)2);
+        upgradedStack = SoulUpgradeHelper.applyUpgrade(upgradedStack, SoulUpgrades.upgradeFork, (byte) 1);
+        list.add(setEnergy(upgradedStack, getMaxEnergyStored(upgradedStack)));
+    }
+
+    @Override
+    public EnumRarity getRarity(ItemStack itemStack) {
+        return tier.rarity;
     }
 
     @Override
@@ -109,7 +123,7 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
 
     @Override
     public double getDurabilityForDisplay(ItemStack itemStack) {
-        return Math.max(1.0 - (double)getEnergyStored(itemStack) / (double)tier.maxEnergy, 0);
+        return Math.max(1.0 - (double)getEnergyStored(itemStack) / (double)getMaxEnergyStored(itemStack), 0);
     }
 
     @Override
@@ -137,16 +151,18 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
     @Override
     public boolean onBlockDestroyed(ItemStack itemStack, World world, Block block, int x, int y, int z, EntityLivingBase entity) {
         if(entity instanceof EntityPlayer && !world.isRemote){
-            int radius = 0;
+            int radiusHorizontal = 0;
+            int radiusVertical = 0;
             switch (getMode(itemStack)){
-                case 1: radius = 1; break;
-                case 2: radius = 2; break;
+                case 1: radiusVertical = 1; break;
+                case 2: radiusVertical = 1; radiusHorizontal = 1; break;
+                case 3: radiusVertical = 2; radiusHorizontal = 2; break;
             }
-            for (int a = x - radius; a <= x + radius; a++) {
-                for (int b = y - radius; b <= y + radius; b++) {
-                    for(int c = z - radius; c <= z + radius; c++) {
+            for (int a = x - radiusHorizontal; a <= x + radiusHorizontal; a++) {
+                for (int b = y - radiusVertical; b <= y + radiusVertical; b++) {
+                    for(int c = z - radiusHorizontal; c <= z + radiusHorizontal; c++) {
                         if (world.blockExists(a, b, c) && effectiveMaterials.contains(world.getBlock(a, b, c).getMaterial())) {
-                            if (a != x || b != y || c != z) { //don't harvest the same block twice silly!
+                            if (!(a == x && b == y && c == z)) { //don't harvest the same block twice silly!
                                 harvestBlock(world, a, b, c, (EntityPlayer) entity);
                             }
                         }
@@ -184,17 +200,89 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
         return false;
     }
 
+    private boolean tillBlock(ItemStack itemStack, World world, int x, int y, int z, int sideHit, EntityPlayer player){
+        Block block = world.getBlock(x, y, z);
+        if (sideHit != 0 && world.getBlock(x, y + 1, z).isAir(world, x, y + 1, z) && (block == Blocks.grass || block == Blocks.dirt) && player.canPlayerEdit(x, y, z, sideHit, itemStack)) {
+            UseHoeEvent event = new UseHoeEvent(player, itemStack, world, x, y, z);
+            MinecraftForge.EVENT_BUS.post(event);
+
+            if (event.getResult() == Event.Result.ALLOW) { //if another mod handled this block using the event
+                return true;
+            }else if(!event.isCanceled()) {
+                if (world.isRemote) {
+                    return true;
+                } else {
+                    world.setBlock(x, y, z, Blocks.farmland);
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int sideHit, float hitX, float hitY, float hitZ) {
+        if(SoulUpgradeHelper.getUpgradeLevel(itemStack, SoulUpgrades.upgradeFork) == 0) return false;
+        if(!tillBlock(itemStack, world, x, y, z, sideHit, player)) return false; //if the player right-clicks a block of cobble near a block of dirt we won't till the dirt
+
+        boolean success = false;
+        int radius = 0;
+
+        switch (getMode(itemStack)){
+            case 2: radius = 1; break;
+            case 3: radius = 2; break;
+        }
+
+        for(int a = x - radius; a <= x + radius; a++) {
+            for(int c = z - radius; c <= z + radius; c++) { //don't care about y levels with a hoe
+                if(!(a == x && c == z)) { //we already tilled the block at x, y, z
+                    if (tillBlock(itemStack, world, a, y, c, sideHit, player)) {
+                        success = true;
+                    }
+                }
+            }
+        }
+
+        if(success) {
+            player.setCurrentItemOrArmor(0, drainEnergy(itemStack, getEnergyPerUseWithMode(itemStack)));
+            if (this.getEnergyStored(itemStack) == 0 && tier.canBreak) {
+                player.renderBrokenItemStack(itemStack);
+                player.destroyCurrentEquippedItem();
+                player.addStat(StatList.objectBreakStats[Item.getIdFromItem(itemStack.getItem())], 1);
+            }
+            world.playSoundEffect((double) ((float) x + 0.5F), (double) ((float) y + 0.5F), (double) ((float) z + 0.5F), Blocks.farmland.stepSound.getStepResourcePath(), (Blocks.farmland.stepSound.getVolume() + 1.0F) / 2.0F, Blocks.farmland.stepSound.getPitch() * 0.8F);
+        }
+
+        return success;
+    }
+
     @Override
     @SuppressWarnings("unchecked")
     public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean wtf) {
         try {
-            list.add(StringHelper.writeEnergyInfo(getEnergyStored(itemStack), tier.maxEnergy));
+            list.add(StringHelper.writeEnergyInfo(getEnergyStored(itemStack), getMaxEnergyStored(itemStack)));
 
             if (MiscUtil.isShiftPressed()) {
-                for(AbstractSoulUpgrade upgrade : SoulUpgrades.registry){
-                    upgrade.addDescription(itemStack, player, list);
+                for(AbstractSoulUpgrade upgrade : SoulUpgrades.registry){ //installed upgrades
+                    if(SoulUpgradeHelper.getUpgradeLevel(itemStack, upgrade) != 0) {
+                        list.add(EnumChatFormatting.DARK_AQUA.toString() + StringHelper.writeUpgradeInfo(itemStack, upgrade));
+                        upgrade.addDescription(itemStack, list);
+                    }
+                }
+
+                list.add(EnumChatFormatting.YELLOW + StatCollector.translateToLocal("rfdrills.soul_upgrade.recipe"));
+
+                for(AbstractSoulUpgrade upgrade : SoulUpgrades.registry){ //available recipes
+                    if(upgrade.isUpgradeAvailable(itemStack)){
+                        list.add(EnumChatFormatting.DARK_AQUA.toString() + StringHelper.writeUpgradeInfo(SoulUpgradeHelper.getUpgradeLevel(itemStack, upgrade) + 1, upgrade));
+                        upgrade.addRecipeDescription(itemStack, list);
+                    }
                 }
             } else {
+                for(Map.Entry<AbstractSoulUpgrade, Byte> entry : SoulUpgradeHelper.getUpgrades(itemStack).entrySet()){
+                    list.add(EnumChatFormatting.DARK_AQUA.toString() + StringHelper.writeUpgradeInfo(itemStack, entry.getKey()));
+                }
                 list.add(cofh.lib.util.helpers.StringHelper.shiftForDetails());
             }
         }catch (Exception e){
@@ -223,8 +311,10 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
             case 0:
                 return StatCollector.translateToLocal("rfdrills.1x1x1.mode");
             case 1:
-                return StatCollector.translateToLocal("rfdrills.3x3x3.mode");
+                return StatCollector.translateToLocal("rfdrills.1x3x1.mode");
             case 2:
+                return StatCollector.translateToLocal("rfdrills.3x3x3.mode");
+            case 3:
                 return StatCollector.translateToLocal("rfdrills.5x5x5.mode");
             default:
                 LogHelper.warn("Illegal drill mode!");
@@ -265,8 +355,16 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
             itemStack.stackTagCompound = new NBTTagCompound();
         }
 
+        int rechargeRate = tier.rechargeRate;
+
+        switch (SoulUpgradeHelper.getUpgradeLevel(itemStack, SoulUpgrades.upgradeEmpowered)){
+            case 1: rechargeRate = 750; break;
+            case 2: rechargeRate = 1500; break;
+            case 3: rechargeRate = 5000; break;
+        }
+
         int energy = getEnergyStored(itemStack);
-        int energyReceived = Math.min(tier.maxEnergy - energy, Math.min(tier.rechargeRate, maxReceive));
+        int energyReceived = Math.min(getMaxEnergyStored(itemStack) - energy, Math.min(rechargeRate, maxReceive));
 
         if (!simulate) {
             energy += energyReceived;
@@ -296,7 +394,13 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
 
     @Override
     public int getMaxEnergyStored(ItemStack itemStack) {
-        return tier.maxEnergy;
+        switch (SoulUpgradeHelper.getUpgradeLevel(itemStack, SoulUpgrades.upgradeEmpowered)){
+            case 0: return tier.maxEnergy; //200 000
+            case 1: return 500000;
+            case 2: return 1000000;
+            case 3: return 5000000;
+            default: return tier.maxEnergy;
+        }
     }
 
     /* IEqaulityOverrideItem */
@@ -310,7 +414,7 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
 
     @Override
     public int getMode(ItemStack itemStack){
-        /*if(!tier.hasModes){
+        if(!tier.hasModes){
             return 0;
         }
 
@@ -322,8 +426,7 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
             return itemStack.stackTagCompound.getByte("Mode");
         }else{
             return 0;
-        } */
-        return 0;
+        }
     }
 
     public boolean setMode(ItemStack itemStack, int mode) {
@@ -358,7 +461,7 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
 
     @Override
     public int getNumModes(ItemStack itemStack) {
-        return SoulUpgradeHelper.getUpgradeLevel(itemStack, SoulUpgrades.upgradeBeastMode) + 1;
+        return SoulUpgradeHelper.getUpgradeLevel(itemStack, SoulUpgrades.upgradeBeastMode) + 2;
     }
 
     @Override

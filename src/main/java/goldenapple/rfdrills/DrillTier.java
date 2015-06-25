@@ -3,7 +3,7 @@ package goldenapple.rfdrills;
 import net.minecraft.item.EnumRarity;
 import net.minecraft.item.Item;
 
-public class DrillTier {
+public class DrillTier { //look into ConfigHandler for more info
     public static DrillTier DRILL1;
     public static DrillTier DRILL2;
     public static DrillTier DRILL3;
