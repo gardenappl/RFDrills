@@ -8,6 +8,8 @@ public class DrillTier { //look into ConfigHandler for more info
     public static DrillTier DRILL2;
     public static DrillTier DRILL3;
     public static DrillTier DRILL4;
+
+    public static DrillTier HOE;
     public static DrillTier FLUX_CRUSHER;
     public static DrillTier SOUL_CRUSHER;
 

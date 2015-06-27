@@ -1,7 +1,8 @@
 package goldenapple.rfdrills.item;
 
-import cofh.api.item.IMultiModeItem;
+import cofh.api.item.IEmpowerableItem;
 import cofh.core.item.IEqualityOverrideItem;
+import cofh.core.util.KeyBindingEmpower;
 import com.google.common.collect.Sets;
 import cpw.mods.fml.common.eventhandler.Event;
 import goldenapple.rfdrills.DrillTier;
@@ -38,7 +39,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityOverrideItem, IMultiModeItem {
+public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityOverrideItem, IEmpowerableItem {
     private static final Set<Block> vanillaBlocks = Sets.newHashSet(Blocks.cobblestone, Blocks.double_stone_slab, Blocks.stone_slab, Blocks.stone, Blocks.sandstone, Blocks.mossy_cobblestone, Blocks.iron_ore, Blocks.iron_block, Blocks.coal_ore, Blocks.gold_block, Blocks.gold_ore, Blocks.diamond_ore, Blocks.diamond_block, Blocks.ice, Blocks.netherrack, Blocks.lapis_ore, Blocks.lapis_block, Blocks.redstone_ore, Blocks.lit_redstone_ore, Blocks.rail, Blocks.detector_rail, Blocks.golden_rail, Blocks.activator_rail, Blocks.grass, Blocks.dirt, Blocks.sand, Blocks.gravel, Blocks.snow_layer, Blocks.snow, Blocks.clay, Blocks.farmland, Blocks.soul_sand, Blocks.mycelium, Blocks.planks, Blocks.bookshelf, Blocks.log, Blocks.log2, Blocks.chest, Blocks.pumpkin, Blocks.lit_pumpkin);
     private static final Set<Material> effectiveMaterials = Sets.newHashSet(Material.anvil, Material.clay, Material.craftedSnow, Material.glass, Material.dragonEgg, Material.grass, Material.ground, Material.ice, Material.snow, Material.iron, Material.rock, Material.sand, Material.coral, Material.wood, Material.leaves, Material.plants, Material.vine, Material.cloth, Material.gourd);
 
@@ -202,20 +203,18 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
 
     private boolean tillBlock(ItemStack itemStack, World world, int x, int y, int z, int sideHit, EntityPlayer player){
         Block block = world.getBlock(x, y, z);
-        if (sideHit != 0 && world.getBlock(x, y + 1, z).isAir(world, x, y + 1, z) && (block == Blocks.grass || block == Blocks.dirt) && player.canPlayerEdit(x, y, z, sideHit, itemStack)) {
-            UseHoeEvent event = new UseHoeEvent(player, itemStack, world, x, y, z);
-            MinecraftForge.EVENT_BUS.post(event);
 
-            if (event.getResult() == Event.Result.ALLOW) { //if another mod handled this block using the event
-                return true;
-            }else if(!event.isCanceled()) {
-                if (world.isRemote) {
-                    return true;
-                } else {
-                    world.setBlock(x, y, z, Blocks.farmland);
-                    return true;
-                }
-            }
+        UseHoeEvent event = new UseHoeEvent(player, itemStack, world, x, y, z);
+        if(MinecraftForge.EVENT_BUS.post(event)) //if the event got canceled
+            return false;
+
+        if (event.getResult() == Event.Result.ALLOW) //if another mod handled this block using the event
+            return true;
+
+        if (sideHit != 0 && world.getBlock(x, y + 1, z).isAir(world, x, y + 1, z) && (block == Blocks.grass || block == Blocks.dirt) && player.canPlayerEdit(x, y, z, sideHit, itemStack)) {
+            if (!world.isRemote)
+                world.setBlock(x, y, z, Blocks.farmland);
+            return true;
         }
 
         return false;
@@ -225,8 +224,8 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
     public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int sideHit, float hitX, float hitY, float hitZ) {
         if(SoulUpgradeHelper.getUpgradeLevel(itemStack, SoulUpgrades.upgradeFork) == 0) return false;
         if(!tillBlock(itemStack, world, x, y, z, sideHit, player)) return false; //if the player right-clicks a block of cobble near a block of dirt we won't till the dirt
+        if(getEnergyStored(itemStack) == 0) return false;
 
-        boolean success = false;
         int radius = 0;
 
         switch (getMode(itemStack)){
@@ -237,24 +236,20 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
         for(int a = x - radius; a <= x + radius; a++) {
             for(int c = z - radius; c <= z + radius; c++) { //don't care about y levels with a hoe
                 if(!(a == x && c == z)) { //we already tilled the block at x, y, z
-                    if (tillBlock(itemStack, world, a, y, c, sideHit, player)) {
-                        success = true;
-                    }
+                    tillBlock(itemStack, world, a, y, c, sideHit, player);
                 }
             }
         }
 
-        if(success) {
-            player.setCurrentItemOrArmor(0, drainEnergy(itemStack, getEnergyPerUseWithMode(itemStack)));
-            if (this.getEnergyStored(itemStack) == 0 && tier.canBreak) {
-                player.renderBrokenItemStack(itemStack);
-                player.destroyCurrentEquippedItem();
-                player.addStat(StatList.objectBreakStats[Item.getIdFromItem(itemStack.getItem())], 1);
-            }
-            world.playSoundEffect((double) ((float) x + 0.5F), (double) ((float) y + 0.5F), (double) ((float) z + 0.5F), Blocks.farmland.stepSound.getStepResourcePath(), (Blocks.farmland.stepSound.getVolume() + 1.0F) / 2.0F, Blocks.farmland.stepSound.getPitch() * 0.8F);
+        player.setCurrentItemOrArmor(0, drainEnergy(itemStack, getEnergyPerUseWithMode(itemStack)));
+        if (this.getEnergyStored(itemStack) == 0 && tier.canBreak) {
+            player.renderBrokenItemStack(itemStack);
+            player.destroyCurrentEquippedItem();
+            player.addStat(StatList.objectBreakStats[Item.getIdFromItem(itemStack.getItem())], 1);
         }
+        world.playSoundEffect((double) ((float) x + 0.5F), (double) ((float) y + 0.5F), (double) ((float) z + 0.5F), Blocks.farmland.stepSound.getStepResourcePath(), (Blocks.farmland.stepSound.getVolume() + 1.0F) / 2.0F, Blocks.farmland.stepSound.getPitch() * 0.8F);
 
-        return success;
+        return true;
     }
 
     @Override
@@ -279,6 +274,8 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
                         upgrade.addRecipeDescription(itemStack, list);
                     }
                 }
+
+                list.add(StringHelper.writeModeSwitchInfo("rfdrills.crusher_has_modes.tooltip", KeyBindingEmpower.instance));
             } else {
                 for(Map.Entry<AbstractSoulUpgrade, Byte> entry : SoulUpgradeHelper.getUpgrades(itemStack).entrySet()){
                     list.add(EnumChatFormatting.DARK_AQUA.toString() + StringHelper.writeUpgradeInfo(itemStack, entry.getKey()));
@@ -304,6 +301,38 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
     @Override
     public String getUnlocalizedName(ItemStack itemStack) {
         return "item." + Reference.MOD_ID.toLowerCase() + ":" + Names.SOUL_CRUSHER;
+    }
+
+    public int getMode(ItemStack itemStack){
+        if(!tier.hasModes){
+            return 0;
+        }
+
+        if(itemStack.stackTagCompound == null){
+            return 0;
+        }
+
+        if(itemStack.stackTagCompound.hasKey("Mode")) {
+            return itemStack.stackTagCompound.getByte("Mode");
+        }else{
+            return 0;
+        }
+    }
+
+    public boolean setMode(ItemStack itemStack, int mode) {
+        if(SoulUpgradeHelper.getUpgradeLevel(itemStack, SoulUpgrades.upgradeBeastMode) == 0) return false;
+        if(getEnergyStored(itemStack) == 0) return false;
+
+        if(itemStack.stackTagCompound == null){
+            itemStack.stackTagCompound = new NBTTagCompound();
+        }
+
+        itemStack.stackTagCompound.setByte("Mode", (byte)mode);
+        return true;
+    }
+
+    private int getNumModes(ItemStack itemStack) {
+        return SoulUpgradeHelper.getUpgradeLevel(itemStack, SoulUpgrades.upgradeBeastMode) + 2;
     }
 
     public String writeModeInfo(ItemStack itemStack){
@@ -410,62 +439,28 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
         return current.getItem() == previous.getItem();
     }
 
-    /* IMultiModeItem */
+    /* IEmpowerableItem */
 
     @Override
-    public int getMode(ItemStack itemStack){
-        if(!tier.hasModes){
-            return 0;
-        }
-
-        if(itemStack.stackTagCompound == null){
-            return 0;
-        }
-
-        if(itemStack.stackTagCompound.hasKey("Mode")) {
-            return itemStack.stackTagCompound.getByte("Mode");
-        }else{
-            return 0;
-        }
+    public boolean isEmpowered(ItemStack itemStack) {
+        return getMode(itemStack) == getNumModes(itemStack);
     }
 
-    public boolean setMode(ItemStack itemStack, int mode) {
-        if(SoulUpgradeHelper.getUpgradeLevel(itemStack, SoulUpgrades.upgradeBeastMode) == 0) return false;
-        if(getEnergyStored(itemStack) == 0) return false;
+    @Override
+    public boolean setEmpoweredState(ItemStack itemStack, boolean b) {
+        if(!tier.hasModes) return false;
 
-        if(itemStack.stackTagCompound == null){
-            itemStack.stackTagCompound = new NBTTagCompound();
+        if(getMode(itemStack) == getNumModes(itemStack)){
+            setMode(itemStack, 0);
+        }else{
+            setMode(itemStack, getMode(itemStack) + 1);
         }
 
-        itemStack.stackTagCompound.setByte("Mode", (byte)mode);
         return true;
     }
 
     @Override
-    public boolean incrMode(ItemStack itemStack) {
-        if(getMode(itemStack) < getNumModes(itemStack) - 1){
-            return setMode(itemStack, getMode(itemStack) + 1);
-        }else{
-            return setMode(itemStack, 0);
-        }
-    }
-
-    @Override
-    public boolean decrMode(ItemStack itemStack) {
-        if(getMode(itemStack) > 0){
-            return setMode(itemStack, getMode(itemStack) - 1);
-        }else{
-            return setMode(itemStack, getNumModes(itemStack) - 1);
-        }
-    }
-
-    @Override
-    public int getNumModes(ItemStack itemStack) {
-        return SoulUpgradeHelper.getUpgradeLevel(itemStack, SoulUpgrades.upgradeBeastMode) + 2;
-    }
-
-    @Override
-    public void onModeChange(EntityPlayer player, ItemStack itemStack) {
+    public void onStateChange(EntityPlayer player, ItemStack itemStack) {
         if(getMode(itemStack) == 0){
             player.worldObj.playSoundAtEntity(player, "random.orb", 0.2F, 0.6F);
         }else {

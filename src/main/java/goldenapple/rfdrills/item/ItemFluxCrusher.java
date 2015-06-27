@@ -1,8 +1,8 @@
 package goldenapple.rfdrills.item;
 
-import cofh.api.item.IMultiModeItem;
+import cofh.api.item.IEmpowerableItem;
 import cofh.core.item.IEqualityOverrideItem;
-import cofh.core.util.KeyBindingMultiMode;
+import cofh.core.util.KeyBindingEmpower;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import goldenapple.rfdrills.DrillTier;
@@ -37,7 +37,7 @@ import net.minecraftforge.event.world.BlockEvent;
 import java.util.List;
 import java.util.Set;
 
-public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityOverrideItem, IMultiModeItem{
+public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityOverrideItem, IEmpowerableItem{
     private static final Set<Block> vanillaBlocks = Sets.newHashSet(Blocks.cobblestone, Blocks.double_stone_slab, Blocks.stone_slab, Blocks.stone, Blocks.sandstone, Blocks.mossy_cobblestone, Blocks.iron_ore, Blocks.iron_block, Blocks.coal_ore, Blocks.gold_block, Blocks.gold_ore, Blocks.diamond_ore, Blocks.diamond_block, Blocks.ice, Blocks.netherrack, Blocks.lapis_ore, Blocks.lapis_block, Blocks.redstone_ore, Blocks.lit_redstone_ore, Blocks.rail, Blocks.detector_rail, Blocks.golden_rail, Blocks.activator_rail, Blocks.grass, Blocks.dirt, Blocks.sand, Blocks.gravel, Blocks.snow_layer, Blocks.snow, Blocks.clay, Blocks.farmland, Blocks.soul_sand, Blocks.mycelium, Blocks.planks, Blocks.bookshelf, Blocks.log, Blocks.log2, Blocks.chest, Blocks.pumpkin, Blocks.lit_pumpkin);
     private static final Set<Material> effectiveMaterials = Sets.newHashSet(Material.anvil, Material.clay, Material.craftedSnow, Material.glass, Material.dragonEgg, Material.grass, Material.ground, Material.ice, Material.snow, Material.iron, Material.rock, Material.sand, Material.coral, Material.wood, Material.leaves, Material.plants, Material.vine, Material.cloth, Material.gourd);
 
@@ -212,7 +212,7 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityO
                     list.add(StatCollector.translateToLocal("rfdrills.enchantable.tooltip"));
                 }
                 if (tier.hasModes){
-                    list.add(StringHelper.writeModeSwitchInfo("rfdrills.crusher_has_modes.tooltip", KeyBindingMultiMode.instance));
+                    list.add(StringHelper.writeModeSwitchInfo("rfdrills.crusher_has_modes.tooltip", KeyBindingEmpower.instance));
                 }
             } else {
               //list.add(StatCollector.translateToLocal("info.cofh.hold") + " §e§o" + StatCollector.translateToLocal("info.cofh.shift") + " §r§7" + StatCollector.translateToLocal("info.cofh.forDetails"));
@@ -267,19 +267,9 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityO
         }
     }
 
-    /* IMultiModeItem */
-
-    @Override
-    public DrillTier getTier(ItemStack itemStack) {
-        return tier;
-    }
-
-    @Override
     public int getMode(ItemStack itemStack){
         if(!tier.hasModes) return 0;
-
         if(getEnergyStored(itemStack) == 0) return 0;
-
         if(itemStack.stackTagCompound == null) return 0;
 
         if(itemStack.stackTagCompound.hasKey("Mode")) {
@@ -289,7 +279,6 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityO
         }
     }
 
-    @Override
     public boolean setMode(ItemStack itemStack, int mode) {
         if(getEnergyStored(itemStack) == 0) return false;
 
@@ -301,40 +290,12 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityO
         return true;
     }
 
-    @Override
-    public boolean incrMode(ItemStack itemStack) {
-        if(getMode(itemStack) < 2){
-            return setMode(itemStack, getMode(itemStack) + 1);
-        }else{
-            return setMode(itemStack, 0);
-        }
-    }
-
-    @Override
-    public boolean decrMode(ItemStack itemStack) {
-        if(getMode(itemStack) > 0){
-            return setMode(itemStack, getMode(itemStack) - 1);
-        }else{
-            return setMode(itemStack, 2);
-        }
-    }
-
-    @Override
-    public int getNumModes(ItemStack itemStack) {
-        return 3;
-    }
-
-    @Override
-    public void onModeChange(EntityPlayer player, ItemStack itemStack) {
-        if(getMode(itemStack) == 0){
-            player.worldObj.playSoundAtEntity(player, "random.orb", 0.2F, 0.6F);
-        }else {
-            player.worldObj.playSoundAtEntity(player, "ambient.weather.thunder", 0.4F, 1.0F);
-        }
-        player.addChatComponentMessage(new ChatComponentText(writeModeInfo(itemStack)));
-    }
-
     /* IEnergyTool */
+
+    @Override
+    public DrillTier getTier(ItemStack itemStack) {
+        return tier;
+    }
 
     @Override
     public ItemStack setEnergy(ItemStack itemStack, int energy){
@@ -403,5 +364,35 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityO
     @Override
     public boolean isLastHeldItemEqual(ItemStack current, ItemStack previous) {
         return false;
+    }
+
+    /* IEmpowerableItem */
+
+    @Override
+    public boolean isEmpowered(ItemStack itemStack) {
+        return getMode(itemStack) == 2;
+    }
+
+    @Override
+    public boolean setEmpoweredState(ItemStack itemStack, boolean b) {
+        if(!tier.hasModes) return false;
+
+        if(getMode(itemStack) == 2){
+            setMode(itemStack, 0);
+        }else{
+            setMode(itemStack, getMode(itemStack) + 1);
+        }
+
+        return true;
+    }
+
+    @Override
+    public void onStateChange(EntityPlayer player, ItemStack itemStack) {
+        if(getMode(itemStack) == 0){
+            player.worldObj.playSoundAtEntity(player, "random.orb", 0.2F, 0.6F);
+        }else {
+            player.worldObj.playSoundAtEntity(player, "ambient.weather.thunder", 0.4F, 1.0F);
+        }
+        player.addChatComponentMessage(new ChatComponentText(writeModeInfo(itemStack)));
     }
 }

@@ -7,6 +7,7 @@ item.rfdrills:advanced_drill.name=Продвинутый бур
 
 item.rfdrills:flux_infused_crusher.name=Наполненый флаксом крушитель
 item.rfdrills:soul_crusher.name=Крушитель из тёмного соулария
+item.rfdrills:flux_hoe.name=Флаксовая мотыга
 
 item.rfdrills:leadstone_chainsaw.name=Свинцовая пила
 item.rfdrills:hardened_chainsaw.name=Усиленная пила
@@ -28,12 +29,19 @@ item.rfdrills:resonating_crystal.name=Резонирующий кристалл
 item.rfdrills:destructive_crystal.name=Разрушающий кристалл
 item.rfdrills:earthshaking_crystal.name=Землетрясущий кристалл
 item.rfdrills:soularium_nugget.name=Самородок соулария
-item.rfdrills:dark_soularium_nugget.name=Самородок обогащённого сплава соулария
+item.rfdrills:rich_soularium_nugget.name=Самородок обогащённого сплава соулария
 item.rfdrills:superconductance_coil.name=Красная сверхпроводящая катушка
 item.rfdrills:fluctuating_core.name=Неустойчивое ядро
 item.rfdrills:fluctuating_core_frame.name=Рамка неустойчивого ядра
 
+item.rfdrills:dark_soularium.name=Тёмный соуларий
+item.rfdrills:dark_soularium_nugget.name=Самородок тёмного соулария
 
+item.rfdrills:obsidian_rod.name=Обсидиановый стержень
+item.rfdrills:flux_obsidian_rod.name=Наполненый флаксом обсидиановый стержень
+
+
+rfdrills.hoe.tooltip=§aТакже работает как серп.
 rfdrills.drill.tooltip=§aРаботает как кирка и лопата.
 rfdrills.chainsaw.tooltip=§aТакже работает как ножницы.
 rfdrills.crusher.tooltip=§aРаботает как кирка, лопата и топор.
@@ -72,20 +80,60 @@ rfdrills.shears_on.mode=Ножницы: §aВкл
 rfdrills.shears_off.mode=Ножницы: §cВыкл
 rfdrills.5x5x5.mode=Режим: §a5x5x5
 rfdrills.3x3x3.mode=Режим: §e3x3x3
-rfdrills.1x3x1.mode=Режим: §a1х3х1
+rfdrills.1x3x1.mode=Режим: §e1х3х1
 rfdrills.1x1x1.mode=Режим: §c1х1х1
 
+config.general=Основное
 config.general.tooltip=Конфигурировать основные настройки мода
-config.drill_tier1.tooltip=Конфигурировать свойства дрелей 1-го класса
-config.drill_tier2.tooltip=Конфигурировать свойства дрелей 2-го класса
-config.drill_tier3.tooltip=Конфигурировать свойства дрелей 3-го класса
-config.drill_tier4.tooltip=Конфигурировать свойства дрелей 4-го класса
+config.drill_tier1=Дрели 1 уровня
+config.drill_tier1.tooltip=Конфигурировать свойства дрелей 1 уровня
+config.drill_tier2=Дрели 2 уровня
+config.drill_tier2.tooltip=Конфигурировать свойства дрелей 2 уровня
+config.drill_tier3=Дрели 3 уровня
+config.drill_tier3.tooltip=Конфигурировать свойства дрелей 3 уровня
+config.drill_tier4=Дрели 4 уровня
+config.drill_tier4.tooltip=Конфигурировать свойства дрелей 4 уровня
+config.flux_crusher=Наполненый флаксом крушитель
 config.flux_crusher.tooltip=Конфигурировать свойства Наполненого флаксом крушителя
+config.soul_crusher=Крушитель из тёмного соулария
 config.soul_crusher.tooltip=Конфигурировать свойства Крушителя из тёмного соулария
-config.chainsaw_tier1.tooltip=Конфигурировать свойства пил 1-го класса
-config.chainsaw_tier2.tooltip=Конфигурировать свойства пил 2-го класса
-config.chainsaw_tier3.tooltip=Конфигурировать свойства пил 3-го класса
-config.chainsaw_tier4.tooltip=Конфигурировать свойства пил 4-го класса
+config.chainsaw_tier1=Пилы 1 уровня
+config.chainsaw_tier1.tooltip=Конфигурировать свойства пил 1 уровня
+config.chainsaw_tier2=Пилы 2 уровня
+config.chainsaw_tier2.tooltip=Конфигурировать свойства пил 2 уровня
+config.chainsaw_tier3=Пилы 3 уровня
+config.chainsaw_tier3.tooltip=Конфигурировать свойства пил 3 уровня
+config.chainsaw_tier4=Пилы 4 уровня
+config.chainsaw_tier4.tooltip=Конфигурировать свойства пил 4 уровня
+
+config.maxEnergy=Макс. энергоёмкость
+config.maxEnergy.tooltip=Максимальное количество энергии которое может вместить этот инструмент
+config.energyPerBlock=Энергия за блок
+config.energyPerBlock.tooltip=Количество энергии которое используется для добычи одного блока (2х для атаки мобов)
+config.rechargeRate=Скорость зарядки
+config.rechargeRate.tooltip=Количество RF которое инструмент может зарядить за тик
+config.canBreak=Может сломатся
+config.canBreak.tooltip=Может ли инструмент сломатся при нехватке энергии
+config.hasModes=Есть режимы
+config.hasModes.tooltip=Может ли инструмент иметь несколько режимов копания
+config.miningLevel=Уровень добычи
+config.miningLevel.tooltip=Уровень добычи инструмента (1 - копает железо, 2 - копает алмазы и т.д.)
+config.efficiency=Эффективность
+config.efficiency.tooltip=Скорость копания инструмента
+config.damage=Урон
+config.damage.tooltip=Урон, который наносит инструмент при атаке мобов
+config.enchant=Зачаровываемость
+config.enchant.tooltip=Зачаровываемость предмета (0 - нельзя зачаровать)
+
+#Please don't translate the words "true" and "false"
+config.integrateTE=Включить интеграцию TE
+config.integrateTE.tooltip=Переключите на "false" чтобы отменить интеграцию с Thermal Expansion
+config.integrateEIO=Включить интеграцию EIO
+config.integrateEIO.tooltip=Переключите на "false" чтобы отменить интеграцию с EnderIO
+config.integrateRArs=Включить интеграцию RA
+config.integrateRArs.tooltip=Переключите на "false" чтобы отменить интеграцию с Redstone Arsenal
+config.shearsDefault=Ножницы по умолчанию
+config.shearsDefault.tooltip=Переключите на "false" чтобы отменить функцию ножниц у пил нижних уровней
 
 option.rfdrills.waila_rf=Использование RF
 option.rfdrills.waila_mode=Режим копания

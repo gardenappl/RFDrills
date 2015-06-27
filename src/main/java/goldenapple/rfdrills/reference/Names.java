@@ -1,5 +1,7 @@
 package goldenapple.rfdrills.reference;
 
+import goldenapple.rfdrills.RFDrills;
+
 public class Names {
     public static final String LEADSTONE_DRILL = "leadstone_drill";
     public static final String HARDENED_DRILL = "hardened_drill";
@@ -17,6 +19,7 @@ public class Names {
 
     public static final String SOUL_CRUSHER = "soul_crusher";
     public static final String FLUX_CRUSHER = "flux_infused_crusher";
+    public static final String FLUX_HOE = "flux_hoe";
 
     public static final String COMPONENT_TE = "motor_te";
     public static final String[] COMPONENTS_TE = {"leadstone_motor",
@@ -29,11 +32,21 @@ public class Names {
                                               "fluctuating_core_frame",
                                               "superconductance_coil"};
     public static final String COMPONENT_EIO = "motor_eio";
-    public static final String[] COMPONENTS_EIO = {"basic_motor",
+    public static       String[] COMPONENTS_EIO = {"basic_motor",
                                                "advanced_motor",
                                                "resonating_crystal",
                                                "soularium_nugget",
-                                               "dark_soularium_nugget",
+                                               "rich_soularium_nugget",
                                                "destructive_crystal",
                                                "earthshaking_crystal"};
+    public static final String SJ_REPLACEMENT = "sj_replacement";
+    public static final String[] SJ_REPLACEMENTS = {"dark_soularium"};
+
+    public static final String RA_REPLACEMENT = "ra_replacement";
+    public static final String[] RA_REPLACEMENTS = {"obsidian_rod",
+                                                    "flux_obsidian_rod"};
+
+    static{
+        if(!RFDrills.isSJLoaded) COMPONENTS_EIO[LibMetadata.RICH_SOULARIUM_NUGGET] = "dark_soularium_nugget";
+    }
 }

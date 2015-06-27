@@ -7,6 +7,7 @@ item.rfdrills:advanced_drill.name=Advanced Electric Drill
 
 item.rfdrills:flux_infused_crusher.name=Flux-Infused Crusher
 item.rfdrills:soul_crusher.name=Dark Soularium Crusher
+item.rfdrills:flux_hoe.name=Flux Hoe
 
 item.rfdrills:leadstone_chainsaw.name=Leadstone Chainsaw
 item.rfdrills:hardened_chainsaw.name=Hardened Chainsaw
@@ -28,12 +29,19 @@ item.rfdrills:resonating_crystal.name=Resonating Crystal
 item.rfdrills:destructive_crystal.name=Destructive Crystal
 item.rfdrills:earthshaking_crystal.name=Earthshaking Crystal
 item.rfdrills:soularium_nugget.name=Soularium Nugget
-item.rfdrills:dark_soularium_nugget.name=Enriched Soularium Alloy Nugget
+item.rfdrills:rich_soularium_nugget.name=Enriched Soularium Alloy Nugget
 item.rfdrills:superconductance_coil.name=Redstone Superconductance Coil
 item.rfdrills:fluctuating_core.name=Fluctuating Core
 item.rfdrills:fluctuating_core_frame.name=Fluctuating Core Frame
 
+item.rfdrills:dark_soularium.name=Dark Soularium
+item.rfdrills:dark_soularium_nugget.name=Dark Soularium Nugget
 
+item.rfdrills:obsidian_rod.name=Obsidian Rod
+item.rfdrills:flux_obsidian_rod.name=Infused Obsidian Rod
+
+
+rfdrills.hoe.tooltip=§aAlso serves as a sickle.
 rfdrills.drill.tooltip=§aServes as a pick and a shovel.
 rfdrills.chainsaw.tooltip=§aAlso serves as shears.
 rfdrills.crusher.tooltip=§aServes as a pick, a shovel and an axe.
@@ -43,6 +51,7 @@ rfdrills.chainsaw_has_modes.tooltip=§b§oPress %s to toggle shears.
 rfdrills.drill_has_modes.tooltip=§b§oPress %s to switch mining modes.
 rfdrills.crusher_has_modes.tooltip=§b§oPress %s to switch mining modes.
 rfdrills.enchantable.tooltip=§aCan be enchanted.
+
 
 rfdrills.soul_upgrade.tooltip=Upgrade for the Dark Soularium Crusher
 rfdrills.soul_upgrade.recipe=Anvil Recipes:
@@ -77,21 +86,62 @@ rfdrills.shears_on.mode=Shears: §aOn
 rfdrills.shears_off.mode=Shears: §cOff
 rfdrills.5x5x5.mode=Mode: §a5x5x5
 rfdrills.3x3x3.mode=Mode: §e3x3x3
-rfdrills.1x3x1.mode=Mode: §a1x3x1
+rfdrills.1x3x1.mode=Mode: §e1x3x1
 rfdrills.1x1x1.mode=Mode: §c1x1x1
 
-
+config.general=General
 config.general.tooltip=Configure main gameplay settings
+config.drill_tier1=Drill Tier 1
 config.drill_tier1.tooltip=Configure properties of Tier 1 drills
+config.drill_tier2=Drill Tier 2
 config.drill_tier2.tooltip=Configure properties of Tier 2 drills
+config.drill_tier3=Drill Tier 3
 config.drill_tier3.tooltip=Configure properties of Tier 3 drills
+config.drill_tier4=Drill Tier 4
 config.drill_tier4.tooltip=Configure properties of Tier 4 drills
+config.flux_crusher=Flux-Infused Crusher
 config.flux_crusher.tooltip=Configure properties of the Flux-Infused Crusher
+config.soul_crusher=Dark Soularium Crusher
 config.soul_crusher.tooltip=Configure properties of the Dark Soularium Crusher
+config.hoe=Flux Hoe
+config.hoe.tooltip=Configure properties of the Flux Hoe
+config.chainsaw_tier1=Chainsaw Tier 1
 config.chainsaw_tier1.tooltip=Configure properties of Tier 1 chainsaws
+config.chainsaw_tier2=Chainsaw Tier 2
 config.chainsaw_tier2.tooltip=Configure properties of Tier 2 chainsaws
+config.chainsaw_tier3=Chainsaw Tier 3
 config.chainsaw_tier3.tooltip=Configure properties of Tier 3 chainsaws
+config.chainsaw_tier4=Chainsaw Tier 4
 config.chainsaw_tier4.tooltip=Configure properties of Tier 4 chainsaws
+
+config.maxEnergy=Maximum energy
+config.maxEnergy.tooltip=The max amount of energy that the tool can hold
+config.energyPerBlock=Energy per block
+config.energyPerBlock.tooltip=The amount of energy that the tool uses to mine 1 block (uses twice as much energy for attacking)
+config.rechargeRate=Recharge rate
+config.rechargeRate.tooltip=RF that the tool can recharge per tick
+config.canBreak=Can break
+config.canBreak.tooltip=Can the tool break when it runs out of energy
+config.hasModes=Has modes
+config.hasModes.tooltip=Can the tool change modes
+config.miningLevel=Mining level
+config.miningLevel.tooltip=Mining level of the tool (1 - can mine iron, 2 - can mine diamonds etc.)
+config.efficiency=Efficiency
+config.efficiency.tooltip=Mining speed of the tool
+config.damage=Damage
+config.damage.tooltip=Damage that the tool does when attacking enemies
+config.enchant=Enchantibility
+config.enchant.tooltip=Enchantiblity of the tool (0 - not enchantable)
+
+#Please don't translate the words "true" and "false"
+config.integrateTE=Enable TE integration
+config.integrateTE.tooltip=Set this to "false" to disable Thermal Expansion integration
+config.integrateEIO=Enable EIO integration
+config.integrateEIO.tooltip=Set this to "false" to disable EnderIO integration
+config.integrateRArs=Enable RA integration
+config.integrateRArs.tooltip=Set this to "false" to disable Redstone Arsenal integration
+config.shearsDefault=Shears default
+config.shearsDefault.tooltip=Set this to "false" to disable shears functionality for lower tier chainsaws
 
 option.rfdrills.waila_rf=Show RF usage
 option.rfdrills.waila_rf.sneakingonly=Sneak only: Show RF usage
