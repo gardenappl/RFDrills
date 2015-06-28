@@ -209,6 +209,11 @@ public class ModRecipes {
 
         //Earthshaking Crystal
         EnderIOHelper.addSoulBinderRecipe("Earthshaking Crystal", 200000, 15, "Ghast", destructiveCrystal.copy(), earthshakingCrystal.copy());
+
+        GameRegistry.addRecipe(new ShapedUpgradeRecipe(ModItems.fluxHoe,
+                "iC",
+                " s",
+                " s", 'i', "ingotElectricalSteel", 'C', capacitorBasic.copy(), 's', "itemSilicon").setMirrored(true));
     }
 
     private static void initRArs(){

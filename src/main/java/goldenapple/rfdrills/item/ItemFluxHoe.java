@@ -11,6 +11,7 @@ import goldenapple.rfdrills.reference.Reference;
 import goldenapple.rfdrills.util.LogHelper;
 import goldenapple.rfdrills.util.MiscUtil;
 import goldenapple.rfdrills.util.StringHelper;
+import goldenapple.rfdrills.util.ToolHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -24,7 +25,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.stats.StatList;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
@@ -141,19 +141,8 @@ public class ItemFluxHoe extends ItemTool implements IEnergyTool {
             }
         }
 
-        if(!player.capabilities.isCreativeMode) {
-            player.setCurrentItemOrArmor(0, drainEnergy(itemStack, getEnergyPerUse(itemStack)));
-
-            if (this.getEnergyStored(itemStack) == 0 && tier.canBreak) {
-                //itemStack.damageItem(1000000, entity);
-                player.renderBrokenItemStack(itemStack);
-                player.destroyCurrentEquippedItem();
-                player.addStat(StatList.objectBreakStats[Item.getIdFromItem(itemStack.getItem())], 1);
-            }
-            return true;
-        }
-
-        return false;
+        ToolHelper.damageTool(itemStack, player, getEnergyPerUse(itemStack, block, world.getBlockMetadata(x, y, z)));
+        return true;
     }
 
     private boolean tillBlock(ItemStack itemStack, World world, int x, int y, int z, int sideHit, EntityPlayer player){
@@ -178,8 +167,8 @@ public class ItemFluxHoe extends ItemTool implements IEnergyTool {
 
     @Override
     public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int sideHit, float hitX, float hitY, float hitZ) {
-        if(!tillBlock(itemStack, world, x, y, z, sideHit, player)) return false; //if the player right-clicks a block of cobble near a block of dirt we won't till the dirt
         if(getEnergyStored(itemStack) == 0) return false;
+        if(!tillBlock(itemStack, world, x, y, z, sideHit, player)) return false; //if the player right-clicks a block of cobble near a block of dirt we won't till the dirt
 
         for(int a = x - 1; a <= x + 1; a++) {
             for(int c = z - 1; c <= z + 1; c++) { //don't care about y levels with a hoe
@@ -189,12 +178,7 @@ public class ItemFluxHoe extends ItemTool implements IEnergyTool {
             }
         }
 
-        player.setCurrentItemOrArmor(0, drainEnergy(itemStack, getEnergyPerUse(itemStack)));
-        if (this.getEnergyStored(itemStack) == 0 && tier.canBreak) {
-            player.renderBrokenItemStack(itemStack);
-            player.destroyCurrentEquippedItem();
-            player.addStat(StatList.objectBreakStats[Item.getIdFromItem(itemStack.getItem())], 1);
-        }
+        ToolHelper.damageTool(itemStack, player, getEnergyPerUse(itemStack));
         world.playSoundEffect((double) ((float) x + 0.5F), (double) ((float) y + 0.5F), (double) ((float) z + 0.5F), Blocks.farmland.stepSound.getStepResourcePath(), (Blocks.farmland.stepSound.getVolume() + 1.0F) / 2.0F, Blocks.farmland.stepSound.getPitch() * 0.8F);
 
         return true;
@@ -202,18 +186,10 @@ public class ItemFluxHoe extends ItemTool implements IEnergyTool {
 
     @Override
     public boolean hitEntity(ItemStack itemStack, EntityLivingBase entityAttacked, EntityLivingBase entityAttacker) {
-        if(entityAttacker instanceof EntityPlayer && !((EntityPlayer)entityAttacker).capabilities.isCreativeMode) {
-            entityAttacker.setCurrentItemOrArmor(0, drainEnergy(itemStack, getEnergyPerUse(itemStack) * 2));
+        if(entityAttacker instanceof EntityPlayer)
+            ToolHelper.damageTool(itemStack, (EntityPlayer)entityAttacker, getEnergyPerUse(itemStack) * 2);
 
-            if (this.getEnergyStored(itemStack) == 0 && tier.canBreak) {
-                entityAttacker.renderBrokenItemStack(itemStack);
-                ((EntityPlayer)entityAttacker).destroyCurrentEquippedItem();
-                ((EntityPlayer)entityAttacker).addStat(StatList.objectBreakStats[Item.getIdFromItem(itemStack.getItem())], 1);
-            }
-            return true;
-        }
-
-        return false;
+        return true;
     }
 
     @Override

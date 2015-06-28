@@ -46,6 +46,7 @@ public class ModItems {
 
 
     public static void init(){
+        GameRegistry.registerItem(fluxHoe, Names.FLUX_HOE);
         if(Loader.isModLoaded("ThermalExpansion") && ConfigHandler.integrateTE) initTE();
         if(Loader.isModLoaded("EnderIO") && ConfigHandler.integrateEIO) initEIO();
     }
@@ -54,7 +55,6 @@ public class ModItems {
         componentTE.setRarities(new EnumRarity[]{EnumRarity.common, EnumRarity.common, EnumRarity.uncommon, EnumRarity.common, EnumRarity.rare, EnumRarity.common, EnumRarity.rare, EnumRarity.rare, EnumRarity.uncommon});
 
         RAreplacement.setRarities(new EnumRarity[]{EnumRarity.uncommon, EnumRarity.uncommon});
-        RAreplacement.setTooltips(new String[][]{new String[]{"rfdrills.ra_replacement.tooltip1", "rfdrills.ra_replacement.tooltip2"}, new String[]{"rfdrills.ra_replacement.tooltip1", "rfdrills.ra_replacement.tooltip2"}});
 
         GameRegistry.registerItem(componentTE, Names.COMPONENT_TE);
 
@@ -73,7 +73,6 @@ public class ModItems {
 
         if(ConfigHandler.integrateRArs)
             GameRegistry.registerItem(fluxCrusher, Names.FLUX_CRUSHER);
-        GameRegistry.registerItem(fluxHoe, Names.FLUX_HOE);
     }
 
     private static void initEIO(){
@@ -83,7 +82,6 @@ public class ModItems {
 
         SJreplacement.setEffects(new boolean[]{true});
         SJreplacement.setRarities(new EnumRarity[]{EnumRarity.uncommon});
-        SJreplacement.setTooltips(new String[][]{new String[]{"rfdrills.sj_replacement.tooltip1", "rfdrills.sj_replacement.tooltip2"}});
 
         GameRegistry.registerItem(componentEIO, Names.COMPONENT_EIO);
         OreDictionary.registerOre("nuggetSoularium", new ItemStack(componentEIO, 1, LibMetadata.SOULARIUM_NUGGET));

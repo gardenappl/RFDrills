@@ -3,6 +3,8 @@ package goldenapple.rfdrills.item;
 import cofh.api.item.IEmpowerableItem;
 import cofh.core.item.IEqualityOverrideItem;
 import cofh.core.util.KeyBindingEmpower;
+import cofh.lib.util.helpers.BlockHelper;
+import cofh.repack.codechicken.lib.math.MathHelper;
 import com.google.common.collect.Sets;
 import cpw.mods.fml.common.eventhandler.Event;
 import goldenapple.rfdrills.DrillTier;
@@ -15,6 +17,7 @@ import goldenapple.rfdrills.reference.Reference;
 import goldenapple.rfdrills.util.LogHelper;
 import goldenapple.rfdrills.util.MiscUtil;
 import goldenapple.rfdrills.util.StringHelper;
+import goldenapple.rfdrills.util.ToolHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -24,7 +27,10 @@ import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.item.*;
+import net.minecraft.item.EnumRarity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemTool;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.StatList;
 import net.minecraft.util.ChatComponentText;
@@ -33,7 +39,6 @@ import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
-import net.minecraftforge.event.world.BlockEvent;
 
 import java.util.List;
 import java.util.Map;
@@ -132,57 +137,44 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
         //do nothing, other methods are responsible for energy consumption
     }
 
-    private void harvestBlock(World world, int x, int y, int z, EntityPlayer player){
-        Block block = world.getBlock(x, y, z);
-        if (block.getBlockHardness(world, x, y, z) < 0) {
-            return;
-        }
-        int meta = world.getBlockMetadata(x, y, z);
-        BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(x, y, z, world, block, meta, player);
-
-        MinecraftForge.EVENT_BUS.post(event);
-        if(!event.isCanceled()) {
-            if (block.canHarvestBlock(player, meta)) {
-                block.harvestBlock(world, player, x, y, z, meta);
-            }
-            world.setBlockToAir(x, y, z);
-        }
-    }
-
     @Override
     public boolean onBlockDestroyed(ItemStack itemStack, World world, Block block, int x, int y, int z, EntityLivingBase entity) {
-        if(entity instanceof EntityPlayer && !world.isRemote){
-            int radiusHorizontal = 0;
-            int radiusVertical = 0;
+        if(!(entity instanceof EntityPlayer)) return false;
+        EntityPlayer player = (EntityPlayer) entity;
+
+        if(!world.isRemote && getEnergyStored(itemStack) > 0){
+            int xRadius = 0, yRadius = 0, zRadius = 0;
+
             switch (getMode(itemStack)){
-                case 1: radiusVertical = 1; break;
-                case 2: radiusVertical = 1; radiusHorizontal = 1; break;
-                case 3: radiusVertical = 2; radiusHorizontal = 2; break;
+                case 1: if (BlockHelper.getCurrentMousedOverSide(player) == 0 || BlockHelper.getCurrentMousedOverSide(player) == 1) { //if looking at the top or bottom of a block
+                    switch(MathHelper.floor_double((entity.rotationYaw * 4F) / 360F + 0.5D) & 3) { //Stolen from MineFactoryReloaded //https://github.com/powercrystals/MineFactoryReloaded/blob/master/src/powercrystals/minefactoryreloaded/block/BlockConveyor.java
+                        case 0: zRadius = 1; break;
+                        case 1: xRadius = 1; break;
+                        case 2: zRadius = 1; break;
+                        case 3: xRadius = 1; break;
+                    }
+                } else {
+                    yRadius = 1;
+                } break;
+                case 2: xRadius = 1; yRadius = 1; zRadius = 1; break;
+                case 3: xRadius = 2; yRadius = 2; zRadius = 2; break;
             }
-            for (int a = x - radiusHorizontal; a <= x + radiusHorizontal; a++) {
-                for (int b = y - radiusVertical; b <= y + radiusVertical; b++) {
-                    for(int c = z - radiusHorizontal; c <= z + radiusHorizontal; c++) {
+
+            for (int a = x - xRadius; a <= x + xRadius; a++) {
+                for (int b = y - yRadius; b <= y + yRadius; b++) {
+                    for(int c = z - zRadius; c <= z + zRadius; c++) {
                         if (world.blockExists(a, b, c) && effectiveMaterials.contains(world.getBlock(a, b, c).getMaterial())) {
                             if (!(a == x && b == y && c == z)) { //don't harvest the same block twice silly!
-                                harvestBlock(world, a, b, c, (EntityPlayer) entity);
+                                ToolHelper.harvestBlock(world, a, b, c, (EntityPlayer) entity);
                             }
                         }
                     }
                 }
             }
         }
-        if(entity instanceof EntityPlayer && !((EntityPlayer)entity).capabilities.isCreativeMode) {
-            entity.setCurrentItemOrArmor(0, drainEnergy(itemStack, getEnergyPerUseWithMode(itemStack)));
 
-            if (this.getEnergyStored(itemStack) == 0 && tier.canBreak) {
-                entity.renderBrokenItemStack(itemStack);
-                ((EntityPlayer)entity).destroyCurrentEquippedItem();
-                ((EntityPlayer)entity).addStat(StatList.objectBreakStats[Item.getIdFromItem(itemStack.getItem())], 1);
-            }
-            return true;
-        }
-
-        return false;
+        ToolHelper.damageTool(itemStack, player, getEnergyPerUse(itemStack, block, world.getBlockMetadata(x, y, z)));
+        return true;
     }
 
     @Override
@@ -222,9 +214,9 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
 
     @Override
     public boolean onItemUse(ItemStack itemStack, EntityPlayer player, World world, int x, int y, int z, int sideHit, float hitX, float hitY, float hitZ) {
+        if(getEnergyStored(itemStack) == 0) return false;
         if(SoulUpgradeHelper.getUpgradeLevel(itemStack, SoulUpgrades.upgradeFork) == 0) return false;
         if(!tillBlock(itemStack, world, x, y, z, sideHit, player)) return false; //if the player right-clicks a block of cobble near a block of dirt we won't till the dirt
-        if(getEnergyStored(itemStack) == 0) return false;
 
         int radius = 0;
 
@@ -241,12 +233,7 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
             }
         }
 
-        player.setCurrentItemOrArmor(0, drainEnergy(itemStack, getEnergyPerUseWithMode(itemStack)));
-        if (this.getEnergyStored(itemStack) == 0 && tier.canBreak) {
-            player.renderBrokenItemStack(itemStack);
-            player.destroyCurrentEquippedItem();
-            player.addStat(StatList.objectBreakStats[Item.getIdFromItem(itemStack.getItem())], 1);
-        }
+        ToolHelper.damageTool(itemStack, player, getEnergyPerUseWithMode(itemStack));
         world.playSoundEffect((double) ((float) x + 0.5F), (double) ((float) y + 0.5F), (double) ((float) z + 0.5F), Blocks.farmland.stepSound.getStepResourcePath(), (Blocks.farmland.stepSound.getVolume() + 1.0F) / 2.0F, Blocks.farmland.stepSound.getPitch() * 0.8F);
 
         return true;
@@ -320,7 +307,6 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
     }
 
     public boolean setMode(ItemStack itemStack, int mode) {
-        if(SoulUpgradeHelper.getUpgradeLevel(itemStack, SoulUpgrades.upgradeBeastMode) == 0) return false;
         if(getEnergyStored(itemStack) == 0) return false;
 
         if(itemStack.stackTagCompound == null){
@@ -332,7 +318,7 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
     }
 
     private int getNumModes(ItemStack itemStack) {
-        return SoulUpgradeHelper.getUpgradeLevel(itemStack, SoulUpgrades.upgradeBeastMode) + 2;
+        return SoulUpgradeHelper.getUpgradeLevel(itemStack, SoulUpgrades.upgradeBeastMode) + 1;
     }
 
     public String writeModeInfo(ItemStack itemStack){
@@ -461,11 +447,6 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
 
     @Override
     public void onStateChange(EntityPlayer player, ItemStack itemStack) {
-        if(getMode(itemStack) == 0){
-            player.worldObj.playSoundAtEntity(player, "random.orb", 0.2F, 0.6F);
-        }else {
-            player.worldObj.playSoundAtEntity(player, "ambient.weather.thunder", 0.4F, 1.0F);
-        }
         player.addChatComponentMessage(new ChatComponentText(writeModeInfo(itemStack)));
     }
 }

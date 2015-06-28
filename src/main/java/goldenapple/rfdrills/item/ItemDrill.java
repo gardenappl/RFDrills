@@ -3,6 +3,8 @@ package goldenapple.rfdrills.item;
 import cofh.api.item.IEmpowerableItem;
 import cofh.core.item.IEqualityOverrideItem;
 import cofh.core.util.KeyBindingEmpower;
+import cofh.lib.util.helpers.BlockHelper;
+import cofh.repack.codechicken.lib.math.MathHelper;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import goldenapple.rfdrills.DrillTier;
@@ -11,6 +13,7 @@ import goldenapple.rfdrills.reference.Reference;
 import goldenapple.rfdrills.util.LogHelper;
 import goldenapple.rfdrills.util.MiscUtil;
 import goldenapple.rfdrills.util.StringHelper;
+import goldenapple.rfdrills.util.ToolHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -25,12 +28,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemTool;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.stats.StatList;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.world.BlockEvent;
 
 import java.util.List;
 import java.util.Set;
@@ -119,23 +119,6 @@ public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrid
         return Math.max(1.0 - (double) getEnergyStored(itemStack) / (double) tier.maxEnergy, 0);
     }
 
-    private void harvestBlock(World world, int x, int y, int z, EntityPlayer player){
-        Block block = world.getBlock(x, y, z);
-        if (block.getBlockHardness(world, x, y, z) < 0) {
-            return;
-        }
-        int meta = world.getBlockMetadata(x, y, z);
-        BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(x, y, z, world, block, meta, player);
-
-        MinecraftForge.EVENT_BUS.post(event);
-        if(!event.isCanceled()) {
-            if (block.canHarvestBlock(player, meta)) {
-                block.harvestBlock(world, player, x, y, z, meta);
-            }
-            world.setBlockToAir(x, y, z);
-        }
-    }
-
     @Override
     public void setDamage(ItemStack itemStack, int damage) {
         //do nothing, other methods are responsible for energy consumption
@@ -143,44 +126,47 @@ public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrid
 
     @Override
     public boolean onBlockDestroyed(ItemStack itemStack, World world, Block block, int x, int y, int z, EntityLivingBase entity) {
-        if(isEmpowered(itemStack) && entity instanceof EntityPlayer && !world.isRemote && getEnergyStored(itemStack) >= getEnergyPerUseWithMode(itemStack)){
-            for (int b = y - 1; b <= y + 1; b++) {
-                if (world.blockExists(x, b, z) && effectiveMaterials.contains(world.getBlock(x, b, z).getMaterial())) {
-                    if (b != y) { //don't harvest the same block twice
-                        harvestBlock(world, x, b, z, (EntityPlayer) entity);
+        if(!(entity instanceof EntityPlayer)) return false;
+        EntityPlayer player = (EntityPlayer)entity;
+
+        if(!world.isRemote && getEnergyStored(itemStack) > 0){
+            int xRadius = 0, yRadius = 0, zRadius = 0;
+
+            if(isEmpowered(itemStack)){
+                if (BlockHelper.getCurrentMousedOverSide(player) == 0 || BlockHelper.getCurrentMousedOverSide(player) == 1) {
+                    switch(MathHelper.floor_double((entity.rotationYaw * 4F) / 360F + 0.5D) & 3) { //Stolen from MineFactoryReloaded //https://github.com/powercrystals/MineFactoryReloaded/blob/master/src/powercrystals/minefactoryreloaded/block/BlockConveyor.java
+                        case 0: zRadius = 1; break;
+                        case 1: xRadius = 1; break;
+                        case 2: zRadius = 1; break;
+                        case 3: xRadius = 1; break;
+                    }
+                } else {
+                    yRadius = 1;
+                }
+            }
+            for(int a = x - xRadius; a <= x + xRadius; a++) {
+                for (int b = y - yRadius; b <= y + yRadius; b++) {
+                    for(int c = z - zRadius; c <= z + zRadius; c++) {
+                        if (world.blockExists(a, b, c) && effectiveMaterials.contains(world.getBlock(a, b, c).getMaterial())) {
+                            if (!(a == x && b == y && c == z)) { //don't harvest the same block twice
+                                ToolHelper.harvestBlock(world, a, b, c, player);
+                            }
+                        }
                     }
                 }
             }
         }
-        if(entity instanceof EntityPlayer && !((EntityPlayer)entity).capabilities.isCreativeMode) {
-            entity.setCurrentItemOrArmor(0, drainEnergy(itemStack, getEnergyPerUseWithMode(itemStack)));
 
-            if (this.getEnergyStored(itemStack) == 0 && tier.canBreak) {
-              //itemStack.damageItem(1000000, entity);
-                entity.renderBrokenItemStack(itemStack);
-                ((EntityPlayer)entity).destroyCurrentEquippedItem();
-                ((EntityPlayer)entity).addStat(StatList.objectBreakStats[Item.getIdFromItem(itemStack.getItem())], 1);
-            }
-            return true;
-        }
-
-        return false;
+        ToolHelper.damageTool(itemStack, player, getEnergyPerUse(itemStack, block, world.getBlockMetadata(x, y, z)));
+        return true;
     }
 
     @Override
     public boolean hitEntity(ItemStack itemStack, EntityLivingBase entityAttacked, EntityLivingBase entityAttacker) {
-        if(entityAttacker instanceof EntityPlayer && !((EntityPlayer)entityAttacker).capabilities.isCreativeMode) {
-            entityAttacker.setCurrentItemOrArmor(0, drainEnergy(itemStack, getEnergyPerUse(itemStack) * 2));
+        if(entityAttacker instanceof EntityPlayer)
+            ToolHelper.damageTool(itemStack, (EntityPlayer)entityAttacker, getEnergyPerUse(itemStack) * 2);
 
-            if (this.getEnergyStored(itemStack) == 0 && tier.canBreak) {
-                entityAttacker.renderBrokenItemStack(itemStack);
-                ((EntityPlayer)entityAttacker).destroyCurrentEquippedItem();
-                ((EntityPlayer)entityAttacker).addStat(StatList.objectBreakStats[Item.getIdFromItem(itemStack.getItem())], 1);
-            }
-            return true;
-        }
-
-        return false;
+        return true;
     }
 
     @Override
@@ -205,7 +191,6 @@ public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrid
                     list.add(StringHelper.writeModeSwitchInfo("rfdrills.drill_has_modes.tooltip", KeyBindingEmpower.instance));
                 }
             } else {
-              //list.add(StatCollector.translateToLocal("info.cofh.hold") + " §e§o" + StatCollector.translateToLocal("info.cofh.shift") + " §r§7" + StatCollector.translateToLocal("info.cofh.forDetails"));
                 list.add(cofh.lib.util.helpers.StringHelper.shiftForDetails());
             }
         }catch (Exception e){

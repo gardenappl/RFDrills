@@ -2,16 +2,15 @@
 	"versionList": [
 		{
 			"mcVersion": "Minecraft 1.7.10",
-			"modVersion": "1.6",
+			"modVersion": "1.6.1",
 			"changeLog": [
-				"Added the Flux Hoe! Yaaaay!",
-				"If Simply Jetpacks isn't installed, the mod will create it's own version of Dark Soularium.",
-				"If Redstone Arsenal isn't installed but Simply Jetpacks is available, the mod will use SJ's 'replacement items' in the Flux-Infused recipes.",
-				"Crushers now switch modes using the Empowered key just like every other tool in the mod.",
-				"Config values and categories are now localized in the Config GUIs. You shouldn't lose any of your old config options, though (at least I hope so).",
-				"Fixed the Dark Soularium Crusher not swinging and not using energy when hoeing only one block at a time."
+                "The Flux Hoe can now be crafted using EnderIO materials.",
+                "Mining downwards/upwards with the 1x3x1 mode will break blocks in a horizontal line instead.",
+                "Fixed AoE items not being able to harvest most wrenchable machines.",
+                "Fixed the Dark Soularium Crusher being able to till dirt when out of energy (that was just waay too OP).",
+                "Fixed some Dark Soularium Crusher mode weirdness."
 			],
-			"updateURL": "http://minecraft.curseforge.com/mc-mods/229846-rfdrills/files/2244552/download",
+			"updateURL": "http://minecraft.curseforge.com/mc-mods/229846-rfdrills/files/2244698/download",
 			"isDirectLink": "true",
 			"newFileName": ""
 		}

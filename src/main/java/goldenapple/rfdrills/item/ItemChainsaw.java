@@ -9,6 +9,7 @@ import goldenapple.rfdrills.config.ConfigHandler;
 import goldenapple.rfdrills.reference.Reference;
 import goldenapple.rfdrills.util.MiscUtil;
 import goldenapple.rfdrills.util.StringHelper;
+import goldenapple.rfdrills.util.ToolHelper;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
@@ -24,7 +25,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemAxe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.stats.StatList;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
@@ -91,29 +91,6 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool, IEqualityOverr
     }
 
     @Override
-    public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
-        /* if(!world.isRemote && player.isSneaking() && tier.hasModes) {
-            switch (getMode(itemStack)) {
-                case 0:
-                    setMode(itemStack, (byte) 1);
-                    player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("rfdrills.shears_on.mode")));
-                    break;
-                case 1:
-                    setMode(itemStack, (byte) 0);
-                    player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("rfdrills.shears_off.mode")));
-                    break;
-                default:
-                    setMode(itemStack, (byte) 1);
-                    player.addChatMessage(new ChatComponentText(StatCollector.translateToLocal("rfdrills.shears_on.mode")));
-                    LogHelper.warn("Illegal chainsaw mode! Resetting to 1");
-                    break;
-            }
-        }
-        return itemStack; */
-        return super.onItemRightClick(itemStack, world, player);
-    }
-
-    @Override
     public void setDamage(ItemStack itemStack, int damage) {
         //do nothing, other methods are responsible for energy consumption
     }
@@ -121,15 +98,9 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool, IEqualityOverr
     @Override
     public boolean itemInteractionForEntity(ItemStack itemStack, EntityPlayer player, EntityLivingBase entity) {
         if(isEmpowered(itemStack)) {
-            if ((getEnergyStored(itemStack) >= getEnergyPerUse(itemStack) || tier.canBreak) && Items.shears.itemInteractionForEntity(itemStack, player, entity)) {
+            if (getEnergyStored(itemStack) > 0 && Items.shears.itemInteractionForEntity(itemStack, player, entity)) {
                 itemStack.setItemDamage(0);
-                if(!player.capabilities.isCreativeMode) {
-                    player.setCurrentItemOrArmor(0, drainEnergy(itemStack, getEnergyPerUse(itemStack)));
-
-                    if (this.getEnergyStored(itemStack) == 0 && tier.canBreak) {
-                        itemStack.damageItem(1000000, entity);
-                    }
-                }
+                ToolHelper.damageTool(itemStack, player, getEnergyPerUse(itemStack));
                 return true;
             } else {
                 return false;
@@ -141,7 +112,7 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool, IEqualityOverr
 
     @Override
     public boolean onBlockStartBreak(ItemStack itemStack, int x, int y, int z, EntityPlayer player) {
-        if(isEmpowered(itemStack) && getEnergyStored(itemStack) >= getEnergyPerUse(itemStack) / 5) {
+        if(isEmpowered(itemStack) && getEnergyStored(itemStack) > 0) {
             if (Items.shears.onBlockStartBreak(itemStack, x, y, z, player)) {
                 itemStack.setItemDamage(0);
                 return true;
@@ -155,34 +126,18 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool, IEqualityOverr
 
     @Override
     public boolean onBlockDestroyed(ItemStack itemStack, World world, Block block, int x, int y, int z, EntityLivingBase entity) {
-        if(entity instanceof EntityPlayer && !((EntityPlayer)entity).capabilities.isCreativeMode) {
-            entity.setCurrentItemOrArmor(0, drainEnergy(itemStack, getEnergyPerUse(itemStack, block, world.getBlockMetadata(x, y, z))));
+        if(entity instanceof EntityPlayer)
+            ToolHelper.damageTool(itemStack, (EntityPlayer)entity, getEnergyPerUse(itemStack, block, world.getBlockMetadata(x, y, z)));
 
-            if (this.getEnergyStored(itemStack) == 0 && tier.canBreak) {
-                entity.renderBrokenItemStack(itemStack);
-                ((EntityPlayer)entity).destroyCurrentEquippedItem();
-                ((EntityPlayer)entity).addStat(StatList.objectBreakStats[Item.getIdFromItem(itemStack.getItem())], 1);
-            }
-            return !(block instanceof IShearable && isEmpowered(itemStack));
-        }
-
-        return false;
+        return true;
     }
 
     @Override
     public boolean hitEntity(ItemStack itemStack, EntityLivingBase entityAttacked, EntityLivingBase entityAttacker) {
-        if(entityAttacker instanceof EntityPlayer && !((EntityPlayer)entityAttacker).capabilities.isCreativeMode) {
-            entityAttacker.setCurrentItemOrArmor(0, drainEnergy(itemStack, tier.energyPerBlock * 2));
+        if(entityAttacker instanceof EntityPlayer)
+            ToolHelper.damageTool(itemStack, (EntityPlayer)entityAttacker, getEnergyPerUse(itemStack) * 2);
 
-            if (this.getEnergyStored(itemStack) == 0 && tier.canBreak) {
-                entityAttacker.renderBrokenItemStack(itemStack);
-                ((EntityPlayer)entityAttacker).destroyCurrentEquippedItem();
-                ((EntityPlayer)entityAttacker).addStat(StatList.objectBreakStats[Item.getIdFromItem(itemStack.getItem())], 1);
-            }
-            return true;
-        }
-
-        return false;
+        return true;
     }
 
     @Override
