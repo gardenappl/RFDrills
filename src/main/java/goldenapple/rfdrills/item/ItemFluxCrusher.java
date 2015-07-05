@@ -145,7 +145,7 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityO
                 for (int b = y - radius; b <= y + radius; b++) {
                     for(int c = z - radius; c <= z + radius; c++) {
                         if (world.blockExists(a, b, c) && effectiveMaterials.contains(world.getBlock(a, b, c).getMaterial())) {
-                            if (!(a == x || b == y || c == z)) { //don't harvest the same block twice silly!
+                            if (!(a == x && b == y && c == z)) { //don't harvest the same block twice silly!
                                 ToolHelper.harvestBlock(world, a, b, c, player);
                             }
                         }

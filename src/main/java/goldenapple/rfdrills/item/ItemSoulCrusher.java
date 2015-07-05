@@ -205,7 +205,7 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
 
         if (sideHit != 0 && world.getBlock(x, y + 1, z).isAir(world, x, y + 1, z) && (block == Blocks.grass || block == Blocks.dirt) && player.canPlayerEdit(x, y, z, sideHit, itemStack)) {
             if (!world.isRemote)
-                world.setBlock(x, y, z, Blocks.farmland);
+                world.setBlock(x, y, z, Blocks.farmland); //vanilla hoe behaviour
             return true;
         }
 
