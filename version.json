@@ -2,15 +2,11 @@
 	"versionList": [
 		{
 			"mcVersion": "Minecraft 1.7.10",
-			"modVersion": "1.6.1",
+			"modVersion": "1.6.2",
 			"changeLog": [
-                "The Flux Hoe can now be crafted using EnderIO materials.",
-                "Mining downwards/upwards with the 1x3x1 mode will break blocks in a horizontal line instead.",
-                "Fixed AoE items not being able to harvest most wrenchable machines.",
-                "Fixed the Dark Soularium Crusher being able to till dirt when out of energy (that was just waay too OP).",
-                "Fixed some Dark Soularium Crusher mode weirdness."
+                "Fixed the Flux-Infused Crusher skipping blocks in a weird cross-like pattern."
 			],
-			"updateURL": "http://minecraft.curseforge.com/mc-mods/229846-rfdrills/files/2244698/download",
+			"updateURL": "http://minecraft.curseforge.com/mc-mods/229846-rfdrills/files/2245657/download",
 			"isDirectLink": "true",
 			"newFileName": ""
 		}
