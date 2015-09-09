@@ -1,8 +1,5 @@
 package mcp.mobius.waila.api;
 
-import static mcp.mobius.waila.api.SpecialChars.RENDER;
-import static mcp.mobius.waila.api.SpecialChars.WailaStyle;
-
 import java.util.regex.Pattern;
 
 public class SpecialChars {
@@ -33,8 +30,8 @@ public class SpecialChars {
 	public static String ITALIC   = MCStyle + "o";
 	public static String RESET    = MCStyle + "r";		
 
-	public static String WailaStyle     = "\u00A4";
-	public static String WailaIcon      = "\u00A5";
+	public static String WailaStyle     = "\u00a4";
+	public static String WailaIcon      = "\u00a5";
 	public static String WailaRenderer  = "\u00A6";
 	public static String TAB         = WailaStyle + WailaStyle +"a";
 	public static String ALIGNRIGHT  = WailaStyle + WailaStyle +"b";

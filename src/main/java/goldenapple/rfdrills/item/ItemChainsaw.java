@@ -40,7 +40,7 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool, IEqualityOverr
         super(tier.material);
         this.name = name;
         this.tier = tier;
-        this.setCreativeTab(RFDrills.OmniDrillsTab);
+        this.setCreativeTab(RFDrills.RFDrillsTab);
     }
 
     @Override
@@ -51,123 +51,98 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool, IEqualityOverr
     }
 
     @Override
-    public EnumRarity getRarity(ItemStack itemStack) {
+    public EnumRarity getRarity(ItemStack stack) {
         return tier.rarity;
     }
 
-
-    public boolean func_150897_b(Block p_150897_1_){ //stolen from ItemShears
-        return p_150897_1_ == Blocks.web || p_150897_1_ == Blocks.redstone_wire || p_150897_1_ == Blocks.tripwire;
+    @Override
+    public boolean canHarvestBlock(Block block, ItemStack stack) {
+        if(getEnergyStored(stack) > 0 && isEmpowered(stack))
+            return block == Blocks.web || block == Blocks.redstone_wire || block == Blocks.tripwire;
+        else
+            return false;
     }
 
     @Override
-    public float getDigSpeed(ItemStack itemStack, Block block, int meta) {
-        itemStack.setItemDamage(0);
-        if(getEnergyStored(itemStack) >= getEnergyPerUse(itemStack, block, meta)){
-            if(block instanceof IShearable && isEmpowered(itemStack)) {
+    public float getDigSpeed(ItemStack stack, Block block, int meta) {
+        if(getEnergyStored(stack) >= getEnergyPerUse(stack, block, meta)){
+            if(block instanceof IShearable && isEmpowered(stack))
                 return 100.0F;
-            }else if(block.getMaterial() == Material.cloth){
-                return super.getDigSpeed(itemStack, block, meta) * 3;
-            }else {
-                return super.getDigSpeed(itemStack, block, meta);
-            }
-        }else{
-            return 0.5F;
-        }
+            else if(block.getMaterial() == Material.cloth)
+                return super.getDigSpeed(stack, block, meta) * 3;
+            else
+                return super.getDigSpeed(stack, block, meta);
+        }else
+            return 1.0F;
     }
 
-    private int getEnergyPerUse(ItemStack itemStack){
-        return Math.round(tier.energyPerBlock / (EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, itemStack) + 1)); //Vanilla formula: a 100% / (unbreaking level + 1) chance to not take damage
+    private int getEnergyPerUse(ItemStack stack){
+        return Math.round(tier.energyPerBlock / (EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, stack) + 1)); //Vanilla formula: a 100% / (unbreaking level + 1) chance to not take damage
     }
 
     @Override
-    public boolean showDurabilityBar(ItemStack itemStack) {
+    public boolean showDurabilityBar(ItemStack stack) {
         return true;
     }
 
     @Override
-    public double getDurabilityForDisplay(ItemStack itemStack) {
-        return Math.max(1.0 - (double)getEnergyStored(itemStack) / (double)tier.maxEnergy, 0);
+    public double getDurabilityForDisplay(ItemStack stack) {
+        return Math.max(1.0 - (double)getEnergyStored(stack) / (double)tier.maxEnergy, 0);
     }
 
     @Override
-    public void setDamage(ItemStack itemStack, int damage) {
-        //do nothing, other methods are responsible for energy consumption
+    public void setDamage(ItemStack stack, int damage) {
+        super.setDamage(stack, 0);
     }
 
     @Override
-    public boolean itemInteractionForEntity(ItemStack itemStack, EntityPlayer player, EntityLivingBase entity) {
-        if(isEmpowered(itemStack)) {
-            if (getEnergyStored(itemStack) > 0 && Items.shears.itemInteractionForEntity(itemStack, player, entity)) {
-                itemStack.setItemDamage(0);
-                ToolHelper.damageTool(itemStack, player, getEnergyPerUse(itemStack));
+    public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase entity) {
+        if(isEmpowered(stack)) {
+            if (getEnergyStored(stack) > 0 && Items.shears.itemInteractionForEntity(stack, player, entity)) {
+                ToolHelper.drainEnergy(stack, player, getEnergyPerUse(stack));
                 return true;
-            } else {
-                return false;
             }
-        }else{
-            return false;
         }
+        return false;
     }
 
     @Override
-    public boolean onBlockStartBreak(ItemStack itemStack, int x, int y, int z, EntityPlayer player) {
-        if(isEmpowered(itemStack) && getEnergyStored(itemStack) > 0) {
-            if (Items.shears.onBlockStartBreak(itemStack, x, y, z, player)) {
-                itemStack.setItemDamage(0);
-                return true;
-            } else {
-                return false;
-            }
-        }else{
-            return false;
+    public boolean onBlockStartBreak(ItemStack stack, int x, int y, int z, EntityPlayer player) {
+        World world = player.worldObj;
+
+        if(isEmpowered(stack) && getEnergyStored(stack) > 0) {
+            ToolHelper.drainEnergy(stack, player, getEnergyPerUse(stack, world.getBlock(x, y, z), world.getBlockMetadata(x, y, z)));
+            Items.shears.onBlockStartBreak(stack, x, y, z, player);
         }
+        return false;
     }
 
     @Override
-    public boolean onBlockDestroyed(ItemStack itemStack, World world, Block block, int x, int y, int z, EntityLivingBase entity) {
-        if(entity instanceof EntityPlayer)
-            ToolHelper.damageTool(itemStack, (EntityPlayer)entity, getEnergyPerUse(itemStack, block, world.getBlockMetadata(x, y, z)));
-
-        return true;
-    }
-
-    @Override
-    public boolean hitEntity(ItemStack itemStack, EntityLivingBase entityAttacked, EntityLivingBase entityAttacker) {
+    public boolean hitEntity(ItemStack stack, EntityLivingBase entityAttacked, EntityLivingBase entityAttacker) {
         if(entityAttacker instanceof EntityPlayer)
-            ToolHelper.damageTool(itemStack, (EntityPlayer)entityAttacker, getEnergyPerUse(itemStack) * 2);
+            ToolHelper.drainEnergy(stack, (EntityPlayer) entityAttacker, getEnergyPerUse(stack) * 2);
 
         return true;
     }
 
     @Override
     @SuppressWarnings({"unchecked"})
-    public void addInformation(ItemStack itemStack, EntityPlayer player, List list, boolean what) {
-        try {
-            list.add(StringHelper.writeEnergyInfo(getEnergyStored(itemStack), tier.maxEnergy));
+    public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean what) {
+        list.add(StringHelper.writeEnergyInfo(getEnergyStored(stack), tier.maxEnergy));
 
-            if (MiscUtil.isShiftPressed()) {
-                list.add(StringHelper.writeEnergyPerBlockInfo(getEnergyPerUse(itemStack)));
-                if(tier.hasModes) {
-                    list.add(writeModeInfo(itemStack));
-                }
-                list.add(StatCollector.translateToLocal("rfdrills.chainsaw.tooltip"));
-                if (tier.canBreak) {
-                    list.add(StatCollector.translateToLocal("rfdrills.can_break.tooltip"));
-                }
-                if (toolMaterial.getEnchantability() > 0) {
-                    list.add(StatCollector.translateToLocal("rfdrills.enchantable.tooltip"));
-                }
-                if (tier.hasModes) {
-                    list.add(StringHelper.writeModeSwitchInfo("rfdrills.chainsaw_has_modes.tooltip", KeyBindingEmpower.instance));
-                }
-            } else {
-              //list.add(StatCollector.translateToLocal("info.cofh.hold") + " §e§o" + StatCollector.translateToLocal("info.cofh.shift") + " §r§7" + StatCollector.translateToLocal("info.cofh.forDetails"));
-                list.add(cofh.lib.util.helpers.StringHelper.shiftForDetails());
-            }
-        }catch (Exception e){
-            e.printStackTrace();
-        }
+        if (MiscUtil.isShiftPressed()) {
+            list.add(StringHelper.writeEnergyPerBlockInfo(getEnergyPerUse(stack)));
+            if(tier.hasModes)
+                list.add(writeModeInfo(stack));
+            list.add(StatCollector.translateToLocal("rfdrills.chainsaw.tooltip"));
+            if (tier.canBreak)
+                list.add(StatCollector.translateToLocal("rfdrills.can_break.tooltip"));
+            if (toolMaterial.getEnchantability() > 0)
+                list.add(StatCollector.translateToLocal("rfdrills.enchantable.tooltip"));
+            if (tier.hasModes)
+                list.add(StringHelper.writeModeSwitchInfo("rfdrills.chainsaw_has_modes.tooltip", KeyBindingEmpower.instance));
+        } else
+            list.add(cofh.lib.util.helpers.StringHelper.shiftForDetails());
     }
 
     @Override
@@ -181,14 +156,14 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool, IEqualityOverr
     }
 
     @Override
-    public String getUnlocalizedName(ItemStack itemStack) {
+    public String getUnlocalizedName(ItemStack stack) {
         return "item." + Reference.MOD_ID.toLowerCase() + ":" + name;
     }
 
-    public String writeModeInfo(ItemStack itemStack){
+    public String writeModeInfo(ItemStack stack){
         if(!tier.hasModes) return "";
 
-        if(isEmpowered(itemStack))
+        if(isEmpowered(stack))
             return StatCollector.translateToLocal("rfdrills.shears_on.mode");
         else
             return StatCollector.translateToLocal("rfdrills.shears_off.mode");
@@ -197,105 +172,102 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool, IEqualityOverr
     /* IEnergyTool */
 
     @Override
-    public DrillTier getTier(ItemStack itemStack) {
+    public DrillTier getTier(ItemStack stack) {
         return tier;
     }
 
     @Override
-    public ItemStack setEnergy(ItemStack itemStack, int energy){
-        if(itemStack.stackTagCompound == null){
-            itemStack.stackTagCompound = new NBTTagCompound();
+    public ItemStack setEnergy(ItemStack stack, int energy){
+        if(stack.stackTagCompound == null){
+            stack.stackTagCompound = new NBTTagCompound();
         }
 
-        itemStack.stackTagCompound.setInteger("Energy", Math.min(energy, getMaxEnergyStored(itemStack)));
-        return itemStack;
+        stack.stackTagCompound.setInteger("Energy", Math.min(energy, getMaxEnergyStored(stack)));
+        return stack;
     }
 
     @Override
-    public ItemStack drainEnergy(ItemStack itemStack, int energy){
-        return setEnergy(itemStack, Math.max(getEnergyStored(itemStack) - energy, 0));
+    public ItemStack drainEnergy(ItemStack stack, int energy){
+        return setEnergy(stack, Math.max(getEnergyStored(stack) - energy, 0));
     }
 
     @Override
-    public int getEnergyPerUse(ItemStack itemStack, Block block, int meta) {
-        if(isEmpowered(itemStack)) {
-            return block instanceof IShearable ? getEnergyPerUse(itemStack) / 5 : getEnergyPerUse(itemStack);
+    public int getEnergyPerUse(ItemStack stack, Block block, int meta) {
+        if(isEmpowered(stack)) {
+            return block instanceof IShearable ? getEnergyPerUse(stack) / 5 : getEnergyPerUse(stack);
         }else {
-            return getEnergyPerUse(itemStack);
+            return getEnergyPerUse(stack);
         }
     }
 
     /* IEnergyContainerItem */
 
     @Override
-    public int receiveEnergy(ItemStack itemStack, int maxReceive, boolean simulate) { //stolen from ItemEnergyContainer
-        int energy = getEnergyStored(itemStack);
+    public int receiveEnergy(ItemStack stack, int maxReceive, boolean simulate) { //stolen from ItemEnergyContainer
+        int energy = getEnergyStored(stack);
         int energyReceived = Math.min(tier.maxEnergy - energy, Math.min(tier.rechargeRate, maxReceive));
 
         if (!simulate) {
-            setEnergy(itemStack, energy + energyReceived);
+            setEnergy(stack, energy + energyReceived);
         }
         return energyReceived;
     }
 
     @Override
-    public int extractEnergy(ItemStack itemStack, int maxExtract, boolean simulate) {
+    public int extractEnergy(ItemStack stack, int maxExtract, boolean simulate) {
         return 0;
     }
 
     @Override
-    public int getEnergyStored(ItemStack itemStack) {
-        if(itemStack.stackTagCompound == null){
-            itemStack.stackTagCompound = new NBTTagCompound();
+    public int getEnergyStored(ItemStack stack) {
+        if(stack.stackTagCompound == null){
+            stack.stackTagCompound = new NBTTagCompound();
         }
 
-        if(itemStack.stackTagCompound.hasKey("Energy")) {
-            return itemStack.stackTagCompound.getInteger("Energy");
+        if(stack.stackTagCompound.hasKey("Energy")) {
+            return stack.stackTagCompound.getInteger("Energy");
         }else{
-            itemStack.stackTagCompound.setInteger("Energy", 0);
+            stack.stackTagCompound.setInteger("Energy", 0);
             return 0;
         }
     }
 
     @Override
-    public int getMaxEnergyStored(ItemStack itemStack) {
+    public int getMaxEnergyStored(ItemStack stack) {
         return tier.maxEnergy;
     }
 
     /* IEmpowerableItem */
 
     @Override
-    public boolean isEmpowered(ItemStack itemStack) {
-        if(!tier.hasModes){
+    public boolean isEmpowered(ItemStack stack) { //is shears mode activated?
+        if(!tier.hasModes)
             return ConfigHandler.shearsDefault;
-        }
 
-        if(itemStack.stackTagCompound == null){
+        if(stack.stackTagCompound == null)
             return ConfigHandler.shearsDefault;
-        }
 
-        if(itemStack.stackTagCompound.hasKey("Mode")) {
-            return itemStack.stackTagCompound.getByte("Mode") == 1;
-        }else{
+        if(stack.stackTagCompound.hasKey("Mode"))
+            return stack.stackTagCompound.getByte("Mode") == 1;
+        else
             return ConfigHandler.shearsDefault;
-        }
     }
 
     @Override
-    public boolean setEmpoweredState(ItemStack itemStack, boolean b) {
+    public boolean setEmpoweredState(ItemStack stack, boolean b) {
         if(!tier.hasModes) return false;
 
-        if(itemStack.stackTagCompound == null){
-           itemStack.stackTagCompound = new NBTTagCompound();
+        if(stack.stackTagCompound == null){
+           stack.stackTagCompound = new NBTTagCompound();
         }
 
-        itemStack.stackTagCompound.setByte("Mode", b ? (byte) 1 : 0);
+        stack.stackTagCompound.setByte("Mode", b ? (byte) 1 : 0);
         return true;
     }
 
     @Override
-    public void onStateChange(EntityPlayer player, ItemStack itemStack) {
-        player.addChatComponentMessage(new ChatComponentText(writeModeInfo(itemStack)));
+    public void onStateChange(EntityPlayer player, ItemStack stack) {
+        player.addChatComponentMessage(new ChatComponentText(writeModeInfo(stack)));
     }
 
     /* IEqualityOverrideItem */

@@ -21,7 +21,7 @@ public class WailaHandler implements IWailaDataProvider {
     //Singleton
     private static WailaHandler instance;
 
-    private WailaHandler(){};
+    private WailaHandler(){}
 
     public static WailaHandler getInstance(){
         if(instance == null){
@@ -36,17 +36,17 @@ public class WailaHandler implements IWailaDataProvider {
     }
 
     @Override
-    public List<String> getWailaHead(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+    public List<String> getWailaHead(ItemStack itemStack, List<String> tooltip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
         return null;
     }
 
     @Override
-    public List<String> getWailaBody(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+    public List<String> getWailaBody(ItemStack itemStack, List<String> tooltip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
         Block block = accessor.getBlock();
         int meta = accessor.getMetadata();
 
         if(accessor.getPlayer().getCurrentEquippedItem() == null || !(accessor.getPlayer().getCurrentEquippedItem().getItem() instanceof IEnergyTool))
-            return currenttip;
+            return tooltip;
 
         ItemStack equipStack = accessor.getPlayer().getCurrentEquippedItem();
         IEnergyTool energyTool = (IEnergyTool) equipStack.getItem();
@@ -59,40 +59,39 @@ public class WailaHandler implements IWailaDataProvider {
 
         if(equipStack.getItem() instanceof IEnergyTool){
             if(config.getConfig("rfdrills.waila_rf"))
-                currenttip.add(StringHelper.writeEnergyPerBlockInfo(energyTool.getEnergyPerUse(equipStack, block, meta)));
+                tooltip.add(StringHelper.writeEnergyPerBlockInfo(energyTool.getEnergyPerUse(equipStack, block, meta)));
 
             if(config.getConfig("rfdrills.waila_mode") && (accessor.getPlayer().isSneaking() || !(config.getConfig("rfdrills.waila_mode.sneakingonly")))) {
                 if (energyTool.getTier(equipStack).hasModes) {
                     if (equipStack.getItem() instanceof ItemDrill)
-                        currenttip.add(((ItemDrill) equipStack.getItem()).writeModeInfo(equipStack));
+                        tooltip.add(((ItemDrill) equipStack.getItem()).writeModeInfo(equipStack));
 
                     if (equipStack.getItem() instanceof ItemChainsaw)
-                        currenttip.add(((ItemChainsaw) equipStack.getItem()).writeModeInfo(equipStack));
+                        tooltip.add(((ItemChainsaw) equipStack.getItem()).writeModeInfo(equipStack));
 
                     if (equipStack.getItem() instanceof ItemFluxCrusher)
-                        currenttip.add(((ItemFluxCrusher) equipStack.getItem()).writeModeInfo(equipStack));
+                        tooltip.add(((ItemFluxCrusher) equipStack.getItem()).writeModeInfo(equipStack));
 
                     if (equipStack.getItem() instanceof ItemSoulCrusher)
-                        currenttip.add(((ItemSoulCrusher) equipStack.getItem()).writeModeInfo(equipStack));
+                        tooltip.add(((ItemSoulCrusher) equipStack.getItem()).writeModeInfo(equipStack));
                 }
             }
         }
 
-        return currenttip;
+        return tooltip;
     }
 
     @Override
-    public List<String> getWailaTail(ItemStack itemStack, List<String> currenttip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
-        return null;
+    public List<String> getWailaTail(ItemStack itemStack, List<String> tooltip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+        return tooltip;
     }
 
     @Override
     public NBTTagCompound getNBTData(EntityPlayerMP player, TileEntity te, NBTTagCompound tag, World world, int x, int y, int z) {
-        return null;
+        return tag;
     }
 
     public static void init(IWailaRegistrar registrar){
-
         registrar.addConfig(Reference.MOD_NAME, "rfdrills.waila_rf", "option.rfdrills.waila_rf");
         registrar.addConfig(Reference.MOD_NAME, "rfdrills.waila_mode", "option.rfdrills.waila_mode");
         registrar.addConfig(Reference.MOD_NAME, "rfdrills.waila_mode.sneakingonly", "option.rfdrills.waila_mode.sneakingonly");

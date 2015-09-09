@@ -9,11 +9,11 @@ import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import goldenapple.rfdrills.compat.versionchecker.VersionCheckerCompat;
+import goldenapple.rfdrills.compat.waila.WailaHandler;
 import goldenapple.rfdrills.config.ConfigHandler;
 import goldenapple.rfdrills.init.ModItems;
 import goldenapple.rfdrills.init.ModRecipes;
 import goldenapple.rfdrills.item.soulupgrade.SoulUpgradeRecipeHandler;
-import goldenapple.rfdrills.reference.LibReflection;
 import goldenapple.rfdrills.reference.Reference;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
@@ -26,7 +26,7 @@ public class RFDrills {
     @Mod.Instance
     public static RFDrills instance;
     public static ConfigHandler configHandler;
-    public static CreativeTabs OmniDrillsTab;
+    public static CreativeTabs RFDrillsTab;
 
     public static boolean isTELoaded;
     public static boolean isEIOLoaded;
@@ -45,8 +45,8 @@ public class RFDrills {
         configHandler = new ConfigHandler(event.getSuggestedConfigurationFile());
         FMLCommonHandler.instance().bus().register(configHandler);
 
-        if(ConfigHandler.integrateTE || ConfigHandler.integrateEIO) {
-            OmniDrillsTab = new CreativeTabs(Reference.MOD_ID) {
+        if((ConfigHandler.integrateTE && isTELoaded) || (ConfigHandler.integrateEIO && isEIOLoaded)) {
+            RFDrillsTab = new CreativeTabs(Reference.MOD_ID) {
                 @Override
                 public ItemStack getIconItemStack() {
                     ItemStack itemStack = new ItemStack(getTabIconItem());
@@ -70,7 +70,7 @@ public class RFDrills {
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
-        FMLInterModComms.sendMessage("Waila", "register", LibReflection.WAILA_INIT_METHOD);
+        FMLInterModComms.sendMessage("Waila", "register", WailaHandler.class.getName() + ".init");
         VersionCheckerCompat.init();
         ModRecipes.init();
 

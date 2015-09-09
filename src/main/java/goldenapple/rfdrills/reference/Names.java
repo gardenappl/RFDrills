@@ -39,10 +39,10 @@ public class Names {
                                                "rich_soularium_nugget",
                                                "destructive_crystal",
                                                "earthshaking_crystal"};
-    public static final String SJ_REPLACEMENT = "sj_replacement";
+    public static final String REPLACEMENT_SJ = "sj_replacement";
     public static final String[] SJ_REPLACEMENTS = {"dark_soularium"};
 
-    public static final String RA_REPLACEMENT = "ra_replacement";
+    public static final String REPLACEMENT_RA = "ra_replacement";
     public static final String[] RA_REPLACEMENTS = {"obsidian_rod",
                                                     "flux_obsidian_rod"};
 

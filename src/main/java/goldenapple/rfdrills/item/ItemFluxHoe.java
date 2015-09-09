@@ -41,7 +41,7 @@ public class ItemFluxHoe extends ItemTool implements IEnergyTool {
 
     public ItemFluxHoe() {
         super(2.0F, tier.material, Sets.newHashSet());
-        this.setCreativeTab(RFDrills.OmniDrillsTab);
+        this.setCreativeTab(RFDrills.RFDrillsTab);
     }
 
     @Override
@@ -141,7 +141,7 @@ public class ItemFluxHoe extends ItemTool implements IEnergyTool {
             }
         }
 
-        ToolHelper.damageTool(itemStack, player, getEnergyPerUse(itemStack, block, world.getBlockMetadata(x, y, z)));
+        ToolHelper.drainEnergy(itemStack, player, getEnergyPerUse(itemStack, block, world.getBlockMetadata(x, y, z)));
         return true;
     }
 
@@ -178,7 +178,7 @@ public class ItemFluxHoe extends ItemTool implements IEnergyTool {
             }
         }
 
-        ToolHelper.damageTool(itemStack, player, getEnergyPerUse(itemStack));
+        ToolHelper.drainEnergy(itemStack, player, getEnergyPerUse(itemStack));
         world.playSoundEffect((double) ((float) x + 0.5F), (double) ((float) y + 0.5F), (double) ((float) z + 0.5F), Blocks.farmland.stepSound.getStepResourcePath(), (Blocks.farmland.stepSound.getVolume() + 1.0F) / 2.0F, Blocks.farmland.stepSound.getPitch() * 0.8F);
 
         return true;
@@ -187,7 +187,7 @@ public class ItemFluxHoe extends ItemTool implements IEnergyTool {
     @Override
     public boolean hitEntity(ItemStack itemStack, EntityLivingBase entityAttacked, EntityLivingBase entityAttacker) {
         if(entityAttacker instanceof EntityPlayer)
-            ToolHelper.damageTool(itemStack, (EntityPlayer)entityAttacker, getEnergyPerUse(itemStack) * 2);
+            ToolHelper.drainEnergy(itemStack, (EntityPlayer) entityAttacker, getEnergyPerUse(itemStack) * 2);
 
         return true;
     }

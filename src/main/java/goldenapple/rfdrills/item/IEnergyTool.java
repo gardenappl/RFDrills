@@ -5,7 +5,7 @@ import goldenapple.rfdrills.DrillTier;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 
-public interface IEnergyTool extends IEnergyContainerItem{//used for the ShapedUpgradeRecipe and Waila stuff
+public interface IEnergyTool extends IEnergyContainerItem{
     public DrillTier getTier(ItemStack itemStack);
 
     public ItemStack setEnergy(ItemStack itemStack, int energy);

@@ -6,7 +6,6 @@ import goldenapple.rfdrills.item.soulupgrade.SoulUpgradeHelper;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
-import org.lwjgl.input.Keyboard;
 
 public class StringHelper {
 
@@ -44,8 +43,7 @@ public class StringHelper {
     }
 
     private static String writeModeSwitchInfo(String unlocalizedName, int key){
-        String keyName = key < 0 ? StatCollector.translateToLocalFormatted("key.mouseButton", key + 101) : Keyboard.getKeyName(key); //Stolen from CoFHLib https://github.com/CoFH/CoFHLib/blob/master/src/main/java/cofh/lib/util/helpers/StringHelper.java
-        return StatCollector.translateToLocalFormatted(unlocalizedName, keyName);
+        return StatCollector.translateToLocalFormatted(unlocalizedName, cofh.lib.util.helpers.StringHelper.getKeyName(key));
     }
 
     public static String writeModeSwitchInfo(String unlocalizedName, KeyBinding keyBinding) { //vanilla bindings

@@ -1,4 +1,4 @@
-package goldenapple.rfdrills.compat.enderio;
+package goldenapple.rfdrills.util.modhelpers;
 
 import cpw.mods.fml.common.event.FMLInterModComms;
 import goldenapple.rfdrills.reference.Reference;

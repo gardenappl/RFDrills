@@ -25,7 +25,7 @@ public class ItemMultiMetadata extends Item {
         this.names = names;
         this.icons = new IIcon[names.length];
         this.defaultName = defaultName;
-        this.setCreativeTab(RFDrills.OmniDrillsTab);
+        this.setCreativeTab(RFDrills.RFDrillsTab);
         this.setHasSubtypes(true);
     }
 

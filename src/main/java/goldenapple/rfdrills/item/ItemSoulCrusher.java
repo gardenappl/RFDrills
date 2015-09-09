@@ -55,7 +55,7 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
         this.setHarvestLevel("shovel", tier.material.getHarvestLevel());
         this.setHarvestLevel("axe", tier.material.getHarvestLevel());
         this.setHarvestLevel("sickle", tier.material.getHarvestLevel());
-        this.setCreativeTab(RFDrills.OmniDrillsTab);
+        this.setCreativeTab(RFDrills.RFDrillsTab);
     }
 
     @Override
@@ -173,7 +173,7 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
             }
         }
 
-        ToolHelper.damageTool(itemStack, player, getEnergyPerUse(itemStack, block, world.getBlockMetadata(x, y, z)));
+        ToolHelper.drainEnergy(itemStack, player, getEnergyPerUse(itemStack, block, world.getBlockMetadata(x, y, z)));
         return true;
     }
 
@@ -233,7 +233,7 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
             }
         }
 
-        ToolHelper.damageTool(itemStack, player, getEnergyPerUseWithMode(itemStack));
+        ToolHelper.drainEnergy(itemStack, player, getEnergyPerUseWithMode(itemStack));
         world.playSoundEffect((double) ((float) x + 0.5F), (double) ((float) y + 0.5F), (double) ((float) z + 0.5F), Blocks.farmland.stepSound.getStepResourcePath(), (Blocks.farmland.stepSound.getVolume() + 1.0F) / 2.0F, Blocks.farmland.stepSound.getPitch() * 0.8F);
 
         return true;

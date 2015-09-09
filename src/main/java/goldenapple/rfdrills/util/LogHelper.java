@@ -6,49 +6,49 @@ import org.apache.logging.log4j.Level;
 
 public class LogHelper
 {
-    public static void log(Level logLevel, Object object)
+    public static void log(Level logLevel, Object object, Object... formatData)
     {
-        FMLLog.log(Reference.MOD_NAME, logLevel, String.valueOf(object));
+        FMLLog.log(Reference.MOD_NAME, logLevel, String.valueOf(object), formatData);
     }
 
-    public static void off(Object object)
+    public static void off(Object object, Object... formatData)
     {
-        log(Level.OFF, object);
+        log(Level.OFF, object, formatData);
     }
 
-    public static void fatal(Object object)
+    public static void fatal(Object object, Object... formatData)
     {
-        log(Level.FATAL, object);
+        log(Level.FATAL, object, formatData);
     }
 
-    public static void error(Object object)
+    public static void error(Object object, Object... formatData)
     {
-        log(Level.ERROR, object);
+        log(Level.ERROR, object, formatData);
     }
 
-    public static void warn(Object object)
+    public static void warn(Object object, Object... formatData)
     {
-        log(Level.WARN, object);
+        log(Level.WARN, object, formatData);
     }
 
-    public static void info(Object object)
+    public static void info(Object object, Object... formatData)
     {
-        log(Level.INFO, object);
+        log(Level.INFO, object, formatData);
     }
 
-    public static void debug(Object object)
+    public static void debug(Object object, Object... formatData)
     {
-        log(Level.DEBUG, object);
+        log(Level.DEBUG, object, formatData);
     }
 
-    public static void trace(Object object)
+    public static void trace(Object object, Object... formatData)
     {
-        log(Level.TRACE, object);
+        log(Level.TRACE, object, formatData);
     }
 
-    public static void all(Object object)
+    public static void all(Object object, Object... formatData)
     {
-        log(Level.ALL, object);
+        log(Level.ALL, object, formatData);
     }
 
 

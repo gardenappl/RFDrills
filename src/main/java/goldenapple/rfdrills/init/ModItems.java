@@ -1,6 +1,5 @@
 package goldenapple.rfdrills.init;
 
-import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.registry.GameRegistry;
 import goldenapple.rfdrills.DrillTier;
 import goldenapple.rfdrills.RFDrills;
@@ -17,7 +16,7 @@ import net.minecraftforge.oredict.OreDictionary;
 public class ModItems {
     //Thermal Expansion
     public static ItemMultiMetadata componentTE = new ItemMultiMetadata(Names.COMPONENTS_TE, Names.COMPONENT_TE);
-    public static ItemMultiMetadata RAreplacement = new ItemMultiMetadata(Names.RA_REPLACEMENTS, Names.RA_REPLACEMENT);
+    public static ItemMultiMetadata replacementRA = new ItemMultiMetadata(Names.RA_REPLACEMENTS, Names.REPLACEMENT_RA);
 
     public static Item leadstoneDrill = new ItemDrill(Names.LEADSTONE_DRILL, DrillTier.DRILL1);
     public static Item hardenedDrill = new ItemDrill(Names.HARDENED_DRILL, DrillTier.DRILL2);
@@ -34,7 +33,7 @@ public class ModItems {
 
     //EnderIO
     public static ItemMultiMetadata componentEIO = new ItemMultiMetadata(Names.COMPONENTS_EIO, Names.COMPONENT_EIO);
-    public static ItemMultiMetadata SJreplacement = new ItemMultiMetadata(Names.SJ_REPLACEMENTS, Names.SJ_REPLACEMENT);
+    public static ItemMultiMetadata replacementSJ = new ItemMultiMetadata(Names.SJ_REPLACEMENTS, Names.REPLACEMENT_SJ);
 
     public static Item basicDrill = new ItemDrill(Names.BASIC_DRILL, DrillTier.DRILL1);
     public static Item advancedDrill = new ItemDrill(Names.ADVANCED_DRILL, DrillTier.DRILL3);
@@ -44,22 +43,22 @@ public class ModItems {
     public static Item basicChainsaw = new ItemChainsaw(Names.BASIC_CHAINSAW, DrillTier.CHAINSAW1);
     public static Item advancedChainsaw = new ItemChainsaw(Names.ADVANCED_CHAINSAW, DrillTier.CHAINSAW3);
 
-
     public static void init(){
-        GameRegistry.registerItem(fluxHoe, Names.FLUX_HOE);
-        if(Loader.isModLoaded("ThermalExpansion") && ConfigHandler.integrateTE) initTE();
-        if(Loader.isModLoaded("EnderIO") && ConfigHandler.integrateEIO) initEIO();
+        if(RFDrills.isTELoaded && ConfigHandler.integrateTE) initTE();
+        if(RFDrills.isEIOLoaded && ConfigHandler.integrateEIO) initEIO();
+        if((RFDrills.isTELoaded && ConfigHandler.integrateTE) || (RFDrills.isEIOLoaded && ConfigHandler.integrateEIO))
+            GameRegistry.registerItem(fluxHoe, Names.FLUX_HOE);
     }
 
     private static void initTE(){
         componentTE.setRarities(new EnumRarity[]{EnumRarity.common, EnumRarity.common, EnumRarity.uncommon, EnumRarity.common, EnumRarity.rare, EnumRarity.common, EnumRarity.rare, EnumRarity.rare, EnumRarity.uncommon});
 
-        RAreplacement.setRarities(new EnumRarity[]{EnumRarity.uncommon, EnumRarity.uncommon});
+        replacementRA.setRarities(new EnumRarity[]{EnumRarity.uncommon, EnumRarity.uncommon});
 
         GameRegistry.registerItem(componentTE, Names.COMPONENT_TE);
 
         if((!RFDrills.isRArsLoaded && RFDrills.isSJLoaded) && ConfigHandler.integrateRArs)
-            GameRegistry.registerItem(RAreplacement, Names.RA_REPLACEMENT);
+            GameRegistry.registerItem(replacementRA, Names.REPLACEMENT_RA);
 
         GameRegistry.registerItem(leadstoneDrill, Names.LEADSTONE_DRILL);
         GameRegistry.registerItem(hardenedDrill, Names.HARDENED_DRILL);
@@ -80,8 +79,8 @@ public class ModItems {
         componentEIO.setRarities(new EnumRarity[]{EnumRarity.common, EnumRarity.uncommon, EnumRarity.uncommon, EnumRarity.common, EnumRarity.uncommon, EnumRarity.uncommon, EnumRarity.rare});
         componentEIO.setTooltips(new String[][]{null, null, null, null, null, new String[]{"rfdrills.soul_upgrade.tooltip"}, new String[]{"rfdrills.soul_upgrade.tooltip"}});
 
-        SJreplacement.setEffects(new boolean[]{true});
-        SJreplacement.setRarities(new EnumRarity[]{EnumRarity.uncommon});
+        replacementSJ.setEffects(new boolean[]{true});
+        replacementSJ.setRarities(new EnumRarity[]{EnumRarity.uncommon});
 
         GameRegistry.registerItem(componentEIO, Names.COMPONENT_EIO);
         OreDictionary.registerOre("nuggetSoularium", new ItemStack(componentEIO, 1, LibMetadata.SOULARIUM_NUGGET));
@@ -93,8 +92,8 @@ public class ModItems {
         } else {
             LogHelper.info("Simply Jetpacks not found! Using replacement items...");
 
-            GameRegistry.registerItem(SJreplacement, Names.SJ_REPLACEMENT);
-            OreDictionary.registerOre("ingotDarkSoularium", new ItemStack(SJreplacement, 1, LibMetadata.DARK_SOULARIUM));
+            GameRegistry.registerItem(replacementSJ, Names.REPLACEMENT_SJ);
+            OreDictionary.registerOre("ingotDarkSoularium", new ItemStack(replacementSJ, 1, LibMetadata.DARK_SOULARIUM));
         }
 
         GameRegistry.registerItem(basicDrill, Names.BASIC_DRILL);

@@ -12,14 +12,12 @@ import net.minecraftforge.common.util.EnumHelper;
 import java.io.File;
 
 public class ConfigHandler {
-    public static Configuration config; //public because of OmniDrillsGuiConfig
+    public static Configuration config;
 
     public static boolean integrateTE;
     public static boolean integrateEIO;
     public static boolean integrateRArs;
     public static boolean shearsDefault;
-  /*public static String energyUnitName;
-    public static EnumEnergyUnit energyUnit = EnumEnergyUnit.RF; */
 
     public ConfigHandler(File file){
         if(config == null) {
@@ -29,20 +27,6 @@ public class ConfigHandler {
     }
 
     private void loadConfig(){
-      /*energyUnitName = config.getString("energyUnit", Configuration.CATEGORY_GENERAL, "RF", "Energy unit to display in tooltips. Valid units: EU, RF, gJ (GalactiCraft Joules), J (Mekanism Joules)", new String[]{"RF", "EU", "gJ", "J"});
-
-        if(energyUnitName.equals("EU")){
-            energyUnit = EnumEnergyUnit.EU;
-        }else if(energyUnitName.equals("J")){
-            energyUnit = EnumEnergyUnit.J;
-        }else if(energyUnitName.equals("gJ")){
-            energyUnit = EnumEnergyUnit.gJ;
-        }else if(energyUnitName.equals("RF")){
-            energyUnit = EnumEnergyUnit.RF;
-        }else{
-            LogHelper.info("Invalid EnergyUnit value. Using default (RF)");
-        } */
-
         integrateTE = config.getBoolean("Integrate TE", Configuration.CATEGORY_GENERAL, true, "Set this to false to disable Thermal Expansion integration", "config.integrateTE");
         integrateEIO = config.getBoolean("Integrate EIO", Configuration.CATEGORY_GENERAL, true, "Set this to false to disable EnderIO integration", "config.integrateEIO");
         integrateRArs = config.getBoolean("Integrate Redstone Arsenal", Configuration.CATEGORY_GENERAL, true, "Set this to false to disable using Redstone Arsenal integration", "config.integrateRArs");

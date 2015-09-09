@@ -46,7 +46,7 @@ public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrid
         super(1.0F, tier.material, vanillaBlocks);
         this.name = name;
         this.tier = tier;
-        this.setCreativeTab(RFDrills.OmniDrillsTab);
+        this.setCreativeTab(RFDrills.RFDrillsTab);
         this.setHarvestLevel("pickaxe", tier.material.getHarvestLevel());
         this.setHarvestLevel("shovel", tier.material.getHarvestLevel());
     }
@@ -157,14 +157,14 @@ public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrid
             }
         }
 
-        ToolHelper.damageTool(itemStack, player, getEnergyPerUse(itemStack, block, world.getBlockMetadata(x, y, z)));
+        ToolHelper.drainEnergy(itemStack, player, getEnergyPerUse(itemStack, block, world.getBlockMetadata(x, y, z)));
         return true;
     }
 
     @Override
     public boolean hitEntity(ItemStack itemStack, EntityLivingBase entityAttacked, EntityLivingBase entityAttacker) {
         if(entityAttacker instanceof EntityPlayer)
-            ToolHelper.damageTool(itemStack, (EntityPlayer)entityAttacker, getEnergyPerUse(itemStack) * 2);
+            ToolHelper.drainEnergy(itemStack, (EntityPlayer) entityAttacker, getEnergyPerUse(itemStack) * 2);
 
         return true;
     }
