@@ -14,8 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RFDrillsGuiConfig extends GuiConfig{
-
-@SuppressWarnings({"unchecked"})
     public RFDrillsGuiConfig(GuiScreen parentScreen){
         super(parentScreen, getConfigElements(), Reference.MOD_ID, false, false, Reference.MOD_NAME);
     }
@@ -31,14 +29,14 @@ public class RFDrillsGuiConfig extends GuiConfig{
         list.add(getCategoryElement("drill_tier3", StatCollector.translateToLocal("config.drill_tier3"), "config.drill_tier3"));
         list.add(getCategoryElement("drill_tier4", StatCollector.translateToLocal("config.drill_tier4"), "config.drill_tier4"));
 
-        list.add(getCategoryElement("drill_tier5", StatCollector.translateToLocal("config.flux_crusher"), "config.flux_crusher"));
-        list.add(getCategoryElement("soulcrusher", StatCollector.translateToLocal("config.soul_crusher"), "config.soul_crusher"));
-        list.add(getCategoryElement("hoe_tier1", StatCollector.translateToLocal("config.hoe"), "config.hoe"));
-
         list.add(getCategoryElement("chainsaw_tier1", StatCollector.translateToLocal("config.chainsaw_tier1"), "config.chainsaw_tier1"));
         list.add(getCategoryElement("chainsaw_tier2", StatCollector.translateToLocal("config.chainsaw_tier2"), "config.chainsaw_tier2"));
         list.add(getCategoryElement("chainsaw_tier3", StatCollector.translateToLocal("config.chainsaw_tier3"), "config.chainsaw_tier3"));
         list.add(getCategoryElement("chainsaw_tier4", StatCollector.translateToLocal("config.chainsaw_tier4"), "config.chainsaw_tier4"));
+
+        list.add(getCategoryElement("fluxcrusher", StatCollector.translateToLocal("config.flux_crusher"), "config.flux_crusher"));
+        list.add(getCategoryElement("soulcrusher", StatCollector.translateToLocal("config.soul_crusher"), "config.soul_crusher"));
+        list.add(getCategoryElement("hoe", StatCollector.translateToLocal("config.hoe"), "config.hoe"));
         return list;
     }
 

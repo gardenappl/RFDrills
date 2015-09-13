@@ -7,8 +7,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class SoulUpgradeHelper {
-    public static ItemStack applyUpgrade(ItemStack itemStack, AbstractSoulUpgrade upgrade, byte level){
-        ItemStack upgradedStack = itemStack.copy();
+    public static ItemStack applyUpgrade(ItemStack stack, AbstractSoulUpgrade upgrade, byte level){
+        ItemStack upgradedStack = stack.copy();
 
         if(upgradedStack.stackTagCompound == null){
             upgradedStack.stackTagCompound = new NBTTagCompound();
@@ -21,18 +21,18 @@ public class SoulUpgradeHelper {
         return upgradedStack;
     }
 
-    public static byte getUpgradeLevel(ItemStack itemStack, AbstractSoulUpgrade upgrade){
-        if(itemStack.stackTagCompound == null) return 0;
+    public static byte getUpgradeLevel(ItemStack stack, AbstractSoulUpgrade upgrade){
+        if(stack.stackTagCompound == null) return 0;
 
-        NBTTagCompound upgrades = itemStack.stackTagCompound.getCompoundTag("Upgrades");
+        NBTTagCompound upgrades = stack.stackTagCompound.getCompoundTag("Upgrades");
         return upgrades.getByte(upgrade.getUnlocalizedName());
     }
 
-    public static Map<AbstractSoulUpgrade, Byte> getUpgrades(ItemStack itemStack){
+    public static Map<AbstractSoulUpgrade, Byte> getUpgrades(ItemStack stack){
         HashMap<AbstractSoulUpgrade, Byte> map = new HashMap<AbstractSoulUpgrade, Byte>();
 
         for(AbstractSoulUpgrade upgrade : SoulUpgrades.registry){
-            byte level = getUpgradeLevel(itemStack, upgrade);
+            byte level = getUpgradeLevel(stack, upgrade);
             if(level != 0){
                 map.put(upgrade, level);
             }

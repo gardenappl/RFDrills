@@ -5,15 +5,18 @@ import goldenapple.rfdrills.item.soulupgrade.AbstractSoulUpgrade;
 import goldenapple.rfdrills.item.soulupgrade.SoulUpgradeHelper;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
+
+import java.util.Locale;
 
 public class StringHelper {
 
     public static String formatEnergy(int energy) {
         if (energy >= 10000000) {
-            return String.format("%.1fM", (float) energy / 1000000);
+            return String.format(Locale.US, "%.1fM", (float) energy / 1000000);
         } else if (energy >= 10000) {
-            return String.format("%.1fk", (float) energy / 1000);
+            return String.format(Locale.US, "%.1fk", (float) energy / 1000);
         } else return Integer.toString(energy);
     }
 
@@ -29,6 +32,11 @@ public class StringHelper {
             String levelName = StatCollector.translateToLocal("rfdrills.level." + level);
             return upgradeName + " " + levelName;
         }
+    }
+
+    public static String writeEnergyPerBlockInfo(int energy, boolean green){
+        String energyFormatted = (green ? EnumChatFormatting.GREEN : EnumChatFormatting.RED) + formatEnergy(energy) + EnumChatFormatting.RESET;
+        return StatCollector.translateToLocalFormatted("rfdrills.energy_per_block.tooltip", energyFormatted);
     }
 
     public static String writeEnergyPerBlockInfo(int energy) {

@@ -1,7 +1,8 @@
 package goldenapple.rfdrills.init;
 
 import cpw.mods.fml.common.registry.GameRegistry;
-import goldenapple.rfdrills.DrillTier;
+import goldenapple.rfdrills.compat.simplyjetpacks.SimplyJetpacksCompat;
+import goldenapple.rfdrills.item.ToolTier;
 import goldenapple.rfdrills.RFDrills;
 import goldenapple.rfdrills.config.ConfigHandler;
 import goldenapple.rfdrills.item.*;
@@ -16,32 +17,32 @@ import net.minecraftforge.oredict.OreDictionary;
 public class ModItems {
     //Thermal Expansion
     public static ItemMultiMetadata componentTE = new ItemMultiMetadata(Names.COMPONENTS_TE, Names.COMPONENT_TE);
-    public static ItemMultiMetadata replacementRA = new ItemMultiMetadata(Names.RA_REPLACEMENTS, Names.REPLACEMENT_RA);
+    public static ItemMultiMetadata replacementRA1 = new ItemMultiMetadata(Names.RA_REPLACEMENTS, Names.REPLACEMENT_RA1);
 
-    public static Item leadstoneDrill = new ItemDrill(Names.LEADSTONE_DRILL, DrillTier.DRILL1);
-    public static Item hardenedDrill = new ItemDrill(Names.HARDENED_DRILL, DrillTier.DRILL2);
-    public static Item redstoneDrill = new ItemDrill(Names.REDSTONE_DRILL, DrillTier.DRILL3);
-    public static Item resonantDrill = new ItemDrill(Names.RESONANT_DRILL, DrillTier.DRILL4);
+    public static Item leadstoneDrill = new ItemDrill(Names.LEADSTONE_DRILL, ToolTier.DRILL1);
+    public static Item hardenedDrill = new ItemDrill(Names.HARDENED_DRILL, ToolTier.DRILL2);
+    public static Item redstoneDrill = new ItemDrill(Names.REDSTONE_DRILL, ToolTier.DRILL3);
+    public static Item resonantDrill = new ItemDrill(Names.RESONANT_DRILL, ToolTier.DRILL4);
 
     public static Item fluxCrusher = new ItemFluxCrusher();
     public static Item fluxHoe = new ItemFluxHoe();
 
-    public static Item leadstoneChainsaw = new ItemChainsaw(Names.LEADSTONE_CHAINSAW, DrillTier.CHAINSAW1);
-    public static Item hardenedChainsaw = new ItemChainsaw(Names.HARDENED_CHAINSAW, DrillTier.CHAINSAW2);
-    public static Item redstoneChainsaw = new ItemChainsaw(Names.REDSTONE_CHAINSAW, DrillTier.CHAINSAW3);
-    public static Item resonantChainsaw = new ItemChainsaw(Names.RESONANT_CHAINSAW, DrillTier.CHAINSAW4);
+    public static Item leadstoneChainsaw = new ItemChainsaw(Names.LEADSTONE_CHAINSAW, ToolTier.CHAINSAW1);
+    public static Item hardenedChainsaw = new ItemChainsaw(Names.HARDENED_CHAINSAW, ToolTier.CHAINSAW2);
+    public static Item redstoneChainsaw = new ItemChainsaw(Names.REDSTONE_CHAINSAW, ToolTier.CHAINSAW3);
+    public static Item resonantChainsaw = new ItemChainsaw(Names.RESONANT_CHAINSAW, ToolTier.CHAINSAW4);
 
     //EnderIO
     public static ItemMultiMetadata componentEIO = new ItemMultiMetadata(Names.COMPONENTS_EIO, Names.COMPONENT_EIO);
     public static ItemMultiMetadata replacementSJ = new ItemMultiMetadata(Names.SJ_REPLACEMENTS, Names.REPLACEMENT_SJ);
 
-    public static Item basicDrill = new ItemDrill(Names.BASIC_DRILL, DrillTier.DRILL1);
-    public static Item advancedDrill = new ItemDrill(Names.ADVANCED_DRILL, DrillTier.DRILL3);
+    public static Item basicDrill = new ItemDrill(Names.BASIC_DRILL, ToolTier.DRILL1);
+    public static Item advancedDrill = new ItemDrill(Names.ADVANCED_DRILL, ToolTier.DRILL3);
 
     public static Item soulCrusher = new ItemSoulCrusher();
 
-    public static Item basicChainsaw = new ItemChainsaw(Names.BASIC_CHAINSAW, DrillTier.CHAINSAW1);
-    public static Item advancedChainsaw = new ItemChainsaw(Names.ADVANCED_CHAINSAW, DrillTier.CHAINSAW3);
+    public static Item basicChainsaw = new ItemChainsaw(Names.BASIC_CHAINSAW, ToolTier.CHAINSAW1);
+    public static Item advancedChainsaw = new ItemChainsaw(Names.ADVANCED_CHAINSAW, ToolTier.CHAINSAW3);
 
     public static void init(){
         if(RFDrills.isTELoaded && ConfigHandler.integrateTE) initTE();
@@ -53,12 +54,12 @@ public class ModItems {
     private static void initTE(){
         componentTE.setRarities(new EnumRarity[]{EnumRarity.common, EnumRarity.common, EnumRarity.uncommon, EnumRarity.common, EnumRarity.rare, EnumRarity.common, EnumRarity.rare, EnumRarity.rare, EnumRarity.uncommon});
 
-        replacementRA.setRarities(new EnumRarity[]{EnumRarity.uncommon, EnumRarity.uncommon});
+        replacementRA1.setRarities(new EnumRarity[]{EnumRarity.uncommon, EnumRarity.uncommon});
 
         GameRegistry.registerItem(componentTE, Names.COMPONENT_TE);
 
-        if((!RFDrills.isRArsLoaded && RFDrills.isSJLoaded) && ConfigHandler.integrateRArs)
-            GameRegistry.registerItem(replacementRA, Names.REPLACEMENT_RA);
+        if((!RFDrills.isRArsLoaded && SimplyJetpacksCompat.integratesTE()) && ConfigHandler.integrateRArs)
+            GameRegistry.registerItem(replacementRA1, Names.REPLACEMENT_RA1);
 
         GameRegistry.registerItem(leadstoneDrill, Names.LEADSTONE_DRILL);
         GameRegistry.registerItem(hardenedDrill, Names.HARDENED_DRILL);
@@ -86,11 +87,11 @@ public class ModItems {
         OreDictionary.registerOre("nuggetSoularium", new ItemStack(componentEIO, 1, LibMetadata.SOULARIUM_NUGGET));
         OreDictionary.registerOre("nuggetDarkSoularium", new ItemStack(componentEIO, 1, LibMetadata.RICH_SOULARIUM_NUGGET));
 
-        if (RFDrills.isSJLoaded) {
+        if (SimplyJetpacksCompat.integratesEIO()) {
             LogHelper.info("Registering Simply Jetpacks Enriched Soularium Alloy in the OreDictionary as ingotDarkSoularium...");
             OreDictionary.registerOre("ingotDarkSoularium", new ItemStack(GameRegistry.findItem("simplyjetpacks", "components"), 1, 70));
         } else {
-            LogHelper.info("Simply Jetpacks not found! Using replacement items...");
+            LogHelper.info("Simply Jetpacks EIO items not found! Using replacement items...");
 
             GameRegistry.registerItem(replacementSJ, Names.REPLACEMENT_SJ);
             OreDictionary.registerOre("ingotDarkSoularium", new ItemStack(replacementSJ, 1, LibMetadata.DARK_SOULARIUM));

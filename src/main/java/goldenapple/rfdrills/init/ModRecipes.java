@@ -4,6 +4,7 @@ import cofh.api.modhelpers.ThermalExpansionHelper;
 import cofh.lib.util.helpers.ItemHelper;
 import cpw.mods.fml.common.registry.GameRegistry;
 import goldenapple.rfdrills.RFDrills;
+import goldenapple.rfdrills.compat.simplyjetpacks.SimplyJetpacksCompat;
 import goldenapple.rfdrills.util.modhelpers.EnderIOHelper;
 import goldenapple.rfdrills.config.ConfigHandler;
 import goldenapple.rfdrills.crafting.ShapedUpgradeRecipe;
@@ -22,7 +23,7 @@ public class ModRecipes {
         RecipeSorter.register(Reference.MOD_ID + ":upgrading", ShapedUpgradeRecipe.class, RecipeSorter.Category.SHAPED, "after:minecraft:shaped before:minecraft:shapeless");
         if(RFDrills.isTELoaded && ConfigHandler.integrateTE) initTE();
         if(RFDrills.isEIOLoaded && ConfigHandler.integrateEIO) initEIO();
-        if((RFDrills.isRArsLoaded || RFDrills.isSJLoaded) && ConfigHandler.integrateRArs) initRArs();
+        if((RFDrills.isRArsLoaded || SimplyJetpacksCompat.integratesTE()) && ConfigHandler.integrateRArs) initRArs();
     }
 
     private static void initTE(){
@@ -139,7 +140,7 @@ public class ModRecipes {
         ItemStack resonatingCrystal = new ItemStack(ModItems.componentEIO, 1, LibMetadata.RESONATING_CRYSTAL);
         ItemStack destructiveCrystal = new ItemStack(ModItems.componentEIO, 1, LibMetadata.DESTRUCTIVE_CRYSTAL);
         ItemStack earthshakingCrystal = new ItemStack(ModItems.componentEIO, 1, LibMetadata.EARTHSHAKING_CRYSTAL);
-        ItemStack ingotDarkSoularium = RFDrills.isSJLoaded ? new ItemStack(GameRegistry.findItem("simplyjetpacks", "components"), 1, 70) : new ItemStack(ModItems.replacementSJ, 1, LibMetadata.DARK_SOULARIUM);
+        ItemStack ingotDarkSoularium = SimplyJetpacksCompat.integratesEIO() ? new ItemStack(GameRegistry.findItem("simplyjetpacks", "components"), 1, 70) : new ItemStack(ModItems.replacementSJ, 1, LibMetadata.DARK_SOULARIUM);
         ItemStack nugggetDarkSoularium = new ItemStack(ModItems.componentEIO, 1, LibMetadata.RICH_SOULARIUM_NUGGET);
         ItemStack ingotDarkSteel = new ItemStack(GameRegistry.findItem("EnderIO", "itemAlloy"), 1, 6);
         ItemStack ingotSoularium = new ItemStack(GameRegistry.findItem("EnderIO", "itemAlloy"), 1, 7);
@@ -217,11 +218,11 @@ public class ModRecipes {
     }
 
     private static void initRArs(){
-        boolean useReplacement = RFDrills.isSJLoaded && !RFDrills.isRArsLoaded;
+        boolean useSJReplacement = RFDrills.isSJLoaded && !RFDrills.isRArsLoaded && SimplyJetpacksCompat.integratesTE();
 
-        ItemStack obsidianRod = useReplacement ? new ItemStack(ModItems.replacementRA, 1, LibMetadata.OBSIDIAN_ROD) : new ItemStack(GameRegistry.findItem("RedstoneArsenal", "material"), 1, 192);
-        ItemStack fluxRod = useReplacement ? new ItemStack(ModItems.replacementRA, 1, LibMetadata.FLUX_OBSIDIAN_ROD) : new ItemStack(GameRegistry.findItem("RedstoneArsenal", "material"), 1, 193);
-        ItemStack fluxArmorPlate = useReplacement ? new ItemStack(GameRegistry.findItem("simplyjetpacks", "components"), 1, 68) : new ItemStack(GameRegistry.findItem("RedstoneArsenal", "material"), 1, 128);
+        ItemStack obsidianRod = useSJReplacement ? new ItemStack(ModItems.replacementRA1, 1, LibMetadata.OBSIDIAN_ROD) : new ItemStack(GameRegistry.findItem("RedstoneArsenal", "material"), 1, 192);
+        ItemStack fluxRod = useSJReplacement ? new ItemStack(ModItems.replacementRA1, 1, LibMetadata.FLUX_OBSIDIAN_ROD) : new ItemStack(GameRegistry.findItem("RedstoneArsenal", "material"), 1, 193);
+        ItemStack fluxArmorPlate = useSJReplacement ? new ItemStack(GameRegistry.findItem("simplyjetpacks", "components"), 1, 68) : new ItemStack(GameRegistry.findItem("RedstoneArsenal", "material"), 1, 128);
 
         ItemStack coolantUnit = new ItemStack(GameRegistry.findItem("simplyjetpacks", "components"), 1, 63);
         ItemStack superConductanceCoil = new ItemStack(ModItems.componentTE, 1, LibMetadata.SUPERCONDUCTANCE_COIL);

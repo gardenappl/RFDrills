@@ -3,7 +3,6 @@ package goldenapple.rfdrills.item;
 import cofh.api.item.IEmpowerableItem;
 import cofh.core.item.IEqualityOverrideItem;
 import cofh.core.util.KeyBindingEmpower;
-import goldenapple.rfdrills.DrillTier;
 import goldenapple.rfdrills.RFDrills;
 import goldenapple.rfdrills.config.ConfigHandler;
 import goldenapple.rfdrills.reference.Reference;
@@ -20,23 +19,21 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.EnumRarity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemAxe;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.IShearable;
 
 import java.util.List;
 
 public class ItemChainsaw extends ItemAxe implements IEnergyTool, IEqualityOverrideItem, IEmpowerableItem{
     private final String name;
-    private final DrillTier tier;
+    private final ToolTier tier;
 
-    public ItemChainsaw(String name, DrillTier tier){
+    public ItemChainsaw(String name, ToolTier tier){
         super(tier.material);
         this.name = name;
         this.tier = tier;
@@ -99,7 +96,7 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool, IEqualityOverr
     public boolean itemInteractionForEntity(ItemStack stack, EntityPlayer player, EntityLivingBase entity) {
         if(isEmpowered(stack)) {
             if (getEnergyStored(stack) > 0 && Items.shears.itemInteractionForEntity(stack, player, entity)) {
-                ToolHelper.drainEnergy(stack, player, getEnergyPerUse(stack));
+                ToolHelper.drainEnergy(stack, player, getEnergyPerUse(stack) * 2);
                 return true;
             }
         }
@@ -160,19 +157,10 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool, IEqualityOverr
         return "item." + Reference.MOD_ID.toLowerCase() + ":" + name;
     }
 
-    public String writeModeInfo(ItemStack stack){
-        if(!tier.hasModes) return "";
-
-        if(isEmpowered(stack))
-            return StatCollector.translateToLocal("rfdrills.shears_on.mode");
-        else
-            return StatCollector.translateToLocal("rfdrills.shears_off.mode");
-    }
-
     /* IEnergyTool */
 
     @Override
-    public DrillTier getTier(ItemStack stack) {
+    public ToolTier getTier(ItemStack stack) {
         return tier;
     }
 
@@ -198,6 +186,26 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool, IEqualityOverr
         }else {
             return getEnergyPerUse(stack);
         }
+    }
+
+    @Override
+    public boolean canProperlyHarvest(ItemStack stack, Block block, int meta) {
+        if(isEmpowered(stack) && (block instanceof IShearable || block.getMaterial() == Material.cloth))
+            return true;
+        else if(block == Blocks.web || block == Blocks.tripwire)
+            return true;
+        else
+            return ForgeHooks.canToolHarvestBlock(block, meta, stack);
+    }
+
+    @Override
+    public String writeModeInfo(ItemStack stack){
+        if(!tier.hasModes) return "";
+
+        if(isEmpowered(stack))
+            return StatCollector.translateToLocal("rfdrills.shears_on.mode");
+        else
+            return StatCollector.translateToLocal("rfdrills.shears_off.mode");
     }
 
     /* IEnergyContainerItem */

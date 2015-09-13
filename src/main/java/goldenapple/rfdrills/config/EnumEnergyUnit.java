@@ -1,6 +1,6 @@
 package goldenapple.rfdrills.config;
 
-public enum EnumEnergyUnit { //i don't want energy conversion so this is pretty much useless
+public enum EnumEnergyUnit { //i don't want energy conversion yet so this is pretty much useless
     RF(1.0F),
     EU(0.25F), //4 RF = 1 EU
     J(2.5F), //1 RF = 2.5 J

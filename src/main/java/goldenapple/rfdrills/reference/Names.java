@@ -1,6 +1,6 @@
 package goldenapple.rfdrills.reference;
 
-import goldenapple.rfdrills.RFDrills;
+import goldenapple.rfdrills.compat.simplyjetpacks.SimplyJetpacksCompat;
 
 public class Names {
     public static final String LEADSTONE_DRILL = "leadstone_drill";
@@ -42,11 +42,11 @@ public class Names {
     public static final String REPLACEMENT_SJ = "sj_replacement";
     public static final String[] SJ_REPLACEMENTS = {"dark_soularium"};
 
-    public static final String REPLACEMENT_RA = "ra_replacement";
+    public static final String REPLACEMENT_RA1 = "ra_replacement";
     public static final String[] RA_REPLACEMENTS = {"obsidian_rod",
                                                     "flux_obsidian_rod"};
 
     static{
-        if(!RFDrills.isSJLoaded) COMPONENTS_EIO[LibMetadata.RICH_SOULARIUM_NUGGET] = "dark_soularium_nugget";
+        if(!SimplyJetpacksCompat.integratesEIO()) COMPONENTS_EIO[LibMetadata.RICH_SOULARIUM_NUGGET] = "dark_soularium_nugget";
     }
 }

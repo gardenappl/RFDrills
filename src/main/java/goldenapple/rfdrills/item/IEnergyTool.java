@@ -1,16 +1,19 @@
 package goldenapple.rfdrills.item;
 
 import cofh.api.energy.IEnergyContainerItem;
-import goldenapple.rfdrills.DrillTier;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemStack;
 
 public interface IEnergyTool extends IEnergyContainerItem{
-    public DrillTier getTier(ItemStack itemStack);
+    public ToolTier getTier(ItemStack stack);
 
-    public ItemStack setEnergy(ItemStack itemStack, int energy);
+    public ItemStack setEnergy(ItemStack stack, int energy);
 
-    public ItemStack drainEnergy(ItemStack itemStack, int energy);
+    public ItemStack drainEnergy(ItemStack stack, int energy);
 
-    public int getEnergyPerUse(ItemStack itemStack, Block block, int meta);
+    public int getEnergyPerUse(ItemStack stack, Block block, int meta);
+    
+    public boolean canProperlyHarvest(ItemStack stack, Block block, int meta);
+
+    public String writeModeInfo(ItemStack stack);
 }

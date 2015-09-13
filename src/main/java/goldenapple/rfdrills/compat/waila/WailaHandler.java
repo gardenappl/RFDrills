@@ -41,7 +41,7 @@ public class WailaHandler implements IWailaDataProvider {
     }
 
     @Override
-    public List<String> getWailaBody(ItemStack itemStack, List<String> tooltip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
+    public List<String> getWailaBody(ItemStack stack, List<String> tooltip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
         Block block = accessor.getBlock();
         int meta = accessor.getMetadata();
 
@@ -52,28 +52,18 @@ public class WailaHandler implements IWailaDataProvider {
         IEnergyTool energyTool = (IEnergyTool) equipStack.getItem();
 
         //for disguised blocks
-        if(itemStack.getItem() instanceof ItemBlock){
-            block = ((ItemBlock) itemStack.getItem()).field_150939_a;
-            meta = itemStack.getItemDamage();
+        if(stack.getItem() instanceof ItemBlock){
+            block = ((ItemBlock) stack.getItem()).field_150939_a;
+            meta = stack.getItemDamage();
         }
 
         if(equipStack.getItem() instanceof IEnergyTool){
             if(config.getConfig("rfdrills.waila_rf"))
-                tooltip.add(StringHelper.writeEnergyPerBlockInfo(energyTool.getEnergyPerUse(equipStack, block, meta)));
+                tooltip.add(StringHelper.writeEnergyPerBlockInfo(energyTool.getEnergyPerUse(equipStack, block, meta), energyTool.canProperlyHarvest(equipStack, block, meta)));
 
             if(config.getConfig("rfdrills.waila_mode") && (accessor.getPlayer().isSneaking() || !(config.getConfig("rfdrills.waila_mode.sneakingonly")))) {
-                if (energyTool.getTier(equipStack).hasModes) {
-                    if (equipStack.getItem() instanceof ItemDrill)
-                        tooltip.add(((ItemDrill) equipStack.getItem()).writeModeInfo(equipStack));
-
-                    if (equipStack.getItem() instanceof ItemChainsaw)
-                        tooltip.add(((ItemChainsaw) equipStack.getItem()).writeModeInfo(equipStack));
-
-                    if (equipStack.getItem() instanceof ItemFluxCrusher)
-                        tooltip.add(((ItemFluxCrusher) equipStack.getItem()).writeModeInfo(equipStack));
-
-                    if (equipStack.getItem() instanceof ItemSoulCrusher)
-                        tooltip.add(((ItemSoulCrusher) equipStack.getItem()).writeModeInfo(equipStack));
+                if (!energyTool.writeModeInfo(equipStack).isEmpty()) {
+                    tooltip.add(energyTool.writeModeInfo(equipStack));
                 }
             }
         }
