@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Set;
 
 public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityOverrideItem, IEmpowerableItem{
-    private static final Set<Material> effectiveMaterials = Sets.newHashSet(Material.anvil, Material.clay, Material.craftedSnow, Material.glass, Material.dragonEgg, Material.grass, Material.ground, Material.ice, Material.snow, Material.iron, Material.rock, Material.sand, Material.coral, Material.wood, Material.leaves, Material.plants, Material.vine, Material.cloth, Material.gourd);
+    private static final Set<Material> effectiveMaterials = Sets.newHashSet(Material.anvil, Material.clay, Material.craftedSnow, Material.glass, Material.dragonEgg, Material.grass, Material.ground, Material.ice, Material.snow, Material.iron, Material.rock, Material.sand, Material.coral, Material.wood, Material.cloth, Material.gourd);
 
     private static ToolTier tier = ToolTier.FLUX_CRUSHER;
     private IIcon iconEmpty;
@@ -44,18 +44,22 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityO
         this.setHarvestLevel("pickaxe", tier.material.getHarvestLevel());
         this.setHarvestLevel("shovel", tier.material.getHarvestLevel());
         this.setHarvestLevel("axe", tier.material.getHarvestLevel());
-        this.setHarvestLevel("sickle", tier.material.getHarvestLevel()); //don't know what mod would use that but why not
         this.setCreativeTab(RFDrills.RFDrillsTab);
     }
 
     @Override
     public Set<String> getToolClasses(ItemStack stack) {
-        return ImmutableSet.of("pickaxe", "shovel", "axe", "sickle");
+        return ImmutableSet.of("pickaxe", "shovel", "axe");
     }
 
     @Override
     public boolean canHarvestBlock(Block block, ItemStack stack) {
-        return effectiveMaterials.contains(block.getMaterial());
+        return getEnergyStored(stack) >= getEnergyPerUseWithMode(stack) && effectiveMaterials.contains(block.getMaterial());
+    }
+
+    @Override
+    public float func_150893_a(ItemStack stack, Block block) {
+        return getEnergyStored(stack) >= getEnergyPerUseWithMode(stack) && effectiveMaterials.contains(block.getMaterial()) ? efficiencyOnProperMaterial : 1.0F;
     }
 
     @Override
@@ -68,7 +72,7 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityO
 
     @Override
     public float getDigSpeed(ItemStack stack, Block block, int meta) {
-        if(getEnergyStored(stack) >= getEnergyPerUse(stack, block, meta) && ToolHelper.isToolEffective(stack, block, meta, effectiveMaterials)){
+        if(getEnergyStored(stack) >= getEnergyPerUse(stack, block, meta) && ToolHelper.isToolEffective(stack, block, meta)){
             switch (getMode(stack)){
                 case 0: return efficiencyOnProperMaterial;
                 case 1: return efficiencyOnProperMaterial / 3;
@@ -145,7 +149,7 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityO
                     for(int c = z - radius; c <= z + radius; c++) {
                         if (world.blockExists(a, b, c) && !world.isAirBlock(a, b, c)) {
                             if (!(a == x && b == y && c == z)) //don't harvest the same block twice silly!
-                                ToolHelper.harvestBlock(world, a, b, c, player, effectiveMaterials);
+                                ToolHelper.harvestBlock(world, a, b, c, player);
                         }
                     }
                 }
@@ -275,7 +279,7 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityO
 
     @Override
     public boolean canProperlyHarvest(ItemStack stack, Block block, int meta) {
-        return ToolHelper.isToolEffective(stack, block, meta, effectiveMaterials);
+        return ToolHelper.isToolEffective(stack, block, meta);
     }
 
     /* IEnergyContainerItem */

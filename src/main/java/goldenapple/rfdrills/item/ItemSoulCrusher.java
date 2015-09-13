@@ -6,6 +6,7 @@ import cofh.core.util.KeyBindingEmpower;
 import cofh.lib.util.helpers.BlockHelper;
 import cofh.repack.codechicken.lib.math.MathHelper;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import goldenapple.rfdrills.RFDrills;
 import goldenapple.rfdrills.item.soulupgrade.AbstractSoulUpgrade;
 import goldenapple.rfdrills.item.soulupgrade.SoulUpgradeHelper;
@@ -17,6 +18,7 @@ import goldenapple.rfdrills.util.MiscUtil;
 import goldenapple.rfdrills.util.StringHelper;
 import goldenapple.rfdrills.util.ToolHelper;
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IIconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.Enchantment;
@@ -33,41 +35,49 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeHooks;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityOverrideItem, IEmpowerableItem {
-    private static ToolTier tier = ToolTier.SOUL_CRUSHER;
+    private static final Set<Material> effectiveMaterials = Sets.newHashSet(Material.anvil, Material.clay, Material.craftedSnow, Material.glass, Material.dragonEgg, Material.grass, Material.ground, Material.ice, Material.snow, Material.iron, Material.rock, Material.sand, Material.coral, Material.wood, Material.cloth, Material.gourd);
 
+    private static ToolTier tier = ToolTier.SOUL_CRUSHER;
     public ItemSoulCrusher() {
         super(1.0F, tier.material, null);
         this.setHarvestLevel("pickaxe", tier.material.getHarvestLevel());
         this.setHarvestLevel("shovel", tier.material.getHarvestLevel());
         this.setHarvestLevel("axe", tier.material.getHarvestLevel());
-        this.setHarvestLevel("sickle", tier.material.getHarvestLevel());
         this.setCreativeTab(RFDrills.RFDrillsTab);
     }
 
     @Override
     public Set<String> getToolClasses(ItemStack stack) {
-        return ImmutableSet.of("pickaxe", "shovel", "axe", "sickle");
+        return ImmutableSet.of("pickaxe", "shovel", "axe");
+    }
+
+    @Override
+    public boolean canHarvestBlock(Block block, ItemStack stack) {
+        return getEnergyStored(stack) >= getEnergyPerUseWithMode(stack) && effectiveMaterials.contains(block.getMaterial());
+    }
+
+    @Override
+    public float func_150893_a(ItemStack stack, Block block) {
+        return getEnergyStored(stack) >= getEnergyPerUseWithMode(stack) && effectiveMaterials.contains(block.getMaterial()) ? efficiencyOnProperMaterial : 1.0F;
     }
 
     @Override
     public int getHarvestLevel(ItemStack stack, String toolClass) {
-        if(getToolClasses(stack).contains(toolClass) && getEnergyStored(stack) >= tier.energyPerBlock){
+        if(getToolClasses(stack).contains(toolClass) && getEnergyStored(stack) >= getEnergyPerUseWithMode(stack))
             return super.getHarvestLevel(stack, toolClass);
-        }else{
+        else
             return -1;
-        }
     }
 
     @Override
     public float getDigSpeed(ItemStack stack, Block block, int meta) {
-        if(getEnergyStored(stack) >= getEnergyPerUse(stack, block, meta) && ForgeHooks.canToolHarvestBlock(block, meta, stack)){
+        if(getEnergyStored(stack) >= getEnergyPerUse(stack, block, meta) && ToolHelper.isToolEffective(stack, block, meta)){
             switch (getMode(stack)){
                 case 0: return efficiencyOnProperMaterial;
                 case 1: //same as case 2
@@ -78,6 +88,8 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
                     return efficiencyOnProperMaterial;
             }
         }else{
+            lol: LogHelper.info("lol");
+
             return 1.0F;
         }
     }
@@ -214,9 +226,10 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
             boolean printedOneRecipeMessage = false;
             for(AbstractSoulUpgrade upgrade : SoulUpgrades.registry){ //available recipes
                 if(upgrade.isUpgradeAvailable(stack)){
-                    if(!printedOneRecipeMessage)
+                    if(!printedOneRecipeMessage) {
                         list.add(EnumChatFormatting.YELLOW + StatCollector.translateToLocal("rfdrills.soul_upgrade.recipe"));
-                    printedOneRecipeMessage = true;
+                        printedOneRecipeMessage = true;
+                    }
 
                     list.add(EnumChatFormatting.DARK_AQUA.toString() + StringHelper.writeUpgradeInfo(SoulUpgradeHelper.getUpgradeLevel(stack, upgrade) + 1, upgrade));
                     upgrade.addRecipeDescription(stack, list);
@@ -322,7 +335,7 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
 
     @Override
     public boolean canProperlyHarvest(ItemStack stack, Block block, int meta) {
-        return ForgeHooks.canToolHarvestBlock(block, meta, stack) || block.getMaterial().isToolNotRequired();
+        return ToolHelper.isToolEffective(stack, block, meta);
     }
 
     @Override

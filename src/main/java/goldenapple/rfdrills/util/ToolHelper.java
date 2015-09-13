@@ -3,7 +3,6 @@ package goldenapple.rfdrills.util;
 import cpw.mods.fml.common.eventhandler.Event;
 import goldenapple.rfdrills.item.IEnergyTool;
 import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
@@ -16,28 +15,18 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.event.world.BlockEvent;
 
-import java.util.Set;
-
 public class ToolHelper {
-    public static boolean isToolEffective(ItemStack stack, Block block, int meta, Set<Material> materialSet){
-        if(stack != null && block != null) {
+    public static boolean isToolEffective(ItemStack stack, Block block, int meta){
+        if(block == null)
+            return false;
+
+        if(stack != null) {
             for (String toolClass : stack.getItem().getToolClasses(stack)) {
-                if (toolClass.equals(block.getHarvestTool(meta))) {
+                if (toolClass.equals(block.getHarvestTool(meta)))
                     return stack.getItem().getHarvestLevel(stack, toolClass) >= block.getHarvestLevel(meta);
-                }
             }
 
-            if(materialSet != null) {
-                for (Material material : materialSet) {
-                    if (material == block.getMaterial()) {
-                        return true;
-                    }
-                }
-            }
-
-            if(block.getMaterial().isToolNotRequired()) {
-                return true;
-            }
+            return stack.getItem().canHarvestBlock(block, stack);
         }
         return false;
     }
@@ -58,16 +47,15 @@ public class ToolHelper {
     }
 
     public static void harvestBlock(World world, int x, int y, int z, EntityPlayer entityPlayer){
-        harvestBlock(world, x, y, z, entityPlayer, null);
-    }
-
-    public static void harvestBlock(World world, int x, int y, int z, EntityPlayer entityPlayer, Set<Material> materialSet){
         Block block = world.getBlock(x, y, z);
         int meta = world.getBlockMetadata(x, y, z);
 
-        if (!(entityPlayer instanceof EntityPlayerMP) || block.getBlockHardness(world, x, y, z) < 0 || !isToolEffective(entityPlayer.getCurrentEquippedItem(), block, meta, materialSet))
+        if (!(entityPlayer instanceof EntityPlayerMP))
             return;
         EntityPlayerMP player = (EntityPlayerMP) entityPlayer;
+
+        if(!((isToolEffective(player.getCurrentEquippedItem(), block, meta) && block.getBlockHardness(world, x, y, z) >= 0) || player.capabilities.isCreativeMode))
+            return;
 
         BlockEvent.BreakEvent event = ForgeHooks.onBlockBreakEvent(world, player.theItemInWorldManager.getGameType(), player, x, y, z);
         if(event.isCanceled())
@@ -82,9 +70,9 @@ public class ToolHelper {
                     block.harvestBlock(world, player, x, y, z, meta);
                     block.dropXpOnBlockBreak(world, x, y, z, event.getExpToDrop());
                 }
+                world.playAuxSFX(2001, x, y, z, Block.getIdFromBlock(block) + meta << 12);
             }
         }else { //Client-side: Simulating PlayerControllerMP
-            world.playAuxSFX(2001, x, y, z, Block.getIdFromBlock(block) + meta << 12);
 
             if(block.removedByPlayer(world, player, x, y ,z, true))
                 block.onBlockDestroyedByPlayer(world, x, y, z, meta);
@@ -101,9 +89,10 @@ public class ToolHelper {
         if (event.getResult() == Event.Result.ALLOW) //if another mod handled this block using the event
             return true;
 
+        //vanilla hoe behaviour
         if (sideHit != 0 && world.isAirBlock(x, y + 1, z) && (block == Blocks.grass || block == Blocks.dirt) && player.canPlayerEdit(x, y, z, sideHit, stack)) {
             if (!world.isRemote)
-                world.setBlock(x, y, z, Blocks.farmland); //vanilla hoe behaviour
+                world.setBlock(x, y, z, Blocks.farmland);
             return true;
         }
 

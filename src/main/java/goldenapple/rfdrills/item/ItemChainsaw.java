@@ -19,12 +19,14 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.*;
+import net.minecraft.item.EnumRarity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemAxe;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.IShearable;
 
 import java.util.List;
@@ -55,9 +57,17 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool, IEqualityOverr
     @Override
     public boolean canHarvestBlock(Block block, ItemStack stack) {
         if(getEnergyStored(stack) > 0 && isEmpowered(stack))
-            return block == Blocks.web || block == Blocks.redstone_wire || block == Blocks.tripwire;
+            return block instanceof IShearable || block == Blocks.web || block == Blocks.redstone_wire || block == Blocks.tripwire;
         else
             return false;
+    }
+
+    @Override
+    public int getHarvestLevel(ItemStack stack, String toolClass) {
+        if(getToolClasses(stack).contains(toolClass) && getEnergyStored(stack) >= tier.energyPerBlock)
+            return super.getHarvestLevel(stack, toolClass);
+        else
+            return -1;
     }
 
     @Override
@@ -190,12 +200,7 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool, IEqualityOverr
 
     @Override
     public boolean canProperlyHarvest(ItemStack stack, Block block, int meta) {
-        if(isEmpowered(stack) && (block instanceof IShearable || block.getMaterial() == Material.cloth))
-            return true;
-        else if(block == Blocks.web || block == Blocks.tripwire)
-            return true;
-        else
-            return ForgeHooks.canToolHarvestBlock(block, meta, stack);
+        return ToolHelper.isToolEffective(stack, block, meta);
     }
 
     @Override

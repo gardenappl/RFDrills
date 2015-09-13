@@ -28,13 +28,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
-import net.minecraftforge.common.ForgeHooks;
 
 import java.util.List;
 import java.util.Set;
 
 public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrideItem, IEmpowerableItem {
-   // private static final Set<Block> vanillaBlocks = Sets.newHashSet(Blocks.cobblestone, Blocks.double_stone_slab, Blocks.stone_slab, Blocks.stone, Blocks.sandstone, Blocks.mossy_cobblestone, Blocks.iron_ore, Blocks.iron_block, Blocks.coal_ore, Blocks.gold_block, Blocks.gold_ore, Blocks.diamond_ore, Blocks.diamond_block, Blocks.ice, Blocks.netherrack, Blocks.lapis_ore, Blocks.lapis_block, Blocks.redstone_ore, Blocks.lit_redstone_ore, Blocks.rail, Blocks.detector_rail, Blocks.golden_rail, Blocks.activator_rail, Blocks.grass, Blocks.dirt, Blocks.sand, Blocks.gravel, Blocks.snow_layer, Blocks.snow, Blocks.clay, Blocks.farmland, Blocks.soul_sand, Blocks.mycelium);
     private static final Set<Material> effectiveMaterials = Sets.newHashSet(Material.anvil, Material.clay, Material.craftedSnow, Material.glass, Material.dragonEgg, Material.grass, Material.ground, Material.ice, Material.snow, Material.iron, Material.rock, Material.sand, Material.coral);
 
     private ToolTier tier;
@@ -55,8 +53,18 @@ public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrid
     }
 
     @Override
+    public boolean canHarvestBlock(Block block, ItemStack stack) {
+        return getEnergyStored(stack) >= getEnergyPerUseWithMode(stack) && effectiveMaterials.contains(block.getMaterial());
+    }
+
+    @Override
+    public float func_150893_a(ItemStack stack, Block block) {
+        return getEnergyStored(stack) >= getEnergyPerUseWithMode(stack) && effectiveMaterials.contains(block.getMaterial()) ? efficiencyOnProperMaterial : 1.0F;
+    }
+
+    @Override
     public float getDigSpeed(ItemStack stack, Block block, int meta) {
-        if(getEnergyStored(stack) >= getEnergyPerUse(stack, block, meta) && ToolHelper.isToolEffective(stack, block, meta, effectiveMaterials)){
+        if(getEnergyStored(stack) >= getEnergyPerUse(stack, block, meta) && ToolHelper.isToolEffective(stack, block, meta)){
             if(isEmpowered(stack))
                 return efficiencyOnProperMaterial / 3;
             else
@@ -147,7 +155,7 @@ public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrid
             }
         }
 
-        ToolHelper.drainEnergy(stack, player, getEnergyPerUseWithMode(stack));
+        ToolHelper.drainEnergy(stack, player, getEnergyPerUse(stack, world.getBlock(x, y, z), world.getBlockMetadata(x, y, z)));
         return false;
     }
 
@@ -203,9 +211,8 @@ public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrid
 
     @Override
     public ItemStack setEnergy(ItemStack stack, int energy){
-        if(stack.stackTagCompound == null){
+        if(stack.stackTagCompound == null)
             stack.stackTagCompound = new NBTTagCompound();
-        }
 
         stack.stackTagCompound.setInteger("Energy", Math.min(energy, getMaxEnergyStored(stack)));
         return stack;
@@ -233,7 +240,7 @@ public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrid
 
     @Override
     public boolean canProperlyHarvest(ItemStack stack, Block block, int meta) {
-        return ForgeHooks.canToolHarvestBlock(block, meta, stack);
+        return ToolHelper.isToolEffective(stack, block, meta);
     }
 
     /* IEnergyContainerItem */

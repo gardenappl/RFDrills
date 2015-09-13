@@ -12,7 +12,7 @@ public interface IEnergyTool extends IEnergyContainerItem{
     public ItemStack drainEnergy(ItemStack stack, int energy);
 
     public int getEnergyPerUse(ItemStack stack, Block block, int meta);
-    
+    //used for waila tooltips. ignore the stored energy
     public boolean canProperlyHarvest(ItemStack stack, Block block, int meta);
 
     public String writeModeInfo(ItemStack stack);

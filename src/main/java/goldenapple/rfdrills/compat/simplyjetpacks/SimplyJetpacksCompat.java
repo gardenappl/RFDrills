@@ -34,10 +34,12 @@ public class SimplyJetpacksCompat {
     }
 
     static{
-        try {
-            configClass = Class.forName("tonius.simplyjetpacks.config.Config");
-        }catch(Exception e){
-            LogHelper.error("Failed to find class tonius.simplyjetpacks.config.Config");
+        if(RFDrills.isSJLoaded) {
+            try {
+                configClass = Class.forName("tonius.simplyjetpacks.config.Config");
+            }catch (Exception e) {
+                LogHelper.error("Failed to find class tonius.simplyjetpacks.config.Config");
+            }
         }
     }
 }

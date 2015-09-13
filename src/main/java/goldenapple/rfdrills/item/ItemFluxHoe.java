@@ -1,6 +1,7 @@
 package goldenapple.rfdrills.item;
 
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import goldenapple.rfdrills.RFDrills;
@@ -29,10 +30,9 @@ import java.util.List;
 import java.util.Set;
 
 public class ItemFluxHoe extends ItemTool implements IEnergyTool {
-    //public static final Set<Material> effectiveMaterials = Sets.newHashSet(Material.leaves, Material.plants, Material.vine, Material.web);
+    public static final Set<Material> effectiveMaterials = Sets.newHashSet(Material.leaves, Material.plants, Material.vine, Material.web);
 
     private static ToolTier tier = ToolTier.HOE;
-
     public ItemFluxHoe() {
         super(2.0F, tier.material, null);
         this.setCreativeTab(RFDrills.RFDrillsTab);
@@ -40,7 +40,12 @@ public class ItemFluxHoe extends ItemTool implements IEnergyTool {
 
     @Override
     public boolean canHarvestBlock(Block block, ItemStack stack) {
-        return block == Blocks.web || block == Blocks.vine;
+        return getEnergyStored(stack) >= getEnergyPerUse(stack) && (block == Blocks.web || block == Blocks.vine);
+    }
+
+    @Override
+    public float func_150893_a(ItemStack stack, Block block) {
+        return getEnergyStored(stack) >= getEnergyPerUse(stack) && effectiveMaterials.contains(block.getMaterial()) ? efficiencyOnProperMaterial : 1.0F;
     }
 
     @Override
@@ -109,7 +114,7 @@ public class ItemFluxHoe extends ItemTool implements IEnergyTool {
             for (int a = x - 1; a <= x + 1; a++) {
                 for(int b = y - 1; b <= y + 1; b++) {
                     for (int c = z - 1; c <= z + 1; c++) {
-                        if (world.blockExists(x, b, z) && !world.isAirBlock(x, y, z)) {
+                        if (world.blockExists(a, b, c) && !world.isAirBlock(a, b, c)) {
                             if (!(a == x && b == y && c == z)) { //don't harvest the same block twice
                                 ToolHelper.harvestBlock(world, a, b, c, player);
                             }
@@ -120,7 +125,7 @@ public class ItemFluxHoe extends ItemTool implements IEnergyTool {
         }else{ //Harvesting everything else in a 3x1x3 area
             for (int a = x - 1; a <= x + 1; a++) {
                 for (int c = z - 1; c <= z + 1; c++) {
-                    if (world.blockExists(a, y, c) && !world.isAirBlock(x, y, z)) {
+                    if (world.blockExists(a, y, c) && !world.isAirBlock(a, y, c)) {
                         if(!(a == x && c == z))
                             ToolHelper.harvestBlock(world, a, y, c, player);
                     }
@@ -175,7 +180,6 @@ public class ItemFluxHoe extends ItemTool implements IEnergyTool {
                     list.add(StatCollector.translateToLocal("rfdrills.enchantable.tooltip"));
                 }
             } else {
-                //list.add(StatCollector.translateToLocal("info.cofh.hold") + " §e§o" + StatCollector.translateToLocal("info.cofh.shift") + " §r§7" + StatCollector.translateToLocal("info.cofh.forDetails"));
                 list.add(cofh.lib.util.helpers.StringHelper.shiftForDetails());
             }
         }catch (Exception e){
@@ -229,7 +233,7 @@ public class ItemFluxHoe extends ItemTool implements IEnergyTool {
 
     @Override
     public boolean canProperlyHarvest(ItemStack stack, Block block, int meta) {
-        return false;
+        return ToolHelper.isToolEffective(stack, block, meta);
     }
 
     @Override
