@@ -32,7 +32,7 @@ import java.util.Set;
 public class ItemFluxHoe extends ItemTool implements IEnergyTool {
     public static final Set<Material> effectiveMaterials = Sets.newHashSet(Material.leaves, Material.plants, Material.vine, Material.web);
 
-    private static ToolTier tier = ToolTier.HOE;
+    private static final ToolTier tier = ToolTier.HOE;
     public ItemFluxHoe() {
         super(2.0F, tier.material, null);
         this.setCreativeTab(RFDrills.RFDrillsTab);
@@ -84,28 +84,6 @@ public class ItemFluxHoe extends ItemTool implements IEnergyTool {
         super.setDamage(stack, 0);
     }
 
-    /*private void harvestBlock(World world, int x, int y, int z, EntityPlayer player){
-        Block block = world.getBlock(x, y, z);
-        if (block.getBlockHardness(world, x, y, z) < 0 || block.equals(Blocks.waterlily)) {
-            return;
-        }
-        int meta = world.getBlockMetadata(x, y, z);
-        BlockEvent.BreakEvent event = new BlockEvent.BreakEvent(x, y, z, world, block, meta, player);
-
-        MinecraftForge.EVENT_BUS.post(event);
-        if(!event.isCanceled()) {
-            if (block.canHarvestBlock(player, meta)) {
-                block.harvestBlock(world, player, x, y, z, meta);
-            }
-            world.setBlockToAir(x, y, z);
-        }
-
-        if (!world.isRemote && block.equals(Blocks.vine))
-            block.dropBlockAsItem(world, x, y, z, world.getBlockMetadata(x, y, z), 1);
-
-        world.setBlockToAir(x, y, z);
-    } */
-
     @Override
     public boolean onBlockStartBreak(ItemStack stack, int x, int y, int z, EntityPlayer player) {
         World world = player.worldObj;
@@ -142,10 +120,12 @@ public class ItemFluxHoe extends ItemTool implements IEnergyTool {
         if(getEnergyStored(stack) == 0) return false;
         if(!ToolHelper.hoeBlock(stack, world, x, y, z, sideHit, player)) return false; //if the player right-clicks a block of cobble near a block of dirt we won't till the dirt
 
-        for(int a = x - 1; a <= x + 1; a++) {
-            for(int c = z - 1; c <= z + 1; c++) { //don't care about y levels with a hoe
-                if(!(a == x && c == z)) { //we already tilled the block at x, y, z
-                    ToolHelper.hoeBlock(stack, world, a, y, c, sideHit, player);
+        if(!player.isSneaking()) {
+            for (int a = x - 1; a <= x + 1; a++) {
+                for (int c = z - 1; c <= z + 1; c++) { //don't care about y levels with a hoe
+                    if (!(a == x && c == z)) { //we already tilled the block at x, y, z
+                        ToolHelper.hoeBlock(stack, world, a, y, c, sideHit, player);
+                    }
                 }
             }
         }
@@ -232,14 +212,16 @@ public class ItemFluxHoe extends ItemTool implements IEnergyTool {
     }
 
     @Override
-    public boolean canProperlyHarvest(ItemStack stack, Block block, int meta) {
-        return ToolHelper.isToolEffective(stack, block, meta);
-    }
-
-    @Override
     public String writeModeInfo(ItemStack stack) {
         return "";
     }
+
+    @Override
+    public EnumModIntegration getModType() {
+        return EnumModIntegration.OTHER;
+    }
+
+    /* IEnergyContainerItem */
 
     @Override
     public int receiveEnergy(ItemStack stack, int maxReceive, boolean simulate) {

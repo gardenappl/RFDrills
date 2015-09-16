@@ -47,9 +47,10 @@ rfdrills.chainsaw.tooltip=§aТакже работает как ножницы.
 rfdrills.crusher.tooltip=§aРаботает как кирка, лопата и топор.
 rfdrills.energy_per_block.tooltip=Энергии за блок: %s RF
 rfdrills.can_break.tooltip=§cСломается при нехватке энергии.
-rfdrills.chainsaw_has_modes.tooltip=§b§oНажмите %s, чтобы переключить ножницы.
+rfdrills.chainsaw_has_modes.tooltip=§b§oНажмите %s, чтобы переключить режим ножниц.
 rfdrills.drill_has_modes.tooltip=§b§oНажмите %s, чтобы изменить режим копания.
-rfdrills.crusher_has_modes.tooltip=§b§oНажмите %s, чтобы изменить режим копания.
+rfdrills.chainsaw_has_modes.sneak.tooltip=§b§oИспользуйте сидя, чтобы переключить режим ножниц.
+rfdrills.drill_has_modes.sneak.tooltip=§b§oИспользуёте сидя, чтобы изменить режим копания.
 rfdrills.enchantable.tooltip=§aМожет быть зачарована.
 
 rfdrills.soul_upgrade.tooltip=Улучшение для Крушителя
@@ -97,6 +98,8 @@ config.flux_crusher=Наполненый флаксом крушитель
 config.flux_crusher.tooltip=Конфигурировать свойства Наполненого флаксом крушителя
 config.soul_crusher=Крушитель из тёмного соулария
 config.soul_crusher.tooltip=Конфигурировать свойства Крушителя из тёмного соулария
+config.hoe=Флаксовая мотыга
+config.hoe.tooltip=Конфигурировать свойства Флаксовой мотыги
 config.chainsaw_tier1=Пилы 1 уровня
 config.chainsaw_tier1.tooltip=Конфигурировать свойства пил 1 уровня
 config.chainsaw_tier2=Пилы 2 уровня
@@ -125,7 +128,6 @@ config.damage.tooltip=Урон, который наносит инструмен
 config.enchant=Зачаровываемость
 config.enchant.tooltip=Зачаровываемость предмета (0 - нельзя зачаровать)
 
-#Please don't translate the words "true" and "false"
 config.integrateTE=Включить интеграцию TE
 config.integrateTE.tooltip=Переключите на "false" чтобы отменить интеграцию с Thermal Expansion
 config.integrateEIO=Включить интеграцию EIO
@@ -134,6 +136,14 @@ config.integrateRArs=Включить интеграцию RA
 config.integrateRArs.tooltip=Переключите на "false" чтобы отменить интеграцию с Redstone Arsenal
 config.shearsDefault=Ножницы по умолчанию
 config.shearsDefault.tooltip=Переключите на "false" чтобы отменить функцию ножниц у пил нижних уровней
+config.modeSoundTE=Звук переключения режимов TE
+config.modeSoundTE.tooltip=Переключите на "false" чтобы отменить звуковые еффекты при переключении режимов инструментов Thermal Expansion
+config.modeSoundEIO=Звук переключения режимов EIO
+config.modeSoundEIO.tooltip=Переключите на "true" чтобы включить звуковые еффекты при переключении режимов инструментов EnderIO
+config.modeShiftClickTE=Shift+ПКМ переключение режимов TE
+config.modeShiftClickTE.tooltip=Переключите на "true" чтобы позволить переключение режимов инструментов Thermal Expansion используя Shift+ПКМ (по умолчанию используется кнопка "Усилить/Ослабить предмет" от CoFH)
+config.modeShiftClickEIO=Shift+ПКМ переключение режимов EIO
+config.modeShiftClickEIO.tooltip=Переключите на "false" чтобы запретить переключение режимов инструментов EnderIO используя Shift+ПКМ (будет использоваться кнопка "Усилить/Ослабить предмет" от CoFH)
 
 option.rfdrills.waila_rf=Использование RF
 option.rfdrills.waila_mode=Режим копания

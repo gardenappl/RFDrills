@@ -10,9 +10,8 @@ public class SoulUpgradeHelper {
     public static ItemStack applyUpgrade(ItemStack stack, AbstractSoulUpgrade upgrade, byte level){
         ItemStack upgradedStack = stack.copy();
 
-        if(upgradedStack.stackTagCompound == null){
+        if(upgradedStack.stackTagCompound == null)
             upgradedStack.stackTagCompound = new NBTTagCompound();
-        }
 
         NBTTagCompound upgrades = upgradedStack.stackTagCompound.getCompoundTag("Upgrades");
 
@@ -22,7 +21,8 @@ public class SoulUpgradeHelper {
     }
 
     public static byte getUpgradeLevel(ItemStack stack, AbstractSoulUpgrade upgrade){
-        if(stack.stackTagCompound == null) return 0;
+        if(stack.stackTagCompound == null)
+            return 0;
 
         NBTTagCompound upgrades = stack.stackTagCompound.getCompoundTag("Upgrades");
         return upgrades.getByte(upgrade.getUnlocalizedName());
@@ -33,9 +33,8 @@ public class SoulUpgradeHelper {
 
         for(AbstractSoulUpgrade upgrade : SoulUpgrades.registry){
             byte level = getUpgradeLevel(stack, upgrade);
-            if(level != 0){
+            if(level != 0)
                 map.put(upgrade, level);
-            }
         }
 
         return map;

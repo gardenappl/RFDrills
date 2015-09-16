@@ -25,6 +25,7 @@ public class ToolTier { //look into ConfigHandler for more info
     public EnumRarity rarity;
     public boolean canBreak;
     public boolean hasModes;
+
     public ToolTier(Item.ToolMaterial material, int maxEnergy, int rechargeRate, int energyPerBlock, EnumRarity rarity, boolean canBreak, boolean hasModes){
         this.material = material;
         this.maxEnergy = maxEnergy;
@@ -34,4 +35,5 @@ public class ToolTier { //look into ConfigHandler for more info
         this.canBreak = canBreak;
         this.hasModes = hasModes;
     }
+
 }

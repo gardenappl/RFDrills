@@ -9,7 +9,7 @@ import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import goldenapple.rfdrills.compat.versionchecker.VersionCheckerCompat;
-import goldenapple.rfdrills.compat.waila.WailaHandler;
+import goldenapple.rfdrills.compat.waila.WailaCompat;
 import goldenapple.rfdrills.config.ConfigHandler;
 import goldenapple.rfdrills.init.ModItems;
 import goldenapple.rfdrills.init.ModRecipes;
@@ -70,7 +70,7 @@ public class RFDrills {
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
-        FMLInterModComms.sendMessage("Waila", "register", WailaHandler.class.getName() + ".init");
+        FMLInterModComms.sendMessage("Waila", "register", WailaCompat.class.getName() + ".init");
         VersionCheckerCompat.init();
         ModRecipes.init();
 

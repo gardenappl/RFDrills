@@ -8,6 +8,7 @@ import cofh.repack.codechicken.lib.math.MathHelper;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import goldenapple.rfdrills.RFDrills;
+import goldenapple.rfdrills.config.ConfigHandler;
 import goldenapple.rfdrills.item.soulupgrade.AbstractSoulUpgrade;
 import goldenapple.rfdrills.item.soulupgrade.SoulUpgradeHelper;
 import goldenapple.rfdrills.item.soulupgrade.SoulUpgrades;
@@ -186,20 +187,35 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
     }
 
     @Override
+    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+        if(!world.isRemote && player.isSneaking() && MiscUtil.shouldModeShiftClick(this)){
+            setEmpoweredState(stack, !isEmpowered(stack));
+            onStateChange(player, stack);
+        }
+        return stack;
+    }
+
+    @Override
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int sideHit, float hitX, float hitY, float hitZ) {
         if(getEnergyStored(stack) == 0) return false;
         if(SoulUpgradeHelper.getUpgradeLevel(stack, SoulUpgrades.upgradeFork) == 0) return false;
         if(!ToolHelper.hoeBlock(stack, world, x, y, z, sideHit, player)) return false; //if the player right-clicks a block of cobble near a block of dirt we won't till the dirt
 
-        int radius = 0;
-
+        int xRadius = 0, zRadius = 0;
         switch (getMode(stack)){
-            case 2: radius = 1; break;
-            case 3: radius = 2; break;
+            case 1:
+                switch(MathHelper.floor_double((player.rotationYaw * 4F) / 360F + 0.5D) & 3) { //Stolen from MineFactoryReloaded https://github.com/powercrystals/MineFactoryReloaded/blob/master/src/powercrystals/minefactoryreloaded/block/BlockConveyor.java
+                    case 0: zRadius = 1; break;
+                    case 1: xRadius = 1; break;
+                    case 2: zRadius = 1; break;
+                    case 3: xRadius = 1; break;
+                } break;
+            case 2: xRadius = 1; zRadius = 1; break;
+            case 3: xRadius = 2; zRadius = 2; break;
         }
 
-        for(int a = x - radius; a <= x + radius; a++) {
-            for(int c = z - radius; c <= z + radius; c++) { //don't care about y levels with a hoe
+        for(int a = x - xRadius; a <= x + xRadius; a++) {
+            for(int c = z - zRadius; c <= z + zRadius; c++) { //don't care about y levels with a hoe
                 if(!(a == x && c == z)) { //we already tilled the block at x, y, z
                     ToolHelper.hoeBlock(stack, world, a, y, c, sideHit, player);
                 }
@@ -235,7 +251,13 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
                     upgrade.addRecipeDescription(stack, list);
                 }
             }
-            list.add(StringHelper.writeModeSwitchInfo("rfdrills.crusher_has_modes.tooltip", KeyBindingEmpower.instance));
+
+            if (tier.hasModes) {
+                if (ConfigHandler.modeShiftClickEIO)
+                    list.add(StatCollector.translateToLocal("rfdrills.drill_has_modes.sneak.tooltip"));
+                else
+                    list.add(StringHelper.writeModeSwitchInfo("rfdrills.drill_has_modes.tooltip", KeyBindingEmpower.instance));
+            }
         } else {
             for(Map.Entry<AbstractSoulUpgrade, Byte> entry : SoulUpgradeHelper.getUpgrades(stack).entrySet())
                 list.add(EnumChatFormatting.DARK_AQUA.toString() + StringHelper.writeUpgradeInfo(entry.getValue(), entry.getKey()));
@@ -334,9 +356,11 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
     }
 
     @Override
-    public boolean canProperlyHarvest(ItemStack stack, Block block, int meta) {
-        return ToolHelper.isToolEffective(stack, block, meta);
+    public EnumModIntegration getModType() {
+        return EnumModIntegration.EIO;
     }
+
+    /* IEmpowerableItem */
 
     @Override
     public int receiveEnergy(ItemStack stack, int maxReceive, boolean simulate) {
@@ -418,6 +442,12 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
 
     @Override
     public void onStateChange(EntityPlayer player, ItemStack stack) {
+        if(ConfigHandler.modeSoundEIO) {
+            if (getMode(stack) == 0)
+                player.worldObj.playSoundAtEntity(player, "random.orb", 0.2F, 0.6F);
+            else
+                player.worldObj.playSoundAtEntity(player, "ambient.weather.thunder", 0.4F, 1.0F);
+        }
         player.addChatComponentMessage(new ChatComponentText(writeModeInfo(stack)));
     }
 }

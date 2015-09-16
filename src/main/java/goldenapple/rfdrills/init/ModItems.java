@@ -19,10 +19,10 @@ public class ModItems {
     public static ItemMultiMetadata componentTE = new ItemMultiMetadata(Names.COMPONENTS_TE, Names.COMPONENT_TE);
     public static ItemMultiMetadata replacementRA1 = new ItemMultiMetadata(Names.RA_REPLACEMENTS, Names.REPLACEMENT_RA1);
 
-    public static Item leadstoneDrill = new ItemDrill(Names.LEADSTONE_DRILL, ToolTier.DRILL1);
-    public static Item hardenedDrill = new ItemDrill(Names.HARDENED_DRILL, ToolTier.DRILL2);
-    public static Item redstoneDrill = new ItemDrill(Names.REDSTONE_DRILL, ToolTier.DRILL3);
-    public static Item resonantDrill = new ItemDrill(Names.RESONANT_DRILL, ToolTier.DRILL4);
+    public static Item leadstoneDrill = new ItemDrill(Names.LEADSTONE_DRILL, ToolTier.DRILL1).setModType(EnumModIntegration.TE);
+    public static Item hardenedDrill = new ItemDrill(Names.HARDENED_DRILL, ToolTier.DRILL2).setModType(EnumModIntegration.TE);
+    public static Item redstoneDrill = new ItemDrill(Names.REDSTONE_DRILL, ToolTier.DRILL3).setModType(EnumModIntegration.TE);
+    public static Item resonantDrill = new ItemDrill(Names.RESONANT_DRILL, ToolTier.DRILL4).setModType(EnumModIntegration.TE);
 
     public static Item fluxCrusher = new ItemFluxCrusher();
     public static Item fluxHoe = new ItemFluxHoe();
@@ -92,7 +92,6 @@ public class ModItems {
             OreDictionary.registerOre("ingotDarkSoularium", new ItemStack(GameRegistry.findItem("simplyjetpacks", "components"), 1, 70));
         } else {
             LogHelper.info("Simply Jetpacks EIO items not found! Using replacement items...");
-
             GameRegistry.registerItem(replacementSJ, Names.REPLACEMENT_SJ);
             OreDictionary.registerOre("ingotDarkSoularium", new ItemStack(replacementSJ, 1, LibMetadata.DARK_SOULARIUM));
         }

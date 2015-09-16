@@ -12,10 +12,19 @@ import net.minecraft.stats.StatList;
 import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.ForgeEventFactory;
 import net.minecraftforge.event.entity.player.UseHoeEvent;
 import net.minecraftforge.event.world.BlockEvent;
 
 public class ToolHelper {
+    public static boolean isToolEffective(ItemStack stack, World world, int x, int y, int z){
+        Block block = world.getBlock(x, y, z);
+        if(block.getBlockHardness(world, x, y, z) < 0) //unbreakable
+            return false;
+        else
+            return isToolEffective(stack, block, world.getBlockMetadata(x, y, z)) || block.getBlockHardness(world, x, y, z) == 0;
+    }
+
     public static boolean isToolEffective(ItemStack stack, Block block, int meta){
         if(block == null)
             return false;
@@ -54,8 +63,9 @@ public class ToolHelper {
             return;
         EntityPlayerMP player = (EntityPlayerMP) entityPlayer;
 
-        if(!((isToolEffective(player.getCurrentEquippedItem(), block, meta) && block.getBlockHardness(world, x, y, z) >= 0) || player.capabilities.isCreativeMode))
-            return;
+        if(!ForgeEventFactory.doPlayerHarvestCheck(player, block, isToolEffective(player.getCurrentEquippedItem(), world, x, y, z)))
+            if(!player.capabilities.isCreativeMode)
+                return;
 
         BlockEvent.BreakEvent event = ForgeHooks.onBlockBreakEvent(world, player.theItemInWorldManager.getGameType(), player, x, y, z);
         if(event.isCanceled())
@@ -73,7 +83,6 @@ public class ToolHelper {
                 world.playAuxSFX(2001, x, y, z, Block.getIdFromBlock(block) + meta << 12);
             }
         }else { //Client-side: Simulating PlayerControllerMP
-
             if(block.removedByPlayer(world, player, x, y ,z, true))
                 block.onBlockDestroyedByPlayer(world, x, y, z, meta);
         }

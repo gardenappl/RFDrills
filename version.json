@@ -2,11 +2,17 @@
 	"versionList": [
 		{
 			"mcVersion": "Minecraft 1.7.10",
-			"modVersion": "1.6.2",
+			"modVersion": "1.6.3",
 			"changeLog": [
-                "Fixed the Flux-Infused Crusher skipping blocks in a weird cross-like pattern."
+			    "Added config options to change modes via shift+right click (enabled automatically for EIO tools)",
+			    "Added config options to enable/disable sounds when switching modes (disabled automatically for EIO tools)",
+			    "The Flux Hoe only hoes 1 block at a time if the player is sneaking",
+			    "The Dark Soularium Crusher can now hoe in a 1x3x1 area (depends on the direction the player is facing)",
+			    "Organized the config GUI and fixed some typos in property names. You won't lose any of your config data",
+                "Fixed AoE tools not harvesting blocks properly (some people even said they could break bedrock... Whoops.",
+                "Fixed the Dark Soularium Crusher not being craftable if SimplyJetpacks is installed but it's EIO integration is disabled"
 			],
-			"updateURL": "http://minecraft.curseforge.com/mc-mods/229846-rfdrills/files/2245657/download",
+			"updateURL": "http://minecraft.curseforge.com/mc-mods/229846-rfdrills/files/2257240/download",
 			"isDirectLink": "true",
 			"newFileName": ""
 		}

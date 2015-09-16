@@ -3,6 +3,7 @@ package goldenapple.rfdrills.compat.waila;
 import goldenapple.rfdrills.item.*;
 import goldenapple.rfdrills.reference.Reference;
 import goldenapple.rfdrills.util.StringHelper;
+import goldenapple.rfdrills.util.ToolHelper;
 import mcp.mobius.waila.api.IWailaConfigHandler;
 import mcp.mobius.waila.api.IWailaDataAccessor;
 import mcp.mobius.waila.api.IWailaDataProvider;
@@ -13,19 +14,20 @@ import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.world.World;
 
 import java.util.List;
 
-public class WailaHandler implements IWailaDataProvider {
+public class WailaCompat implements IWailaDataProvider {
     //Singleton
-    private static WailaHandler instance;
+    private static WailaCompat instance;
 
-    private WailaHandler(){}
+    private WailaCompat(){}
 
-    public static WailaHandler getInstance(){
+    public static WailaCompat getInstance(){
         if(instance == null){
-            instance = new WailaHandler();
+            instance = new WailaCompat();
         }
         return instance;
     }
@@ -43,6 +45,7 @@ public class WailaHandler implements IWailaDataProvider {
     @Override
     public List<String> getWailaBody(ItemStack stack, List<String> tooltip, IWailaDataAccessor accessor, IWailaConfigHandler config) {
         Block block = accessor.getBlock();
+        MovingObjectPosition pos = accessor.getPosition();
         int meta = accessor.getMetadata();
 
         if(accessor.getPlayer().getCurrentEquippedItem() == null || !(accessor.getPlayer().getCurrentEquippedItem().getItem() instanceof IEnergyTool))
@@ -53,13 +56,14 @@ public class WailaHandler implements IWailaDataProvider {
 
         //for disguised blocks
         if(stack.getItem() instanceof ItemBlock){
-            block = ((ItemBlock) stack.getItem()).field_150939_a;
+            block = Block.getBlockFromItem(stack.getItem());
             meta = stack.getItemDamage();
         }
 
         if(equipStack.getItem() instanceof IEnergyTool){
             if(config.getConfig("rfdrills.waila_rf")) {
-                tooltip.add(StringHelper.writeEnergyPerBlockInfo(energyTool.getEnergyPerUse(equipStack, block, meta), energyTool.canProperlyHarvest(equipStack, block, meta)));
+                boolean harvest = ToolHelper.isToolEffective(equipStack, block, meta) || block.getBlockHardness(accessor.getWorld(), pos.blockX, pos.blockY, pos.blockZ) == 0;
+                tooltip.add(StringHelper.writeEnergyPerBlockInfo(energyTool.getEnergyPerUse(equipStack, block, meta), harvest));
 
             }
             if(config.getConfig("rfdrills.waila_mode") && (accessor.getPlayer().isSneaking() || !(config.getConfig("rfdrills.waila_mode.sneakingonly")))) {

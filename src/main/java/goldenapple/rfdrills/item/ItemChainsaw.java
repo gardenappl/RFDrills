@@ -34,12 +34,18 @@ import java.util.List;
 public class ItemChainsaw extends ItemAxe implements IEnergyTool, IEqualityOverrideItem, IEmpowerableItem{
     private final String name;
     private final ToolTier tier;
+    private EnumModIntegration modType;
 
     public ItemChainsaw(String name, ToolTier tier){
         super(tier.material);
         this.name = name;
         this.tier = tier;
         this.setCreativeTab(RFDrills.RFDrillsTab);
+    }
+
+    public ItemChainsaw setModType(EnumModIntegration modType) {
+        this.modType = modType;
+        return this;
     }
 
     @Override
@@ -133,6 +139,15 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool, IEqualityOverr
     }
 
     @Override
+    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+        if(!world.isRemote && player.isSneaking() && MiscUtil.shouldModeShiftClick(this)){
+            setEmpoweredState(stack, !isEmpowered(stack));
+            onStateChange(player, stack);
+        }
+        return stack;
+    }
+
+    @Override
     @SuppressWarnings({"unchecked"})
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean what) {
         list.add(StringHelper.writeEnergyInfo(getEnergyStored(stack), tier.maxEnergy));
@@ -146,8 +161,14 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool, IEqualityOverr
                 list.add(StatCollector.translateToLocal("rfdrills.can_break.tooltip"));
             if (toolMaterial.getEnchantability() > 0)
                 list.add(StatCollector.translateToLocal("rfdrills.enchantable.tooltip"));
-            if (tier.hasModes)
-                list.add(StringHelper.writeModeSwitchInfo("rfdrills.chainsaw_has_modes.tooltip", KeyBindingEmpower.instance));
+            if (tier.hasModes) {
+                if(!ConfigHandler.modeShiftClickTE && getModType() == EnumModIntegration.TE)
+                    list.add(StringHelper.writeModeSwitchInfo("rfdrills.chainsaw_has_modes.tooltip", KeyBindingEmpower.instance));
+                else if(!ConfigHandler.modeShiftClickEIO && getModType() == EnumModIntegration.EIO)
+                    list.add(StringHelper.writeModeSwitchInfo("rfdrills.chainsaw_has_modes.tooltip", KeyBindingEmpower.instance));
+                else
+                    list.add(StatCollector.translateToLocal("rfdrills.chainsaw_has_modes.sneak.tooltip"));
+            }
         } else
             list.add(cofh.lib.util.helpers.StringHelper.shiftForDetails());
     }
@@ -191,16 +212,11 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool, IEqualityOverr
 
     @Override
     public int getEnergyPerUse(ItemStack stack, Block block, int meta) {
-        if(isEmpowered(stack)) {
+        if(isEmpowered(stack))
             return block instanceof IShearable ? getEnergyPerUse(stack) / 5 : getEnergyPerUse(stack);
-        }else {
+        else
             return getEnergyPerUse(stack);
-        }
-    }
 
-    @Override
-    public boolean canProperlyHarvest(ItemStack stack, Block block, int meta) {
-        return ToolHelper.isToolEffective(stack, block, meta);
     }
 
     @Override
@@ -213,6 +229,11 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool, IEqualityOverr
             return StatCollector.translateToLocal("rfdrills.shears_off.mode");
     }
 
+    @Override
+    public EnumModIntegration getModType() {
+        return modType;
+    }
+
     /* IEnergyContainerItem */
 
     @Override
@@ -220,9 +241,8 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool, IEqualityOverr
         int energy = getEnergyStored(stack);
         int energyReceived = Math.min(tier.maxEnergy - energy, Math.min(tier.rechargeRate, maxReceive));
 
-        if (!simulate) {
+        if (!simulate)
             setEnergy(stack, energy + energyReceived);
-        }
         return energyReceived;
     }
 
@@ -233,13 +253,12 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool, IEqualityOverr
 
     @Override
     public int getEnergyStored(ItemStack stack) {
-        if(stack.stackTagCompound == null){
+        if(stack.stackTagCompound == null)
             stack.stackTagCompound = new NBTTagCompound();
-        }
 
-        if(stack.stackTagCompound.hasKey("Energy")) {
+        if(stack.stackTagCompound.hasKey("Energy"))
             return stack.stackTagCompound.getInteger("Energy");
-        }else{
+        else{
             stack.stackTagCompound.setInteger("Energy", 0);
             return 0;
         }
@@ -280,6 +299,12 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool, IEqualityOverr
 
     @Override
     public void onStateChange(EntityPlayer player, ItemStack stack) {
+        if(MiscUtil.shouldMakeModeSwitchSound(this)) {
+            if (!isEmpowered(stack))
+                player.worldObj.playSoundAtEntity(player, "random.orb", 0.2F, 0.6F);
+            else
+                player.worldObj.playSoundAtEntity(player, "ambient.weather.thunder", 0.4F, 1.0F);
+        }
         player.addChatComponentMessage(new ChatComponentText(writeModeInfo(stack)));
     }
 

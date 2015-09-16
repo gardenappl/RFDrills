@@ -19,11 +19,13 @@ public class RFDrillsGuiConfig extends GuiConfig{
     }
 
     /** Compiles a list of config elements */
+    @SuppressWarnings("unchecked")
     private static List<IConfigElement> getConfigElements() {
         List<IConfigElement> list = new ArrayList<IConfigElement>();
 
+        list.addAll(new ConfigElement(ConfigHandler.config.getCategory(Configuration.CATEGORY_GENERAL)).getChildElements()); //other things from the General category get a separate button
+
         //Add categories to config GUI
-        list.add(getCategoryElement(Configuration.CATEGORY_GENERAL, StatCollector.translateToLocal("config.general"), "config.general"));
         list.add(getCategoryElement("drill_tier1", StatCollector.translateToLocal("config.drill_tier1"), "config.drill_tier1"));
         list.add(getCategoryElement("drill_tier2", StatCollector.translateToLocal("config.drill_tier2"), "config.drill_tier2"));
         list.add(getCategoryElement("drill_tier3", StatCollector.translateToLocal("config.drill_tier3"), "config.drill_tier3"));

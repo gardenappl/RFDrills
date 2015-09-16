@@ -35,8 +35,9 @@ import java.util.Set;
 public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrideItem, IEmpowerableItem {
     private static final Set<Material> effectiveMaterials = Sets.newHashSet(Material.anvil, Material.clay, Material.craftedSnow, Material.glass, Material.dragonEgg, Material.grass, Material.ground, Material.ice, Material.snow, Material.iron, Material.rock, Material.sand, Material.coral);
 
-    private ToolTier tier;
+    private final ToolTier tier;
     private final String name;
+    private EnumModIntegration modType;
 
     public ItemDrill(String name, ToolTier tier){
         super(1.0F, tier.material, null);
@@ -45,6 +46,11 @@ public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrid
         this.setCreativeTab(RFDrills.RFDrillsTab);
         this.setHarvestLevel("pickaxe", tier.material.getHarvestLevel());
         this.setHarvestLevel("shovel", tier.material.getHarvestLevel());
+    }
+
+    public ItemDrill setModType(EnumModIntegration modType){
+        this.modType = modType;
+        return this;
     }
 
     @Override
@@ -168,6 +174,15 @@ public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrid
     }
 
     @Override
+    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+        if(!world.isRemote && player.isSneaking() && MiscUtil.shouldModeShiftClick(this)){
+            setEmpoweredState(stack, !isEmpowered(stack));
+            onStateChange(player, stack);
+        }
+        return stack;
+    }
+
+    @Override
     @SuppressWarnings({"unchecked"})
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean what) {
         list.add(StringHelper.writeEnergyInfo(getEnergyStored(stack), tier.maxEnergy));
@@ -181,8 +196,12 @@ public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrid
                 list.add(StatCollector.translateToLocal("rfdrills.can_break.tooltip"));
             if (toolMaterial.getEnchantability() > 0)
                 list.add(StatCollector.translateToLocal("rfdrills.enchantable.tooltip"));
-            if (tier.hasModes)
-                list.add(StringHelper.writeModeSwitchInfo("rfdrills.drill_has_modes.tooltip", KeyBindingEmpower.instance));
+            if (tier.hasModes) {
+                if (MiscUtil.shouldModeShiftClick(this))
+                    list.add(StatCollector.translateToLocal("rfdrills.drill_has_modes.sneak.tooltip"));
+                else
+                    list.add(StringHelper.writeModeSwitchInfo("rfdrills.drill_has_modes.tooltip", KeyBindingEmpower.instance));
+            }
         } else
             list.add(cofh.lib.util.helpers.StringHelper.shiftForDetails());
     }
@@ -239,8 +258,8 @@ public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrid
     }
 
     @Override
-    public boolean canProperlyHarvest(ItemStack stack, Block block, int meta) {
-        return ToolHelper.isToolEffective(stack, block, meta);
+    public EnumModIntegration getModType() {
+        return modType;
     }
 
     /* IEnergyContainerItem */
@@ -319,6 +338,12 @@ public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrid
 
     @Override
     public void onStateChange(EntityPlayer player, ItemStack stack) {
+        if(MiscUtil.shouldMakeModeSwitchSound(this)) {
+            if (!isEmpowered(stack))
+                player.worldObj.playSoundAtEntity(player, "random.orb", 0.2F, 0.6F);
+            else
+                player.worldObj.playSoundAtEntity(player, "ambient.weather.thunder", 0.4F, 1.0F);
+        }
         player.addChatComponentMessage(new ChatComponentText(writeModeInfo(stack)));
     }
 }

@@ -6,6 +6,7 @@ import cofh.core.util.KeyBindingEmpower;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import goldenapple.rfdrills.RFDrills;
+import goldenapple.rfdrills.config.ConfigHandler;
 import goldenapple.rfdrills.reference.Names;
 import goldenapple.rfdrills.reference.Reference;
 import goldenapple.rfdrills.util.LogHelper;
@@ -36,7 +37,7 @@ import java.util.Set;
 public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityOverrideItem, IEmpowerableItem{
     private static final Set<Material> effectiveMaterials = Sets.newHashSet(Material.anvil, Material.clay, Material.craftedSnow, Material.glass, Material.dragonEgg, Material.grass, Material.ground, Material.ice, Material.snow, Material.iron, Material.rock, Material.sand, Material.coral, Material.wood, Material.cloth, Material.gourd);
 
-    private static ToolTier tier = ToolTier.FLUX_CRUSHER;
+    private static final ToolTier tier = ToolTier.FLUX_CRUSHER;
     private IIcon iconEmpty;
     private IIcon iconActive;
     public ItemFluxCrusher(){
@@ -168,6 +169,15 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityO
     }
 
     @Override
+    public ItemStack onItemRightClick(ItemStack stack, World world, EntityPlayer player) {
+        if(!world.isRemote && player.isSneaking() && ConfigHandler.modeShiftClickTE){
+            setEmpoweredState(stack, !isEmpowered(stack));
+            onStateChange(player, stack);
+        }
+        return stack;
+    }
+
+    @Override
     @SuppressWarnings({"unchecked"})
     public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean what) {
         list.add(StringHelper.writeEnergyInfo(getEnergyStored(stack), tier.maxEnergy));
@@ -179,8 +189,12 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityO
             list.add(StatCollector.translateToLocal("rfdrills.crusher.tooltip"));
             if(tier.material.getEnchantability() > 0)
                 list.add(StatCollector.translateToLocal("rfdrills.enchantable.tooltip"));
-            if (tier.hasModes)
-                list.add(StringHelper.writeModeSwitchInfo("rfdrills.crusher_has_modes.tooltip", KeyBindingEmpower.instance));
+            if (tier.hasModes) {
+                if(ConfigHandler.modeShiftClickTE)
+                    list.add(StatCollector.translateToLocal("rfdrills.drill_has_modes.sneak.tooltip"));
+                else
+                    list.add(StringHelper.writeModeSwitchInfo("rfdrills.drill_has_modes.tooltip", KeyBindingEmpower.instance));
+            }
         } else
             list.add(cofh.lib.util.helpers.StringHelper.shiftForDetails());
     }
@@ -278,8 +292,8 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityO
     }
 
     @Override
-    public boolean canProperlyHarvest(ItemStack stack, Block block, int meta) {
-        return ToolHelper.isToolEffective(stack, block, meta);
+    public EnumModIntegration getModType() {
+        return EnumModIntegration.TE;
     }
 
     /* IEnergyContainerItem */
@@ -350,10 +364,12 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityO
 
     @Override
     public void onStateChange(EntityPlayer player, ItemStack stack) {
-        if(getMode(stack) == 0)
-            player.worldObj.playSoundAtEntity(player, "random.orb", 0.2F, 0.6F);
-        else
-            player.worldObj.playSoundAtEntity(player, "ambient.weather.thunder", 0.4F, 1.0F);
+        if(ConfigHandler.modeSoundTE) {
+            if (getMode(stack) == 0)
+                player.worldObj.playSoundAtEntity(player, "random.orb", 0.2F, 0.6F);
+            else
+                player.worldObj.playSoundAtEntity(player, "ambient.weather.thunder", 0.4F, 1.0F);
+        }
 
         player.addChatComponentMessage(new ChatComponentText(writeModeInfo(stack)));
     }

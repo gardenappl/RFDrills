@@ -47,9 +47,10 @@ rfdrills.chainsaw.tooltip=§aAlso serves as shears.
 rfdrills.crusher.tooltip=§aServes as a pick, a shovel and an axe.
 rfdrills.energy_per_block.tooltip=Energy per block: %s RF
 rfdrills.can_break.tooltip=§cWill break when it runs out of energy.
-rfdrills.chainsaw_has_modes.tooltip=§b§oPress %s to toggle shears.
+rfdrills.chainsaw_has_modes.tooltip=§b§oPress %s to toggle shears mode.
 rfdrills.drill_has_modes.tooltip=§b§oPress %s to switch mining modes.
-rfdrills.crusher_has_modes.tooltip=§b§oPress %s to switch mining modes.
+rfdrills.chainsaw_has_modes.sneak.tooltip=§b§oUse while sneaking to toggle shears mode.
+rfdrills.drill_has_modes.sneak.tooltip=§b§oUse while sneaking to switch mining modes.
 rfdrills.enchantable.tooltip=§aCan be enchanted.
 
 
@@ -133,7 +134,6 @@ config.damage.tooltip=Damage that the tool does when attacking enemies
 config.enchant=Enchantibility
 config.enchant.tooltip=Enchantiblity of the tool (0 - not enchantable)
 
-#Please don't translate the words "true" and "false"
 config.integrateTE=Enable TE integration
 config.integrateTE.tooltip=Set this to "false" to disable Thermal Expansion integration
 config.integrateEIO=Enable EIO integration
@@ -142,6 +142,14 @@ config.integrateRArs=Enable RA integration
 config.integrateRArs.tooltip=Set this to "false" to disable Redstone Arsenal integration
 config.shearsDefault=Shears default
 config.shearsDefault.tooltip=Set this to "false" to disable shears functionality for lower tier chainsaws
+config.modeSoundTE=TE Mode Switch Sound
+config.modeSoundTE.tooltip=Set this to "false" to disable sound effects when switching modes with Thermal Expansion tools.
+config.modeSoundEIO=EIO Mode Switch Sound
+config.modeSoundEIO.tooltip=Set this to "true" to enable sound effects when switching modes with EnderIO tools.
+config.modeShiftClickTE=TE Mode Switch Shift+Click
+config.modeShiftClickTE.tooltip=Set this to "true" to enable mode switching with a sneak-right click for Thermal Expansion tools (by default it uses the CoFH Empower key)
+config.modeShiftClickEIO=EIO Mode Switch Shift+Click
+config.modeShiftClickEIO.tooltip=Set this to "false" to disable mode switching with a sneak-right click for EnderIO tools (it will use the CoFH Empower key)
 
 option.rfdrills.waila_rf=Show RF usage
 option.rfdrills.waila_rf.sneakingonly=Sneak only: Show RF usage
