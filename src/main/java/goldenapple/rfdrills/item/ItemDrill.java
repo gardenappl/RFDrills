@@ -20,10 +20,7 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumRarity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemTool;
+import net.minecraft.item.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StatCollector;
@@ -37,7 +34,7 @@ public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrid
 
     private final ToolTier tier;
     private final String name;
-    private EnumModIntegration modType;
+    private EnumModType modType;
 
     public ItemDrill(String name, ToolTier tier){
         super(1.0F, tier.material, null);
@@ -48,7 +45,7 @@ public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrid
         this.setHarvestLevel("shovel", tier.material.getHarvestLevel());
     }
 
-    public ItemDrill setModType(EnumModIntegration modType){
+    public ItemDrill setModType(EnumModType modType){
         this.modType = modType;
         return this;
     }
@@ -202,8 +199,15 @@ public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrid
                 else
                     list.add(StringHelper.writeModeSwitchInfo("rfdrills.drill_has_modes.tooltip", KeyBindingEmpower.instance));
             }
+            if(MiscUtil.isItemSilent(stack))
+                list.add(StatCollector.translateToLocal("rfdrills.silent.tooltip"));
         } else
             list.add(cofh.lib.util.helpers.StringHelper.shiftForDetails());
+    }
+
+    @Override
+    public EnumAction getItemUseAction(ItemStack stack) {
+        return EnumAction.bow;
     }
 
     @Override
@@ -258,7 +262,7 @@ public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrid
     }
 
     @Override
-    public EnumModIntegration getModType() {
+    public EnumModType getModType() {
         return modType;
     }
 
@@ -338,7 +342,7 @@ public class ItemDrill extends ItemTool implements IEnergyTool, IEqualityOverrid
 
     @Override
     public void onStateChange(EntityPlayer player, ItemStack stack) {
-        if(MiscUtil.shouldMakeModeSwitchSound(this)) {
+        if(!MiscUtil.isItemSilent(stack)) {
             if (!isEmpowered(stack))
                 player.worldObj.playSoundAtEntity(player, "random.orb", 0.2F, 0.6F);
             else

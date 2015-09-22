@@ -4,6 +4,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLInterModComms;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
@@ -21,10 +22,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagByte;
 import net.minecraftforge.common.MinecraftForge;
 
-@Mod(modid = Reference.MOD_ID, version = Reference.VERSION, name = Reference.MOD_NAME, guiFactory = Reference.GUI_FACTORY, dependencies = Reference.DEPENDECIES)
+@Mod(modid = Reference.MOD_ID, version = Reference.VERSION, name = Reference.MOD_NAME, guiFactory = Reference.GUI_FACTORY, dependencies = Reference.DEPENDENCIES)
 public class RFDrills {
     @Mod.Instance
     public static RFDrills instance;
+    @SidedProxy(serverSide = Reference.COMMON_PROXY, clientSide = Reference.CLIENT_PROXY)
+    public static CommonProxy proxy;
     public static ConfigHandler configHandler;
     public static CreativeTabs RFDrillsTab;
 
@@ -33,6 +36,7 @@ public class RFDrills {
     public static boolean isRArsLoaded;
     public static boolean isRArmLoaded;
     public static boolean isSJLoaded;
+    public static boolean isXULoaded;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -41,6 +45,7 @@ public class RFDrills {
         isRArsLoaded = Loader.isModLoaded("RedstoneArsenal");
         isRArmLoaded = Loader.isModLoaded("RArm");
         isSJLoaded = Loader.isModLoaded("simplyjetpacks");
+        isXULoaded = Loader.isModLoaded("ExtraUtilities");
 
         configHandler = new ConfigHandler(event.getSuggestedConfigurationFile());
         FMLCommonHandler.instance().bus().register(configHandler);
@@ -56,11 +61,10 @@ public class RFDrills {
 
                 @Override
                 public Item getTabIconItem() {
-                    if (ConfigHandler.integrateTE) {
+                    if (ConfigHandler.integrateTE)
                         return ModItems.redstoneDrill;
-                    } else {
+                    else
                         return ModItems.basicDrill;
-                    }
                 }
             };
         }
@@ -74,10 +78,11 @@ public class RFDrills {
         VersionCheckerCompat.init();
         ModRecipes.init();
 
-        MinecraftForge.EVENT_BUS.register(new SoulUpgradeRecipeHandler());
+        if(ConfigHandler.integrateEIO)
+            MinecraftForge.EVENT_BUS.register(new SoulUpgradeRecipeHandler());
+        proxy.init();
     }
 
     @EventHandler
-    public void postInit(FMLPostInitializationEvent event) {
-    }
+    public void postInit(FMLPostInitializationEvent event) {}
 }

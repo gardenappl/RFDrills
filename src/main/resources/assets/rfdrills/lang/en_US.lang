@@ -52,6 +52,7 @@ rfdrills.drill_has_modes.tooltip=§b§oPress %s to switch mining modes.
 rfdrills.chainsaw_has_modes.sneak.tooltip=§b§oUse while sneaking to toggle shears mode.
 rfdrills.drill_has_modes.sneak.tooltip=§b§oUse while sneaking to switch mining modes.
 rfdrills.enchantable.tooltip=§aCan be enchanted.
+rfdrills.silent.tooltip=§aMuffled mode switching sound.
 
 
 rfdrills.soul_upgrade.tooltip=Upgrade for the Dark Soularium Crusher
@@ -75,7 +76,7 @@ rfdrills.upgrade.empowered.desc2=Unlocks other upgrades
 rfdrills.upgrade.fork=Fork
 rfdrills.upgrade.fork.recipe1=Diamond Hoe + 10 lvs
 rfdrills.upgrade.fork.desc1.1=Who needs a hoe
-rfdrills.upgrade.fork.desc1.2=when you have a fork
+rfdrills.upgrade.fork.desc1.2=when you have a fork?
 
 
 rfdrills.level.1=I
@@ -150,6 +151,8 @@ config.modeShiftClickTE=TE Mode Switch Shift+Click
 config.modeShiftClickTE.tooltip=Set this to "true" to enable mode switching with a sneak-right click for Thermal Expansion tools (by default it uses the CoFH Empower key)
 config.modeShiftClickEIO=EIO Mode Switch Shift+Click
 config.modeShiftClickEIO.tooltip=Set this to "false" to disable mode switching with a sneak-right click for EnderIO tools (it will use the CoFH Empower key)
+config.animationType=Mining Animation Type
+config.animationType.tooltip=Change the Drill/Chainsaw mining animation (0 = normal "swinging animation", 1 = "bow animation" in 3rd person only, 2 = "bow animation" in 1st and 3rd person")
 
 option.rfdrills.waila_rf=Show RF usage
 option.rfdrills.waila_rf.sneakingonly=Sneak only: Show RF usage

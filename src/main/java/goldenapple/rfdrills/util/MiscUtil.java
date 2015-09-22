@@ -1,9 +1,10 @@
 package goldenapple.rfdrills.util;
 
 import goldenapple.rfdrills.config.ConfigHandler;
-import goldenapple.rfdrills.item.EnumModIntegration;
+import goldenapple.rfdrills.item.EnumModType;
 import goldenapple.rfdrills.item.IEnergyTool;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import org.lwjgl.input.Keyboard;
 
 public class MiscUtil {
@@ -20,19 +21,16 @@ public class MiscUtil {
         return itemStack;
     }
 
-    public static boolean shouldMakeModeSwitchSound(IEnergyTool tool){
-        if(tool.getModType() == EnumModIntegration.TE && ConfigHandler.modeSoundTE)
-            return true;
-        else if(tool.getModType() == EnumModIntegration.EIO && ConfigHandler.modeSoundEIO)
-            return true;
-
-        return false;
+    public static boolean isItemSilent(ItemStack stack){
+        if(!stack.hasTagCompound())
+            stack.stackTagCompound = new NBTTagCompound();
+        return stack.stackTagCompound.getBoolean("isSilent");
     }
 
     public static boolean shouldModeShiftClick(IEnergyTool tool){
-        if(tool.getModType() == EnumModIntegration.TE && ConfigHandler.modeShiftClickTE)
+        if(tool.getModType() == EnumModType.TE && ConfigHandler.modeShiftClickTE)
             return true;
-        else if(tool.getModType() == EnumModIntegration.EIO && ConfigHandler.modeShiftClickEIO)
+        else if(tool.getModType() == EnumModType.EIO && ConfigHandler.modeShiftClickEIO)
             return true;
 
         return false;

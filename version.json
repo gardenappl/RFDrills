@@ -2,17 +2,15 @@
 	"versionList": [
 		{
 			"mcVersion": "Minecraft 1.7.10",
-			"modVersion": "1.6.3",
+			"modVersion": "1.7",
 			"changeLog": [
-			    "Added config options to change modes via shift+right click (enabled automatically for EIO tools)",
-			    "Added config options to enable/disable sounds when switching modes (disabled automatically for EIO tools)",
-			    "The Flux Hoe only hoes 1 block at a time if the player is sneaking",
-			    "The Dark Soularium Crusher can now hoe in a 1x3x1 area (depends on the direction the player is facing)",
-			    "Organized the config GUI and fixed some typos in property names. You won't lose any of your config data",
-                "Fixed AoE tools not harvesting blocks properly (some people even said they could break bedrock... Whoops.",
-                "Fixed the Dark Soularium Crusher not being craftable if SimplyJetpacks is installed but it's EIO integration is disabled"
+			    "Changed the drilling/chainsawing (is this a word?) animation. It now looks like you're actually 'drilling into the block'",
+			    "Added config options to enable/disable the animation in 1st and 3rd person mode",
+			    "Mode switch sounds can now be disabled by putting a tool and a block of Wool (or a Sound Muffler if ExU is installed) into a workbench",
+			    "If you want to get the sounds back, combine the tool with s Note Block",
+			    "Config options for mode switch sound no longer exist - they will get deleted from your configs automatically"
 			],
-			"updateURL": "http://minecraft.curseforge.com/mc-mods/229846-rfdrills/files/2257240/download",
+			"updateURL": "http://minecraft.curseforge.com/mc-mods/229846-rfdrills/files/2258850/download",
 			"isDirectLink": "true",
 			"newFileName": ""
 		}

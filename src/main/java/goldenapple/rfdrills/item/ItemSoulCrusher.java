@@ -89,8 +89,6 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
                     return efficiencyOnProperMaterial;
             }
         }else{
-            lol: LogHelper.info("lol");
-
             return 1.0F;
         }
     }
@@ -175,6 +173,8 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
                 }
             }
         }
+
+        ToolHelper.drainEnergy(stack, player, getEnergyPerUse(stack, world.getBlock(x, y, z), world.getBlockMetadata(x, y, z)));
         return false;
     }
 
@@ -197,9 +197,12 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
 
     @Override
     public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int sideHit, float hitX, float hitY, float hitZ) {
-        if(getEnergyStored(stack) == 0) return false;
-        if(SoulUpgradeHelper.getUpgradeLevel(stack, SoulUpgrades.upgradeFork) == 0) return false;
-        if(!ToolHelper.hoeBlock(stack, world, x, y, z, sideHit, player)) return false; //if the player right-clicks a block of cobble near a block of dirt we won't till the dirt
+        if(getEnergyStored(stack) == 0)
+            return false;
+        if(SoulUpgradeHelper.getUpgradeLevel(stack, SoulUpgrades.upgradeFork) == 0)
+            return false;
+        if(!ToolHelper.hoeBlock(stack, world, x, y, z, sideHit, player))
+            return false; //if the player right-clicks a block of cobble near a block of dirt we won't till the dirt
 
         int xRadius = 0, zRadius = 0;
         switch (getMode(stack)){
@@ -258,9 +261,12 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
                 else
                     list.add(StringHelper.writeModeSwitchInfo("rfdrills.drill_has_modes.tooltip", KeyBindingEmpower.instance));
             }
+            if(MiscUtil.isItemSilent(stack))
+                list.add(StatCollector.translateToLocal("rfdrills.silent.tooltip"));
         } else {
             for(Map.Entry<AbstractSoulUpgrade, Byte> entry : SoulUpgradeHelper.getUpgrades(stack).entrySet())
                 list.add(EnumChatFormatting.DARK_AQUA.toString() + StringHelper.writeUpgradeInfo(entry.getValue(), entry.getKey()));
+
             list.add(cofh.lib.util.helpers.StringHelper.shiftForDetails());
         }
     }
@@ -281,27 +287,24 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
     }
 
     public int getMode(ItemStack stack){
-        if(!tier.hasModes){
+        if(!tier.hasModes)
             return 0;
-        }
 
-        if(stack.stackTagCompound == null){
+        if(stack.stackTagCompound == null)
             return 0;
-        }
 
-        if(stack.stackTagCompound.hasKey("Mode")) {
+        if(stack.stackTagCompound.hasKey("Mode"))
             return stack.stackTagCompound.getByte("Mode");
-        }else{
+        else
             return 0;
-        }
     }
 
     public boolean setMode(ItemStack stack, int mode) {
-        if(getEnergyStored(stack) == 0) return false;
+        if(getEnergyStored(stack) == 0)
+            return false;
 
-        if(stack.stackTagCompound == null){
+        if(stack.stackTagCompound == null)
             stack.stackTagCompound = new NBTTagCompound();
-        }
 
         stack.stackTagCompound.setByte("Mode", (byte)mode);
         return true;
@@ -320,9 +323,8 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
 
     @Override
     public ItemStack setEnergy(ItemStack stack, int energy) {
-        if(stack.stackTagCompound == null){
+        if(stack.stackTagCompound == null)
             stack.stackTagCompound = new NBTTagCompound();
-        }
 
         stack.stackTagCompound.setInteger("Energy", Math.min(energy, getMaxEnergyStored(stack)));
         return stack;
@@ -356,8 +358,8 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
     }
 
     @Override
-    public EnumModIntegration getModType() {
-        return EnumModIntegration.EIO;
+    public EnumModType getModType() {
+        return EnumModType.EIO;
     }
 
     /* IEmpowerableItem */
@@ -442,7 +444,7 @@ public class ItemSoulCrusher extends ItemTool implements IEnergyTool, IEqualityO
 
     @Override
     public void onStateChange(EntityPlayer player, ItemStack stack) {
-        if(ConfigHandler.modeSoundEIO) {
+        if(!MiscUtil.isItemSilent(stack)) {
             if (getMode(stack) == 0)
                 player.worldObj.playSoundAtEntity(player, "random.orb", 0.2F, 0.6F);
             else

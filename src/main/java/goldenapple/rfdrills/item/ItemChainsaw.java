@@ -19,10 +19,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
-import net.minecraft.item.EnumRarity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemAxe;
-import net.minecraft.item.ItemStack;
+import net.minecraft.item.*;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.StatCollector;
@@ -34,7 +31,7 @@ import java.util.List;
 public class ItemChainsaw extends ItemAxe implements IEnergyTool, IEqualityOverrideItem, IEmpowerableItem{
     private final String name;
     private final ToolTier tier;
-    private EnumModIntegration modType;
+    private EnumModType modType;
 
     public ItemChainsaw(String name, ToolTier tier){
         super(tier.material);
@@ -43,7 +40,7 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool, IEqualityOverr
         this.setCreativeTab(RFDrills.RFDrillsTab);
     }
 
-    public ItemChainsaw setModType(EnumModIntegration modType) {
+    public ItemChainsaw setModType(EnumModType modType) {
         this.modType = modType;
         return this;
     }
@@ -162,15 +159,22 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool, IEqualityOverr
             if (toolMaterial.getEnchantability() > 0)
                 list.add(StatCollector.translateToLocal("rfdrills.enchantable.tooltip"));
             if (tier.hasModes) {
-                if(!ConfigHandler.modeShiftClickTE && getModType() == EnumModIntegration.TE)
+                if(!ConfigHandler.modeShiftClickTE && getModType() == EnumModType.TE)
                     list.add(StringHelper.writeModeSwitchInfo("rfdrills.chainsaw_has_modes.tooltip", KeyBindingEmpower.instance));
-                else if(!ConfigHandler.modeShiftClickEIO && getModType() == EnumModIntegration.EIO)
+                else if(!ConfigHandler.modeShiftClickEIO && getModType() == EnumModType.EIO)
                     list.add(StringHelper.writeModeSwitchInfo("rfdrills.chainsaw_has_modes.tooltip", KeyBindingEmpower.instance));
                 else
                     list.add(StatCollector.translateToLocal("rfdrills.chainsaw_has_modes.sneak.tooltip"));
             }
+            if(MiscUtil.isItemSilent(stack))
+                list.add(StatCollector.translateToLocal("rfdrills.silent.tooltip"));
         } else
             list.add(cofh.lib.util.helpers.StringHelper.shiftForDetails());
+    }
+
+    @Override
+    public EnumAction getItemUseAction(ItemStack stack) {
+        return EnumAction.bow;
     }
 
     @Override
@@ -180,7 +184,7 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool, IEqualityOverr
 
     @Override
     public String getUnlocalizedName() {
-        return "item." +Reference.MOD_ID.toLowerCase() + ":" + name;
+        return "item." + Reference.MOD_ID.toLowerCase() + ":" + name;
     }
 
     @Override
@@ -230,7 +234,7 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool, IEqualityOverr
     }
 
     @Override
-    public EnumModIntegration getModType() {
+    public EnumModType getModType() {
         return modType;
     }
 
@@ -287,11 +291,11 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool, IEqualityOverr
 
     @Override
     public boolean setEmpoweredState(ItemStack stack, boolean b) {
-        if(!tier.hasModes) return false;
+        if(!tier.hasModes)
+            return false;
 
-        if(stack.stackTagCompound == null){
+        if(stack.stackTagCompound == null)
            stack.stackTagCompound = new NBTTagCompound();
-        }
 
         stack.stackTagCompound.setByte("Mode", b ? (byte) 1 : 0);
         return true;
@@ -299,7 +303,7 @@ public class ItemChainsaw extends ItemAxe implements IEnergyTool, IEqualityOverr
 
     @Override
     public void onStateChange(EntityPlayer player, ItemStack stack) {
-        if(MiscUtil.shouldMakeModeSwitchSound(this)) {
+        if(!MiscUtil.isItemSilent(stack)) {
             if (!isEmpowered(stack))
                 player.worldObj.playSoundAtEntity(player, "random.orb", 0.2F, 0.6F);
             else

@@ -1,6 +1,6 @@
 package goldenapple.rfdrills.item;
 
-public enum EnumModIntegration {
+public enum EnumModType {
     TE,
     EIO,
     OTHER

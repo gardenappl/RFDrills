@@ -4,9 +4,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class OreHelper {
-    public static boolean isItemThisOre(ItemStack item, String ore){
-        for (int o : OreDictionary.getOreIDs(item)) {
-            if (OreDictionary.getOreName(o).equals(ore)) {
+    public static boolean isItemThisOre(ItemStack stack, String ore){
+        for (int oreID : OreDictionary.getOreIDs(stack)) {
+            if (OreDictionary.getOreName(oreID).equals(ore)) {
                 return true;
             }
         }

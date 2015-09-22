@@ -217,8 +217,8 @@ public class ItemFluxHoe extends ItemTool implements IEnergyTool {
     }
 
     @Override
-    public EnumModIntegration getModType() {
-        return EnumModIntegration.OTHER;
+    public EnumModType getModType() {
+        return EnumModType.OTHER;
     }
 
     /* IEnergyContainerItem */

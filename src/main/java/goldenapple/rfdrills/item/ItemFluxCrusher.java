@@ -195,6 +195,8 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityO
                 else
                     list.add(StringHelper.writeModeSwitchInfo("rfdrills.drill_has_modes.tooltip", KeyBindingEmpower.instance));
             }
+            if(MiscUtil.isItemSilent(stack))
+                list.add(StatCollector.translateToLocal("rfdrills.silent.tooltip"));
         } else
             list.add(cofh.lib.util.helpers.StringHelper.shiftForDetails());
     }
@@ -292,8 +294,8 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityO
     }
 
     @Override
-    public EnumModIntegration getModType() {
-        return EnumModIntegration.TE;
+    public EnumModType getModType() {
+        return EnumModType.TE;
     }
 
     /* IEnergyContainerItem */
@@ -364,7 +366,7 @@ public class ItemFluxCrusher extends ItemTool implements IEnergyTool, IEqualityO
 
     @Override
     public void onStateChange(EntityPlayer player, ItemStack stack) {
-        if(ConfigHandler.modeSoundTE) {
+        if(!MiscUtil.isItemSilent(stack)) {
             if (getMode(stack) == 0)
                 player.worldObj.playSoundAtEntity(player, "random.orb", 0.2F, 0.6F);
             else

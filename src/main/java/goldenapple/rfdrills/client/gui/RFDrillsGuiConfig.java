@@ -1,4 +1,4 @@
-package goldenapple.rfdrills.gui;
+package goldenapple.rfdrills.client.gui;
 
 import cpw.mods.fml.client.config.DummyConfigElement;
 import cpw.mods.fml.client.config.GuiConfig;

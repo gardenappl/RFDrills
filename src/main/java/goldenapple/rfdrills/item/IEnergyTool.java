@@ -15,5 +15,5 @@ public interface IEnergyTool extends IEnergyContainerItem{
 
     public String writeModeInfo(ItemStack stack);
 
-    public EnumModIntegration getModType();
+    public EnumModType getModType();
 }

@@ -6,18 +6,18 @@ import net.minecraft.block.Block;
 import net.minecraft.inventory.InventoryCrafting;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.oredict.ShapedOreRecipe;
+import net.minecraftforge.oredict.ShapelessOreRecipe;
 
-public class ShapedUpgradeRecipe extends ShapedOreRecipe {
-    public ShapedUpgradeRecipe(ItemStack result, Object... recipe) {
+public class ShapelessUpgradeRecipe extends ShapelessOreRecipe {
+    public ShapelessUpgradeRecipe(ItemStack result, Object... recipe) {
         super(result, recipe);
     }
 
-    public ShapedUpgradeRecipe(Item result, Object... recipe){
+    public ShapelessUpgradeRecipe(Item result, Object... recipe) {
         super(result, recipe);
     }
 
-    public ShapedUpgradeRecipe(Block result, Object... recipe){
+    public ShapelessUpgradeRecipe(Block result, Object... recipe) {
         super(result, recipe);
     }
 
@@ -37,6 +37,6 @@ public class ShapedUpgradeRecipe extends ShapedOreRecipe {
             }
         }
 
-        return energyTool.setEnergy(getRecipeOutput().copy(), energy).copy();
+        return energyTool.setEnergy(super.getCraftingResult(inventory), energy).copy();
     }
 }

@@ -14,6 +14,8 @@ import net.minecraftforge.common.util.EnumHelper;
 import java.io.File;
 import java.util.Map;
 
+import static net.minecraftforge.common.config.Configuration.CATEGORY_GENERAL;
+
 public class ConfigHandler {
     public static Configuration config;
 
@@ -22,10 +24,9 @@ public class ConfigHandler {
     public static boolean integrateRArs;
 
     public static boolean shearsDefault;
-    public static boolean modeSoundTE;
-    public static boolean modeSoundEIO;
     public static boolean modeShiftClickTE;
     public static boolean modeShiftClickEIO;
+    public static int animationType;
 
     public ConfigHandler(File file){
         if(config == null)
@@ -40,15 +41,14 @@ public class ConfigHandler {
         if(config.hasCategory("drill_tier5"))
             renameCategory("drill_tier5", "fluxcrusher");
 
-        integrateTE = config.get(Configuration.CATEGORY_GENERAL, "Integrate TE", true).setLanguageKey("config.integrateTE").setRequiresMcRestart(true).getBoolean();
-        integrateEIO = config.get(Configuration.CATEGORY_GENERAL, "Integrate EIO", true).setLanguageKey("config.integrateEIO").setRequiresMcRestart(true).getBoolean();
-        integrateRArs = config.get(Configuration.CATEGORY_GENERAL, "Integrate Redstone Arsenal", true).setLanguageKey("config.integrateRArs").setRequiresMcRestart(true).getBoolean();
+        integrateTE = config.get(CATEGORY_GENERAL, "Integrate TE", true).setLanguageKey("config.integrateTE").setRequiresMcRestart(true).getBoolean();
+        integrateEIO = config.get(CATEGORY_GENERAL, "Integrate EIO", true).setLanguageKey("config.integrateEIO").setRequiresMcRestart(true).getBoolean();
+        integrateRArs = config.get(CATEGORY_GENERAL, "Integrate Redstone Arsenal", true).setLanguageKey("config.integrateRArs").setRequiresMcRestart(true).getBoolean();
 
-        shearsDefault = config.get(Configuration.CATEGORY_GENERAL, "Shears Default", true).setLanguageKey("config.shearsDefault").getBoolean();
-        modeSoundTE = config.get(Configuration.CATEGORY_GENERAL, "TE Mode Switch Sound", true).setLanguageKey("config.modeSoundTE").getBoolean();
-        modeSoundEIO = config.get(Configuration.CATEGORY_GENERAL, "EIO Mode Switch Sound", false).setLanguageKey("config.modeSoundEIO").getBoolean();
-        modeShiftClickTE = config.get(Configuration.CATEGORY_GENERAL, "TE Mode Switch Shift+Click", false).setLanguageKey("config.modeShiftClickTE").getBoolean();
-        modeShiftClickEIO = config.get(Configuration.CATEGORY_GENERAL, "EIO Mode Switch Shift+Click", true).setLanguageKey("config.modeShiftClickEIO").getBoolean();
+        shearsDefault = config.get(CATEGORY_GENERAL, "Shears Default", true).setLanguageKey("config.shearsDefault").getBoolean();
+        modeShiftClickTE = config.get(CATEGORY_GENERAL, "TE Mode Switch Shift+Click", false).setLanguageKey("config.modeShiftClickTE").getBoolean();
+        modeShiftClickEIO = config.get(CATEGORY_GENERAL, "EIO Mode Switch Shift+Click", true).setLanguageKey("config.modeShiftClickEIO").getBoolean();
+        animationType = config.get(CATEGORY_GENERAL, "Mining Animation Type", 2).setLanguageKey("config.animationType").setMinValue(0).setMaxValue(2).setRequiresMcRestart(true).getInt();
 
         ToolTier.DRILL1 = getToolTierInfo("drill_tier1", 20000, 80, 80, EnumRarity.common, true, false, 2, 6.0F, 2.0F, 0);
         ToolTier.DRILL2 = getToolTierInfo("drill_tier2", 100000, 200, 400, EnumRarity.common, false, false, 3, 8.0F, 3.0F, 0);
@@ -66,31 +66,20 @@ public class ConfigHandler {
 
         for(String categoryName : config.getCategoryNames()){
             for(Map.Entry<String, Property> entry : config.getCategory(categoryName).entrySet()){
-                if(entry.getKey().equals("Enchantablility")) //yeah that was a fun typo
+                if(entry.getKey().equals("Enchantablility"))     //yeah that was a fun typo
                     renameProperty(categoryName, entry.getKey(), "Enchantability");
-
-                if(entry.getKey().equals("Enchantibility")) //that was fun as well
+                else if(entry.getKey().equals("Enchantibility")) //that was fun as well
                     renameProperty(categoryName, entry.getKey(), "Enchantability");
             }
         }
+        if(config.getCategory(CATEGORY_GENERAL).containsKey("TE Mode Switch Sound"))
+            removeProperty(CATEGORY_GENERAL, "TE Mode Switch Sound");
+        if(config.getCategory(CATEGORY_GENERAL).containsKey("EIO Mode Switch Sound"))
+            removeProperty(CATEGORY_GENERAL, "EIO Mode Switch Sound");
+
 
         if(config.hasChanged())
             config.save();
-    }
-
-    private static void renameProperty(String category, String nameOld, String nameNew){
-        LogHelper.info("Outdated config contains property %s in category %s! Renaming to %s...", nameOld, category, nameNew);
-        config.renameProperty(category, nameOld, nameNew);
-    }
-
-    private static void renameCategory(String categoryOld, String categoryNew){
-        if(config.hasCategory(categoryOld)) {
-            LogHelper.info("Outdated config contains category %s! Renaming to %s...", categoryOld, categoryNew);
-
-            for (Map.Entry<String, Property> entry : config.getCategory(categoryOld).entrySet())
-                config.getCategory(categoryNew).put(entry.getKey(), entry.getValue());
-            config.removeCategory(config.getCategory(categoryOld));
-        }
     }
 
     private static ToolTier getToolTierInfo(String category, int maxEnergy, int energyPerBlock, int rechargeRate, EnumRarity rarity, boolean canBreak, boolean hasModes, int miningLevel, float efficiency, float damage, int enchant){
@@ -132,10 +121,33 @@ public class ConfigHandler {
         return new ToolTier(material, maxEnergy, rechargeRate, energyPerBlock, EnumRarity.common, canBreak, false);
     }
 
+
+    private static void removeProperty(String category, String name){
+        if(config.hasCategory(category) && config.getCategory(category).containsKey(name)){
+            LogHelper.info("Outdated config contains property %s in category %s! Removing..", name, category);
+            config.getCategory(category).remove(name);
+        }
+    }
+
+    private static void renameProperty(String category, String nameOld, String nameNew){
+        LogHelper.info("Outdated config contains property %s in category %s! Renaming to %s...", nameOld, category, nameNew);
+        config.renameProperty(category, nameOld, nameNew);
+    }
+
+    private static void renameCategory(String categoryOld, String categoryNew){
+        if(config.hasCategory(categoryOld)) {
+            LogHelper.info("Outdated config contains category %s! Renaming to %s...", categoryOld, categoryNew);
+
+            for (Map.Entry<String, Property> entry : config.getCategory(categoryOld).entrySet())
+                config.getCategory(categoryNew).put(entry.getKey(), entry.getValue());
+            config.removeCategory(config.getCategory(categoryOld));
+        }
+    }
+
+
     @SubscribeEvent
     public void onConfigChanged(ConfigChangedEvent.OnConfigChangedEvent event){
-        if(event.modID.equals(Reference.MOD_ID)){
+        if(event.modID.equals(Reference.MOD_ID))
             loadConfig();
-        }
     }
 }
