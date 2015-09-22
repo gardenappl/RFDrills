@@ -2,15 +2,11 @@
 	"versionList": [
 		{
 			"mcVersion": "Minecraft 1.7.10",
-			"modVersion": "1.7",
+			"modVersion": "1.7.1",
 			"changeLog": [
-			    "Changed the drilling/chainsawing (is this a word?) animation. It now looks like you're actually 'drilling into the block'",
-			    "Added config options to enable/disable the animation in 1st and 3rd person mode",
-			    "Mode switch sounds can now be disabled by putting a tool and a block of Wool (or a Sound Muffler if ExU is installed) into a workbench",
-			    "If you want to get the sounds back, combine the tool with s Note Block",
-			    "Config options for mode switch sound no longer exist - they will get deleted from your configs automatically"
+			    "The new mining animation from 1.7 should no longer crash servers."
 			],
-			"updateURL": "http://minecraft.curseforge.com/mc-mods/229846-rfdrills/files/2258850/download",
+			"updateURL": "http://minecraft.curseforge.com/mc-mods/229846-rfdrills/files/2258941/download",
 			"isDirectLink": "true",
 			"newFileName": ""
 		}

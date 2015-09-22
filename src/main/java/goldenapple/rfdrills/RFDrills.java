@@ -28,7 +28,6 @@ public class RFDrills {
     public static RFDrills instance;
     @SidedProxy(serverSide = Reference.COMMON_PROXY, clientSide = Reference.CLIENT_PROXY)
     public static CommonProxy proxy;
-    public static ConfigHandler configHandler;
     public static CreativeTabs RFDrillsTab;
 
     public static boolean isTELoaded;
@@ -47,8 +46,7 @@ public class RFDrills {
         isSJLoaded = Loader.isModLoaded("simplyjetpacks");
         isXULoaded = Loader.isModLoaded("ExtraUtilities");
 
-        configHandler = new ConfigHandler(event.getSuggestedConfigurationFile());
-        FMLCommonHandler.instance().bus().register(configHandler);
+        FMLCommonHandler.instance().bus().register(new ConfigHandler(event.getSuggestedConfigurationFile()));
 
         if((ConfigHandler.integrateTE && isTELoaded) || (ConfigHandler.integrateEIO && isEIOLoaded)) {
             RFDrillsTab = new CreativeTabs(Reference.MOD_ID) {
@@ -70,6 +68,7 @@ public class RFDrills {
         }
 
         ModItems.init();
+        proxy.preInit();
     }
 
     @EventHandler
@@ -84,5 +83,7 @@ public class RFDrills {
     }
 
     @EventHandler
-    public void postInit(FMLPostInitializationEvent event) {}
+    public void postInit(FMLPostInitializationEvent event) {
+        proxy.postInit();
+    }
 }
