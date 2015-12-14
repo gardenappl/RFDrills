@@ -36,6 +36,7 @@ public class RFDrills {
     public static boolean isRArmLoaded;
     public static boolean isSJLoaded;
     public static boolean isXULoaded;
+    public static boolean isWailaLoaded;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
@@ -45,6 +46,7 @@ public class RFDrills {
         isRArmLoaded = Loader.isModLoaded("RArm");
         isSJLoaded = Loader.isModLoaded("simplyjetpacks");
         isXULoaded = Loader.isModLoaded("ExtraUtilities");
+        isWailaLoaded = Loader.isModLoaded("Waila");
 
         FMLCommonHandler.instance().bus().register(new ConfigHandler(event.getSuggestedConfigurationFile()));
 
@@ -73,7 +75,8 @@ public class RFDrills {
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
-        FMLInterModComms.sendMessage("Waila", "register", WailaCompat.class.getName() + ".init");
+        if(isWailaLoaded)
+            FMLInterModComms.sendMessage("Waila", "register", WailaCompat.class.getName() + ".init");
         VersionCheckerCompat.init();
         ModRecipes.init();
 
@@ -85,5 +88,6 @@ public class RFDrills {
     @EventHandler
     public void postInit(FMLPostInitializationEvent event) {
         proxy.postInit();
+        //OreHelper.dumpAllOres();
     }
 }

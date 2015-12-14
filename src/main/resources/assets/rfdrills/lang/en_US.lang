@@ -29,13 +29,11 @@ item.rfdrills:resonating_crystal.name=Resonating Crystal
 item.rfdrills:destructive_crystal.name=Destructive Crystal
 item.rfdrills:earthshaking_crystal.name=Earthshaking Crystal
 item.rfdrills:soularium_nugget.name=Soularium Nugget
-item.rfdrills:rich_soularium_nugget.name=Enriched Soularium Alloy Nugget
+item.rfdrills:dark_soularium.name=Dark Soularium
+item.rfdrills:dark_soularium_nugget.name=Dark Soularium Nugget
 item.rfdrills:superconductance_coil.name=Redstone Superconductance Coil
 item.rfdrills:fluctuating_core.name=Fluctuating Core
 item.rfdrills:fluctuating_core_frame.name=Fluctuating Core Frame
-
-item.rfdrills:dark_soularium.name=Dark Soularium
-item.rfdrills:dark_soularium_nugget.name=Dark Soularium Nugget
 
 item.rfdrills:obsidian_rod.name=Obsidian Rod
 item.rfdrills:flux_obsidian_rod.name=Infused Obsidian Rod

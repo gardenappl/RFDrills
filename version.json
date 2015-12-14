@@ -2,9 +2,10 @@
 	"versionList": [
 		{
 			"mcVersion": "Minecraft 1.7.10",
-			"modVersion": "1.7.1",
+			"modVersion": "1.7.2",
 			"changeLog": [
-			    "The new mining animation from 1.7 should no longer crash servers."
+			    "Got rid of redundant code that registers Simply Jetpacks' Dark Soularium in the Ore Dictionary.",
+			    "Fixed bug which crashed the game on startup if WAILA isn't installed"
 			],
 			"updateURL": "http://minecraft.curseforge.com/mc-mods/229846-rfdrills/files/2258941/download",
 			"isDirectLink": "true",

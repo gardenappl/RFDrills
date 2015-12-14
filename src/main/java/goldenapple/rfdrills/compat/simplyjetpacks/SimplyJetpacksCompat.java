@@ -7,6 +7,7 @@ import java.lang.reflect.Field;
 
 public class SimplyJetpacksCompat {
     private static Class configClass;
+
     public static boolean integratesEIO(){
         if(!RFDrills.isSJLoaded)
             return false;

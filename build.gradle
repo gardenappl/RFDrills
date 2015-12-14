@@ -28,7 +28,7 @@ repositories{
 
 apply plugin: 'forge'
 
-version = "1.7.10-1.7.1"
+version = "1.7.10-1.7.2"
 group = "goldenapple.rfdrills" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "RFDrills"
 
@@ -38,7 +38,9 @@ minecraft {
 
 dependencies {
     compile files('CoFHCore-[1.7.10]3.0.2-262-dev.jar')
-    compile "mcp.mobius.waila:Waila:1.5.10_1.7.10"
+    compile module("mcp.mobius.waila:Waila:1.5.10_1.7.10") {
+        transitive = false // WAILA is depending on an invalid combination of CCC/NEI that doesn't run...
+    }
 }
 
 processResources

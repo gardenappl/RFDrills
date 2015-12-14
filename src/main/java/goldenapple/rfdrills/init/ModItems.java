@@ -6,7 +6,7 @@ import goldenapple.rfdrills.item.ToolTier;
 import goldenapple.rfdrills.RFDrills;
 import goldenapple.rfdrills.config.ConfigHandler;
 import goldenapple.rfdrills.item.*;
-import goldenapple.rfdrills.reference.LibMetadata;
+import goldenapple.rfdrills.reference.Metadata;
 import goldenapple.rfdrills.reference.Names;
 import goldenapple.rfdrills.util.LogHelper;
 import net.minecraft.item.EnumRarity;
@@ -84,16 +84,13 @@ public class ModItems {
         replacementSJ.setRarities(new EnumRarity[]{EnumRarity.uncommon});
 
         GameRegistry.registerItem(componentEIO, Names.COMPONENT_EIO);
-        OreDictionary.registerOre("nuggetSoularium", new ItemStack(componentEIO, 1, LibMetadata.SOULARIUM_NUGGET));
-        OreDictionary.registerOre("nuggetDarkSoularium", new ItemStack(componentEIO, 1, LibMetadata.RICH_SOULARIUM_NUGGET));
+        OreDictionary.registerOre("nuggetSoularium", new ItemStack(componentEIO, 1, Metadata.SOULARIUM_NUGGET));
+        OreDictionary.registerOre("nuggetDarkSoularium", new ItemStack(componentEIO, 1, Metadata.DARK_SOULARIUM_NUGGET));
 
-        if (SimplyJetpacksCompat.integratesEIO()) {
-            LogHelper.info("Registering Simply Jetpacks Enriched Soularium Alloy in the OreDictionary as ingotDarkSoularium...");
-            OreDictionary.registerOre("ingotDarkSoularium", new ItemStack(GameRegistry.findItem("simplyjetpacks", "components"), 1, 70));
-        } else {
-            LogHelper.info("Simply Jetpacks EIO items not found! Using replacement items...");
+        if (!SimplyJetpacksCompat.integratesEIO()) {
+            LogHelper.info("Simply Jetpacks' EIO items not found! Adding replacement items...");
             GameRegistry.registerItem(replacementSJ, Names.REPLACEMENT_SJ);
-            OreDictionary.registerOre("ingotDarkSoularium", new ItemStack(replacementSJ, 1, LibMetadata.DARK_SOULARIUM));
+            OreDictionary.registerOre("ingotDarkSoularium", new ItemStack(replacementSJ, 1, Metadata.DARK_SOULARIUM));
         }
 
         GameRegistry.registerItem(basicDrill, Names.BASIC_DRILL);

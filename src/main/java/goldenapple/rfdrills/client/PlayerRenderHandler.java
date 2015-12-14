@@ -35,7 +35,7 @@ public class PlayerRenderHandler {
 
             if (equippedStack.getItem() instanceof IEnergyTool && equippedStack.getItem().getItemUseAction(equippedStack) == EnumAction.bow) {
                 if(event.player.isSwingInProgress) {
-                    event.player.setItemInUse(equippedStack, event.player.ticksExisted); //a bit of a hack here. I need a variable that would increase every tick, otherwise the "bow shaking" effect won't happen.
+                    event.player.setItemInUse(equippedStack, event.player.ticksExisted); //a bit of a hack here. I need a variable that would increase every tick, otherwise the "bow shaking" effect won't happen. player.ticksExisted works for that.
                     event.player.swingProgress = 0; //disable the normal mining swing animation
                 }
             }

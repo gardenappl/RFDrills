@@ -1,7 +1,5 @@
 package goldenapple.rfdrills.reference;
 
-import goldenapple.rfdrills.compat.simplyjetpacks.SimplyJetpacksCompat;
-
 public class Names {
     public static final String LEADSTONE_DRILL = "leadstone_drill";
     public static final String HARDENED_DRILL = "hardened_drill";
@@ -31,6 +29,7 @@ public class Names {
                                               "fluctuating_core",
                                               "fluctuating_core_frame",
                                               "superconductance_coil"};
+
     public static final String COMPONENT_EIO = "motor_eio";
     public static       String[] COMPONENTS_EIO = {"basic_motor",
                                                "advanced_motor",
@@ -39,14 +38,11 @@ public class Names {
                                                "rich_soularium_nugget",
                                                "destructive_crystal",
                                                "earthshaking_crystal"};
+
     public static final String REPLACEMENT_SJ = "sj_replacement";
     public static final String[] SJ_REPLACEMENTS = {"dark_soularium"};
 
     public static final String REPLACEMENT_RA1 = "ra_replacement";
     public static final String[] RA_REPLACEMENTS = {"obsidian_rod",
                                                     "flux_obsidian_rod"};
-
-    static{
-        if(!SimplyJetpacksCompat.integratesEIO()) COMPONENTS_EIO[LibMetadata.RICH_SOULARIUM_NUGGET] = "dark_soularium_nugget";
-    }
 }

@@ -29,13 +29,11 @@ item.rfdrills:resonating_crystal.name=Резонирующий кристалл
 item.rfdrills:destructive_crystal.name=Разрушающий кристалл
 item.rfdrills:earthshaking_crystal.name=Землетрясущий кристалл
 item.rfdrills:soularium_nugget.name=Самородок соулария
-item.rfdrills:rich_soularium_nugget.name=Самородок обогащённого сплава соулария
+item.rfdrills:dark_soularium.name=Тёмный соуларий
+item.rfdrills:dark_soularium_nugget.name=Самородок тёмного соулария
 item.rfdrills:superconductance_coil.name=Красная сверхпроводящая катушка
 item.rfdrills:fluctuating_core.name=Неустойчивое ядро
 item.rfdrills:fluctuating_core_frame.name=Рамка неустойчивого ядра
-
-item.rfdrills:dark_soularium.name=Тёмный соуларий
-item.rfdrills:dark_soularium_nugget.name=Самородок тёмного соулария
 
 item.rfdrills:obsidian_rod.name=Обсидиановый стержень
 item.rfdrills:flux_obsidian_rod.name=Наполненый флаксом обсидиановый стержень

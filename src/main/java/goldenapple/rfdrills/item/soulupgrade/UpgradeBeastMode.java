@@ -1,7 +1,7 @@
 package goldenapple.rfdrills.item.soulupgrade;
 
 import goldenapple.rfdrills.init.ModItems;
-import goldenapple.rfdrills.reference.LibMetadata;
+import goldenapple.rfdrills.reference.Metadata;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
 
@@ -30,8 +30,8 @@ public class UpgradeBeastMode extends AbstractSoulUpgrade {
     @Override
     public boolean isRecipeValid(int level, ItemStack itemStack) {
         switch (level){
-            case 1: return itemStack.getItem() == ModItems.componentEIO && itemStack.getItemDamage() == LibMetadata.DESTRUCTIVE_CRYSTAL;
-            case 2: return itemStack.getItem() == ModItems.componentEIO && itemStack.getItemDamage() == LibMetadata.EARTHSHAKING_CRYSTAL;
+            case 1: return itemStack.getItem() == ModItems.componentEIO && itemStack.getItemDamage() == Metadata.DESTRUCTIVE_CRYSTAL;
+            case 2: return itemStack.getItem() == ModItems.componentEIO && itemStack.getItemDamage() == Metadata.EARTHSHAKING_CRYSTAL;
             default: return false;
         }
     }

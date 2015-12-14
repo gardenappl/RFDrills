@@ -14,8 +14,15 @@ public class OreHelper {
     }
 
     public static void dumpAllOres(){
-        for (String l : OreDictionary.getOreNames()){
-            LogHelper.info(l);
+        for (String oreName : OreDictionary.getOreNames()){
+            LogHelper.info("%s: %s", oreName, OreDictionary.getOres(oreName).size());
         }
+    }
+
+    public static ItemStack findFirstOre(String ore){
+        if(!OreDictionary.getOres(ore).isEmpty())
+            return OreDictionary.getOres(ore).get(0);
+        else
+            return null;
     }
 }
