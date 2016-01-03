@@ -2,12 +2,13 @@
 	"versionList": [
 		{
 			"mcVersion": "Minecraft 1.7.10",
-			"modVersion": "1.7.2",
+			"modVersion": "1.7.3",
 			"changeLog": [
-			    "Got rid of redundant code that registers Simply Jetpacks' Dark Soularium in the Ore Dictionary.",
-			    "Fixed bug which crashed the game on startup if WAILA isn't installed"
+			    "Fixed issue with Flux-Infused Crusher's muffling/unmuffling recipes.",
+			    "Added tooltips to Redstone Arsenal and Simply Jetpacks replacement items.",
+			    "The Obsidian Rod now has a proper recipe"
 			],
-			"updateURL": "http://minecraft.curseforge.com/mc-mods/229846-rfdrills/files/2258941/download",
+			"updateURL": "http://minecraft.curseforge.com/projects/rfdrills/files/latest",
 			"isDirectLink": "true",
 			"newFileName": ""
 		}
