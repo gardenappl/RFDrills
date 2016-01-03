@@ -16,11 +16,6 @@ public class MiscUtil {
         return Keyboard.isKeyDown(Keyboard.KEY_LCONTROL) || Keyboard.isKeyDown(Keyboard.KEY_RCONTROL);
     }
 
-    public static ItemStack setStackSize(ItemStack itemStack, int amount){
-        itemStack.stackSize = amount;
-        return itemStack;
-    }
-
     public static boolean isItemSilent(ItemStack stack){
         if(!stack.hasTagCompound())
             stack.stackTagCompound = new NBTTagCompound();

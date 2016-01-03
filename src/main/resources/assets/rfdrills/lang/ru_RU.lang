@@ -51,6 +51,9 @@ rfdrills.chainsaw_has_modes.sneak.tooltip=§b§oИспользуйте сидя,
 rfdrills.drill_has_modes.sneak.tooltip=§b§oИспользуёте сидя, чтобы изменить режим копания.
 rfdrills.enchantable.tooltip=§aМожет быть зачарована.
 rfdrills.silent.tooltip=§aЗвук переключения режима приглушен.
+rfdrills.replacement.tooltip1=%s не уствновлен.
+rfdrills.replacement.tooltip2=Поэтому, вот вам очевидный плагиат
+rfdrills.replacement.tooltip3=одного из его предметов.
 
 rfdrills.soul_upgrade.tooltip=Улучшение для Крушителя
 rfdrills.soul_upgrade.recipe=Улучшения на наковальне:

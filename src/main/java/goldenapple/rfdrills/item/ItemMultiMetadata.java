@@ -29,15 +29,15 @@ public class ItemMultiMetadata extends Item {
         this.setHasSubtypes(true);
     }
 
-    public void setRarities(EnumRarity[] rarities){
+    public void setRarities(EnumRarity... rarities){
         this.rarities = rarities;
     }
 
-    public void setTooltips(String[][] tooltips){
+    public void setTooltips(String[]... tooltips){
         this.tooltips = tooltips;
     }
 
-    public void setEffects(boolean[] effects){
+    public void setEffects(boolean... effects){
         this.effects = effects;
     }
 

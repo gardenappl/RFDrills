@@ -66,7 +66,7 @@ public class ConfigHandler {
 
         for(String categoryName : config.getCategoryNames()){
             for(Map.Entry<String, Property> entry : config.getCategory(categoryName).entrySet()){
-                if(entry.getKey().equals("Enchantablility"))     //yeah that was a fun typo
+                if(entry.getKey().equals("Enchantablility")) //yeah that was a fun typo
                     renameProperty(categoryName, entry.getKey(), "Enchantability");
                 else if(entry.getKey().equals("Enchantibility")) //that was fun as well
                     renameProperty(categoryName, entry.getKey(), "Enchantability");

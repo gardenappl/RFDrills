@@ -1,4 +1,4 @@
-package goldenapple.rfdrills.util.modhelpers;
+package goldenapple.rfdrills.compat.enderio;
 
 import cpw.mods.fml.common.event.FMLInterModComms;
 import goldenapple.rfdrills.reference.Reference;
@@ -6,7 +6,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 
-public class EnderIOHelper { //shamelessly stolen from Simply Jetpacks https://github.com/Tonius/SimplyJetpacks/blob/master/src/main/java/tonius/simplyjetpacks/integration/EIORecipes.java
+public class EnderIOCompat { //shamelessly stolen from Simply Jetpacks https://github.com/Tonius/SimplyJetpacks/blob/master/src/main/java/tonius/simplyjetpacks/integration/EIORecipes.java
     public static void addAlloySmelterRecipe(String name, int energy, ItemStack primaryInput, ItemStack secondaryInput, ItemStack tertiaryInput, ItemStack output) {
         StringBuilder toSend = new StringBuilder();
 

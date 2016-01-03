@@ -17,7 +17,7 @@ import net.minecraftforge.oredict.OreDictionary;
 public class ModItems {
     //Thermal Expansion
     public static ItemMultiMetadata componentTE = new ItemMultiMetadata(Names.COMPONENTS_TE, Names.COMPONENT_TE);
-    public static ItemMultiMetadata replacementRA1 = new ItemMultiMetadata(Names.RA_REPLACEMENTS, Names.REPLACEMENT_RA1);
+    public static ItemReplacement replacementRA1 = new ItemReplacement(Names.RA_REPLACEMENTS, Names.REPLACEMENT_RA1, "Redstone Arsenal");
 
     public static Item leadstoneDrill = new ItemDrill(Names.LEADSTONE_DRILL, ToolTier.DRILL1).setModType(EnumModType.TE);
     public static Item hardenedDrill = new ItemDrill(Names.HARDENED_DRILL, ToolTier.DRILL2).setModType(EnumModType.TE);
@@ -34,7 +34,7 @@ public class ModItems {
 
     //EnderIO
     public static ItemMultiMetadata componentEIO = new ItemMultiMetadata(Names.COMPONENTS_EIO, Names.COMPONENT_EIO);
-    public static ItemMultiMetadata replacementSJ = new ItemMultiMetadata(Names.SJ_REPLACEMENTS, Names.REPLACEMENT_SJ);
+    public static ItemReplacement replacementSJ = new ItemReplacement(Names.SJ_REPLACEMENTS, Names.REPLACEMENT_SJ, "Simply Jetpacks");
 
     public static Item basicDrill = new ItemDrill(Names.BASIC_DRILL, ToolTier.DRILL1);
     public static Item advancedDrill = new ItemDrill(Names.ADVANCED_DRILL, ToolTier.DRILL3);
@@ -52,9 +52,9 @@ public class ModItems {
     }
 
     private static void initTE(){
-        componentTE.setRarities(new EnumRarity[]{EnumRarity.common, EnumRarity.common, EnumRarity.uncommon, EnumRarity.common, EnumRarity.rare, EnumRarity.common, EnumRarity.rare, EnumRarity.rare, EnumRarity.uncommon});
+        componentTE.setRarities(EnumRarity.common, EnumRarity.common, EnumRarity.uncommon, EnumRarity.common, EnumRarity.rare, EnumRarity.common, EnumRarity.rare, EnumRarity.rare, EnumRarity.uncommon);
 
-        replacementRA1.setRarities(new EnumRarity[]{EnumRarity.uncommon, EnumRarity.uncommon});
+        replacementRA1.setRarities(EnumRarity.uncommon, EnumRarity.uncommon);
 
         GameRegistry.registerItem(componentTE, Names.COMPONENT_TE);
 
@@ -76,12 +76,12 @@ public class ModItems {
     }
 
     private static void initEIO(){
-        componentEIO.setEffects(new boolean[]{false, false, true, false, true, true, true});
-        componentEIO.setRarities(new EnumRarity[]{EnumRarity.common, EnumRarity.uncommon, EnumRarity.uncommon, EnumRarity.common, EnumRarity.uncommon, EnumRarity.uncommon, EnumRarity.rare});
-        componentEIO.setTooltips(new String[][]{null, null, null, null, null, new String[]{"rfdrills.soul_upgrade.tooltip"}, new String[]{"rfdrills.soul_upgrade.tooltip"}});
+        componentEIO.setEffects(false, false, true, false, true, true, true);
+        componentEIO.setRarities(EnumRarity.common, EnumRarity.uncommon, EnumRarity.uncommon, EnumRarity.common, EnumRarity.uncommon, EnumRarity.uncommon, EnumRarity.rare);
+        componentEIO.setTooltips(null, null, null, null, null, new String[]{"rfdrills.soul_upgrade.tooltip"}, new String[]{"rfdrills.soul_upgrade.tooltip"});
 
-        replacementSJ.setEffects(new boolean[]{true});
-        replacementSJ.setRarities(new EnumRarity[]{EnumRarity.uncommon});
+        replacementSJ.setEffects(true);
+        replacementSJ.setRarities(EnumRarity.uncommon);
 
         GameRegistry.registerItem(componentEIO, Names.COMPONENT_EIO);
         OreDictionary.registerOre("nuggetSoularium", new ItemStack(componentEIO, 1, Metadata.SOULARIUM_NUGGET));

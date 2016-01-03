@@ -2,8 +2,8 @@ item.rfdrills:leadstone_drill.name=Leadstone Mining Drill
 item.rfdrills:hardened_drill.name=Hardened Mining Drill
 item.rfdrills:redstone_drill.name=Redstone Mining Drill
 item.rfdrills:resonant_drill.name=Resonant Mining Drill
-item.rfdrills:basic_drill.name=Basic Electric Drill
-item.rfdrills:advanced_drill.name=Advanced Electric Drill
+item.rfdrills:basic_drill.name=Basic Mining Drill
+item.rfdrills:advanced_drill.name=Advanced Mining Drill
 
 item.rfdrills:flux_infused_crusher.name=Flux-Infused Crusher
 item.rfdrills:soul_crusher.name=Dark Soularium Crusher
@@ -22,8 +22,8 @@ item.rfdrills:redstone_motor_frame.name=Redstone Motor Frame
 item.rfdrills:redstone_motor.name=Redstone Motor
 item.rfdrills:resonant_motor_frame.name=Resonant Motor Frame
 item.rfdrills:resonant_motor.name=Resonant Motor
-item.rfdrills:basic_motor.name=Basic Electric Motor
-item.rfdrills:advanced_motor.name=Advanced Electric Motor
+item.rfdrills:basic_motor.name=Basic Motor
+item.rfdrills:advanced_motor.name=Advanced Motor
 
 item.rfdrills:resonating_crystal.name=Resonating Crystal
 item.rfdrills:destructive_crystal.name=Destructive Crystal
@@ -51,6 +51,9 @@ rfdrills.chainsaw_has_modes.sneak.tooltip=§b§oUse while sneaking to toggle she
 rfdrills.drill_has_modes.sneak.tooltip=§b§oUse while sneaking to switch mining modes.
 rfdrills.enchantable.tooltip=§aCan be enchanted.
 rfdrills.silent.tooltip=§aMuffled mode switching sound.
+rfdrills.replacement.tooltip1=%s is not installed.
+rfdrills.replacement.tooltip2=So instead, have this blatant rip-off
+rfdrills.replacement.tooltip3=of one of its items.
 
 
 rfdrills.soul_upgrade.tooltip=Upgrade for the Dark Soularium Crusher

@@ -35,7 +35,7 @@ public class Names {
                                                "advanced_motor",
                                                "resonating_crystal",
                                                "soularium_nugget",
-                                               "rich_soularium_nugget",
+                                               "dark_soularium_nugget",
                                                "destructive_crystal",
                                                "earthshaking_crystal"};
 
